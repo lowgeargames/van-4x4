@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,39 +13,481 @@
 <body>
 
     <header class="hero">
-        <p class="team-name">Low Gear Games</p>
 
-        <h1>Van 4x4</h1>
+        <p class="team-name">
+            Low Gear Games
+        </p>
+
+        <h1>
+            Van 4x4
+        </h1>
 
         <p class="subtitle">
             Game Design Document
         </p>
+
+        <p class="hero-description">
+            Um jogo 3D off-road com física arcade, terrenos extremos
+            e uma van que se recusa a parar.
+        </p>
+
     </header>
+
+
+    <nav class="navigation">
+
+        <a href="#overview">Visão Geral</a>
+        <a href="#game-info">Informações</a>
+        <a href="#objective">Objetivo</a>
+        <a href="#gameplay">Gameplay</a>
+        <a href="#vehicle">Van</a>
+        <a href="#controls">Controles</a>
+        <a href="#progression">Progressão</a>
+        <a href="#world">Mundo</a>
+        <a href="#missions">Missões</a>
+        <a href="#team">Equipe</a>
+        <a href="#technology">Tecnologias</a>
+
+    </nav>
+
 
     <main>
 
+        <!-- VISÃO GERAL -->
+
         <section id="overview">
+
             <h2>Visão Geral</h2>
 
             <p>
-                Van 4x4 é um jogo 3D de direção off-road com física arcade e
-                visual low-poly. O jogador controla uma van praticamente
-                indestrutível e precisa atravessar terrenos difíceis para
-                chegar até diferentes locais e realizar serviços de manutenção.
+                Van 4x4 é um jogo 3D de direção off-road com física arcade
+                e visual low-poly.
             </p>
 
             <p>
-                O foco principal do jogo está na dirigibilidade exagerada,
-                exploração dos ambientes e nas situações inesperadas geradas
-                pela física.
+                O jogador controla uma van praticamente indestrutível e
+                precisa atravessar terrenos difíceis para chegar até diferentes
+                locais e realizar pequenos serviços de manutenção.
             </p>
+
+            <p>
+                O foco principal está na dirigibilidade exagerada, na exploração
+                dos ambientes e nas situações inesperadas geradas pela física.
+                A proposta não é simular de forma realista um veículo, mas criar
+                uma experiência divertida e fácil de entender.
+            </p>
+
         </section>
 
 
+        <!-- INFORMAÇÕES -->
+
+        <section id="game-info">
+
+            <h2>Informações do Jogo</h2>
+
+            <div class="info-grid">
+
+                <div class="info-card">
+                    <span>Gênero</span>
+                    <strong>Direção Off-road / Arcade</strong>
+                </div>
+
+                <div class="info-card">
+                    <span>Perspectiva</span>
+                    <strong>Terceira pessoa 3D</strong>
+                </div>
+
+                <div class="info-card">
+                    <span>Modo</span>
+                    <strong>Single-player</strong>
+                </div>
+
+                <div class="info-card">
+                    <span>Plataformas</span>
+                    <strong>Windows, Linux e macOS</strong>
+                </div>
+
+                <div class="info-card">
+                    <span>Visual</span>
+                    <strong>3D Low-poly</strong>
+                </div>
+
+                <div class="info-card">
+                    <span>Público</span>
+                    <strong>Jogadores casuais e fãs de jogos de direção</strong>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- OBJETIVO -->
+
+        <section id="objective">
+
+            <h2>Objetivo do Jogo</h2>
+
+            <p>
+                O jogador deve utilizar a van para atravessar terrenos
+                difíceis e chegar até diferentes pontos do mapa onde existem
+                equipamentos que precisam de manutenção.
+            </p>
+
+            <p>
+                O principal desafio está no percurso. Lama, pedras,
+                subidas, rios, obstáculos e condições climáticas tornam
+                cada deslocamento diferente.
+            </p>
+
+            <p>
+                O jogo deve ser rápido de aprender e permitir que uma pessoa
+                comece a dirigir poucos segundos após iniciar uma partida.
+            </p>
+
+        </section>
+
+
+        <!-- GAMEPLAY -->
+
+        <section id="gameplay">
+
+            <h2>Gameplay</h2>
+
+            <p>
+                Cada missão começa com um objetivo localizado em algum ponto
+                do mapa. O jogador deve dirigir até esse local utilizando
+                a van e escolher como atravessar o terreno.
+            </p>
+
+            <p>
+                Durante o percurso, será necessário lidar com obstáculos,
+                inclinações, lama, água e condições ambientais que modificam
+                a maneira como a van se comporta.
+            </p>
+
+            <p>
+                Ao chegar ao destino, o jogador realiza um pequeno serviço
+                de manutenção e conclui a missão.
+            </p>
+
+            <h3>Core Gameplay Loop</h3>
+
+            <div class="game-loop">
+
+                <span>Receber missão</span>
+                <span>→</span>
+
+                <span>Dirigir</span>
+                <span>→</span>
+
+                <span>Superar o terreno</span>
+                <span>→</span>
+
+                <span>Realizar reparo</span>
+                <span>→</span>
+
+                <span>Receber recompensa</span>
+                <span>→</span>
+
+                <span>Melhorar a van</span>
+
+            </div>
+
+        </section>
+
+
+        <!-- MECÂNICA DA VAN -->
+
+        <section id="vehicle">
+
+            <h2>A Van</h2>
+
+            <p>
+                A van é o principal elemento do jogo e sua dirigibilidade
+                deve ser a principal fonte de diversão.
+            </p>
+
+            <p>
+                A física será propositalmente exagerada. O veículo poderá
+                subir terrenos muito inclinados, atravessar obstáculos,
+                realizar saltos, derrapar e até capotar sem ser destruído.
+            </p>
+
+            <p>
+                O objetivo é criar situações em que o jogador consiga
+                recuperar o controle mesmo depois de movimentos absurdos,
+                mantendo a partida rápida e evitando interrupções constantes.
+            </p>
+
+            <div class="feature-grid">
+
+                <div class="feature-card">
+                    <h3>Física Arcade</h3>
+
+                    <p>
+                        Comportamento exagerado e divertido em vez de
+                        uma simulação automobilística realista.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Van Indestrutível</h3>
+
+                    <p>
+                        Capotamentos e impactos fazem parte da experiência
+                        e não devem encerrar imediatamente a partida.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Terreno como Desafio</h3>
+
+                    <p>
+                        O percurso e a maneira de chegar ao objetivo são
+                        parte central de cada missão.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- CONTROLES -->
+
+        <section id="controls">
+
+            <h2>Controles</h2>
+
+            <p>
+                Os controles serão simples para permitir que novos jogadores
+                entendam rapidamente como jogar.
+            </p>
+
+            <div class="controls-grid">
+
+                <div class="control-card">
+                    <span>W</span>
+                    <p>Acelerar</p>
+                </div>
+
+                <div class="control-card">
+                    <span>S</span>
+                    <p>Frear / Ré</p>
+                </div>
+
+                <div class="control-card">
+                    <span>A / D</span>
+                    <p>Direção</p>
+                </div>
+
+                <div class="control-card">
+                    <span>Espaço</span>
+                    <p>Freio de mão</p>
+                </div>
+
+                <div class="control-card">
+                    <span>E</span>
+                    <p>Interagir</p>
+                </div>
+
+                <div class="control-card">
+                    <span>R</span>
+                    <p>Reposicionar a van</p>
+                </div>
+
+            </div>
+
+            <p class="note">
+                Os controles ainda poderão ser modificados durante os testes
+                de jogabilidade.
+            </p>
+
+        </section>
+
+
+        <!-- PROGRESSÃO -->
+
+        <section id="progression">
+
+            <h2>Progressão</h2>
+
+            <p>
+                A conclusão das missões permite ao jogador avançar para
+                desafios maiores e melhorar a capacidade da van.
+            </p>
+
+            <p>
+                Inicialmente, a progressão poderá utilizar dinheiro obtido
+                ao completar missões. Esse dinheiro poderá ser utilizado
+                para comprar melhorias para o veículo ou novas ferramentas.
+            </p>
+
+            <h3>Possíveis melhorias</h3>
+
+            <div class="feature-grid">
+
+                <div class="feature-card">
+                    <h3>Motor</h3>
+                    <p>Maior força para enfrentar subidas e terrenos difíceis.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Pneus</h3>
+                    <p>Melhor aderência em lama e terrenos irregulares.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Suspensão</h3>
+                    <p>Melhor capacidade de absorver impactos e obstáculos.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Guincho</h3>
+                    <p>Ferramenta para ajudar em situações onde a van fica presa.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Snorkel</h3>
+                    <p>Permite enfrentar áreas com maior quantidade de água.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Ferramentas</h3>
+                    <p>Permitem realizar novos tipos de serviço e manutenção.</p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- MUNDO -->
+
+        <section id="world">
+
+            <h2>Mundo e Ambientes</h2>
+
+            <p>
+                Os ambientes serão construídos utilizando uma estética
+                low-poly e terão como principal função criar diferentes
+                desafios para a direção.
+            </p>
+
+            <p>
+                O mundo poderá apresentar uma progressão em que as condições
+                começam relativamente normais e ficam gradativamente mais
+                extremas.
+            </p>
+
+            <div class="feature-grid">
+
+                <div class="feature-card">
+                    <h3>Estradas de Terra</h3>
+                    <p>
+                        Terrenos iniciais utilizados para apresentar
+                        a dirigibilidade básica.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Montanhas</h3>
+                    <p>
+                        Subidas, pedras, barrancos e caminhos alternativos.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Lama e Água</h3>
+                    <p>
+                        Áreas com menor aderência e maior dificuldade
+                        de movimentação.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Tempestades</h3>
+                    <p>
+                        Chuva, raios e redução de visibilidade modificam
+                        a experiência durante as missões.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Eventos Ambientais</h3>
+                    <p>
+                        Árvores caindo, deslizamentos ou outros acontecimentos
+                        podem modificar o percurso.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Condições Extremas</h3>
+                    <p>
+                        Conforme o jogo avança, os ambientes podem assumir
+                        características cada vez mais caóticas.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- MISSÕES -->
+
+        <section id="missions">
+
+            <h2>Missões e Reparos</h2>
+
+            <p>
+                As missões possuem objetivos simples para manter o foco
+                principalmente na direção e no percurso.
+            </p>
+
+            <p>
+                O jogador será enviado para estruturas localizadas em
+                diferentes regiões do mapa.
+            </p>
+
+            <h3>Possíveis locais</h3>
+
+            <ul class="gdd-list">
+                <li>Torres de comunicação</li>
+                <li>Antenas</li>
+                <li>Estações meteorológicas</li>
+                <li>Instalações elétricas</li>
+                <li>Sensores e equipamentos remotos</li>
+            </ul>
+
+            <h3>Possíveis reparos</h3>
+
+            <ul class="gdd-list">
+                <li>Trocar um fusível</li>
+                <li>Reconectar um cabo</li>
+                <li>Substituir uma bateria</li>
+                <li>Reiniciar um equipamento</li>
+                <li>Reposicionar uma antena</li>
+            </ul>
+
+            <p>
+                Os reparos deverão ser rápidos e simples para não retirar
+                o foco da principal mecânica do jogo: dirigir a van.
+            </p>
+
+        </section>
+
+
+        <!-- EQUIPE -->
+
         <section id="team">
+
             <h2>Equipe</h2>
 
             <div class="team-member">
+
                 <h3>Luciano Ludwig Heling</h3>
 
                 <p>
@@ -54,42 +497,129 @@
                 <p>
                     <strong>Funções:</strong>
                     Game Design, Programação, Level Design, Arte 3D,
-                    Testes e Gerenciamento do Projeto.
+                    Testes, Documentação e Gerenciamento do Projeto.
                 </p>
+
             </div>
+
         </section>
 
 
-        <section id="gameplay">
-            <h2>Gameplay</h2>
-
-            <p>
-                O ciclo principal do jogo será:
-            </p>
-
-            <p class="game-loop">
-                Receber missão → Dirigir até o local → Superar o terreno →
-                Realizar o reparo → Receber recompensa → Melhorar a van
-            </p>
-        </section>
-
+        <!-- TECNOLOGIAS -->
 
         <section id="technology">
+
             <h2>Tecnologias</h2>
 
-            <p>
-                O jogo será desenvolvido utilizando Godot 4 e GDScript.
-                O Visual Studio Code será utilizado para programação,
-                Git e GitHub para versionamento e gerenciamento do projeto
-                e Blender para criação e edição de modelos 3D.
-            </p>
+            <div class="technology-grid">
+
+                <div class="technology-card">
+
+                    <h3>Godot 4</h3>
+
+                    <p>
+                        Engine principal utilizada para desenvolver o jogo,
+                        trabalhar com cenas, física, renderização, interface,
+                        áudio e demais sistemas.
+                    </p>
+
+                </div>
+
+
+                <div class="technology-card">
+
+                    <h3>GDScript</h3>
+
+                    <p>
+                        Linguagem principal utilizada para implementar
+                        as mecânicas e sistemas do jogo.
+                    </p>
+
+                </div>
+
+
+                <div class="technology-card">
+
+                    <h3>Visual Studio Code</h3>
+
+                    <p>
+                        Editor utilizado principalmente para programação
+                        e edição dos arquivos do projeto.
+                    </p>
+
+                </div>
+
+
+                <div class="technology-card">
+
+                    <h3>Git e GitHub</h3>
+
+                    <p>
+                        Utilizados para versionamento, documentação,
+                        acompanhamento do desenvolvimento e gerenciamento
+                        das tarefas.
+                    </p>
+
+                </div>
+
+
+                <div class="technology-card">
+
+                    <h3>GitHub Desktop</h3>
+
+                    <p>
+                        Interface utilizada para realizar as operações
+                        de versionamento durante o desenvolvimento.
+                    </p>
+
+                </div>
+
+
+                <div class="technology-card">
+
+                    <h3>Blender</h3>
+
+                    <p>
+                        Utilizado para criação ou edição dos modelos 3D
+                        necessários para o jogo.
+                    </p>
+
+                </div>
+
+
+                <div class="technology-card">
+
+                    <h3>HTML e CSS</h3>
+
+                    <p>
+                        Utilizados para desenvolver este Game Design Document,
+                        permitindo que ele seja armazenado e versionado junto
+                        com o restante do projeto.
+                    </p>
+
+                </div>
+
+            </div>
+
         </section>
+
 
     </main>
 
+
     <footer>
-        <p>Low Gear Games — Jogos Digitais — UFPel</p>
+
+        <p>
+            Low Gear Games — Van 4x4
+        </p>
+
+        <p>
+            Jogos Digitais — Universidade Federal de Pelotas
+        </p>
+
     </footer>
 
+
 </body>
+
 </html>
