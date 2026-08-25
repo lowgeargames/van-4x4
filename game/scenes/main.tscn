@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://ddpobstqe0oyt"]
+
+[ext_resource type="Script" uid="uid://l5yiuh17frik" path="res://scripts/luciano.gd" id="1_o5qli"]
+
+[node name="Main" type="Node2D" unique_id=1257724008]
+
+[node name="Luciano" type="Node2D" parent="." unique_id=677882641]
+script = ExtResource("1_o5qli")
