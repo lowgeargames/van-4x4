@@ -39,12 +39,15 @@
         <a href="#overview">Visão Geral</a>
         <a href="#game-info">Informações</a>
         <a href="#objective">Objetivo</a>
+        <a href="#scope">Escopo</a>
         <a href="#gameplay">Gameplay</a>
         <a href="#vehicle">Van</a>
+        <a href="#camera">Câmera</a>
         <a href="#controls">Controles</a>
         <a href="#progression">Progressão</a>
-        <a href="#world">Mundo</a>
+        <a href="#world">Mapa</a>
         <a href="#missions">Missões</a>
+        <a href="#performance">Performance</a>
         <a href="#team">Equipe</a>
         <a href="#technology">Tecnologias</a>
 
@@ -74,7 +77,7 @@
                 O foco principal está na dirigibilidade exagerada, na exploração
                 dos ambientes e nas situações inesperadas geradas pela física.
                 A proposta não é simular de forma realista um veículo, mas criar
-                uma experiência divertida e fácil de entender.
+                uma experiência divertida, responsiva e fácil de entender.
             </p>
 
         </section>
@@ -137,13 +140,71 @@
 
             <p>
                 O principal desafio está no percurso. Lama, pedras,
-                subidas, rios, obstáculos e condições climáticas tornam
+                subidas, água, obstáculos e condições climáticas tornam
                 cada deslocamento diferente.
             </p>
 
             <p>
                 O jogo deve ser rápido de aprender e permitir que uma pessoa
                 comece a dirigir poucos segundos após iniciar uma partida.
+            </p>
+
+        </section>
+
+
+        <!-- ESCOPO -->
+
+        <section id="scope">
+
+            <h2>Escopo da Versão Inicial</h2>
+
+            <p>
+                O projeto será desenvolvido individualmente. Por esse motivo,
+                a versão inicial será planejada com um escopo reduzido e
+                concentrado principalmente na qualidade da mecânica de direção.
+            </p>
+
+            <p>
+                Em vez de vários mapas ou fases extensas, o jogo utilizará
+                inicialmente um único mapa principal compacto, contendo
+                diferentes áreas e tipos de terreno.
+            </p>
+
+            <div class="feature-grid">
+
+                <div class="feature-card">
+                    <h3>1 Mapa Principal</h3>
+
+                    <p>
+                        Um ambiente compacto reutilizado por diferentes missões,
+                        evitando a necessidade de produzir vários mapas completos.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Poucos Pontos de Missão</h3>
+
+                    <p>
+                        Aproximadamente três ou quatro áreas principais de
+                        manutenção serão suficientes para a primeira versão.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Foco na Mecânica</h3>
+
+                    <p>
+                        A prioridade será tornar a van divertida de controlar
+                        antes de aumentar a quantidade de conteúdo.
+                    </p>
+                </div>
+
+            </div>
+
+            <p class="note">
+                Novos mapas, áreas e sistemas somente deverão ser considerados
+                depois que o núcleo principal do jogo estiver funcionando de
+                maneira satisfatória.
             </p>
 
         </section>
@@ -168,8 +229,9 @@
             </p>
 
             <p>
-                Ao chegar ao destino, o jogador realiza um pequeno serviço
-                de manutenção e conclui a missão.
+                Ao chegar ao destino, o jogador posiciona a van próximo ao
+                equipamento e realiza uma interação simples para concluir
+                o serviço de manutenção.
             </p>
 
             <h3>Core Gameplay Loop</h3>
@@ -195,6 +257,19 @@
 
             </div>
 
+            <figure class="gdd-figure">
+                <img
+                    src="assets/gameplay_loop.png"
+                    alt="Diagrama conceitual do loop principal de gameplay de Van 4x4"
+                >
+
+                <figcaption>
+                    Representação visual do loop principal de gameplay:
+                    receber uma missão, dirigir, superar o terreno, realizar
+                    o reparo, receber a recompensa e melhorar a van.
+                </figcaption>
+            </figure>
+
         </section>
 
 
@@ -210,6 +285,12 @@
             </p>
 
             <p>
+                A referência visual principal é uma van americana clássica
+                de serviços e manutenção, com carroceria retangular,
+                aparência robusta e espaço para ferramentas e equipamentos.
+            </p>
+
+            <p>
                 A física será propositalmente exagerada. O veículo poderá
                 subir terrenos muito inclinados, atravessar obstáculos,
                 realizar saltos, derrapar e até capotar sem ser destruído.
@@ -220,6 +301,20 @@
                 recuperar o controle mesmo depois de movimentos absurdos,
                 mantendo a partida rápida e evitando interrupções constantes.
             </p>
+
+            <figure class="gdd-figure gdd-figure-featured">
+                <img
+                    src="assets/van_conceitual.png"
+                    alt="Prancha conceitual da van principal do jogo Van 4x4"
+                >
+
+                <figcaption>
+                    Conceito visual inicial da van: veículo utilitário
+                    americano adaptado para manutenção e uso off-road.
+                    A arte serve como referência para proporções, acessórios,
+                    identidade visual e futura modelagem low-poly.
+                </figcaption>
+            </figure>
 
             <div class="feature-grid">
 
@@ -247,6 +342,59 @@
                     <p>
                         O percurso e a maneira de chegar ao objetivo são
                         parte central de cada missão.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- CÂMERA -->
+
+        <section id="camera">
+
+            <h2>Câmera</h2>
+
+            <p>
+                A câmera principal será em terceira pessoa e acompanhará
+                a van durante toda a experiência de direção.
+            </p>
+
+            <p>
+                A versão inicial não terá um personagem controlável fora
+                do veículo. Dessa forma, não será necessário alternar entre
+                sistemas de câmera de direção e movimentação a pé.
+            </p>
+
+            <div class="feature-grid">
+
+                <div class="feature-card">
+                    <h3>Direção</h3>
+
+                    <p>
+                        A câmera ficará posicionada atrás da van, acompanhando
+                        seu movimento com suavização suficiente para manter
+                        boa leitura do terreno.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Reparos</h3>
+
+                    <p>
+                        Durante uma manutenção, a câmera poderá permanecer na
+                        posição normal ou aproximar-se do ponto de interação.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>Escopo Controlado</h3>
+
+                    <p>
+                        Não haverá inicialmente sistema de movimentação a pé,
+                        câmera em primeira pessoa ou animações de entrada e
+                        saída do veículo.
                     </p>
                 </div>
 
@@ -361,77 +509,129 @@
 
             </div>
 
+            <p class="note">
+                A quantidade de melhorias será reduzida caso seja necessário
+                preservar o escopo e priorizar a qualidade da dirigibilidade.
+            </p>
+
         </section>
 
 
-        <!-- MUNDO -->
+        <!-- MAPA -->
 
         <section id="world">
 
-            <h2>Mundo e Ambientes</h2>
+            <h2>Mapa e Ambientes</h2>
 
             <p>
-                Os ambientes serão construídos utilizando uma estética
-                low-poly e terão como principal função criar diferentes
-                desafios para a direção.
+                A primeira versão será construída em um único mapa principal
+                compacto. O objetivo é fazer esse ambiente parecer variado
+                através de relevo, obstáculos e diferentes tipos de terreno,
+                sem depender de uma área extremamente grande.
             </p>
 
             <p>
-                O mundo poderá apresentar uma progressão em que as condições
-                começam relativamente normais e ficam gradativamente mais
-                extremas.
+                O mapa será inicialmente desenvolvido como um blockout simples,
+                utilizando formas básicas para testar distâncias, escala,
+                caminhos e comportamento da van antes da produção visual final.
             </p>
+
+            <figure class="gdd-figure gdd-figure-featured">
+                <img
+                    src="assets/mapa_conceitual_inicial.png"
+                    alt="Mapa conceitual inicial do jogo Van 4x4"
+                >
+
+                <figcaption>
+                    Mapa conceitual inicial. A base funciona como região
+                    central, enquanto montanha, lama, água, torre e estação
+                    criam diferentes desafios e pontos de missão dentro
+                    do mesmo cenário.
+                </figcaption>
+            </figure>
 
             <div class="feature-grid">
 
                 <div class="feature-card">
-                    <h3>Estradas de Terra</h3>
+                    <h3>Base / Garagem</h3>
+
                     <p>
-                        Terrenos iniciais utilizados para apresentar
-                        a dirigibilidade básica.
+                        Região inicial do jogador e ponto de referência central
+                        para o restante do mapa.
                     </p>
                 </div>
 
                 <div class="feature-card">
-                    <h3>Montanhas</h3>
+                    <h3>Estrada de Terra</h3>
+
                     <p>
-                        Subidas, pedras, barrancos e caminhos alternativos.
+                        Caminho mais seguro entre algumas regiões e espaço
+                        utilizado para apresentar a dirigibilidade básica.
                     </p>
                 </div>
 
                 <div class="feature-card">
-                    <h3>Lama e Água</h3>
+                    <h3>Montanha</h3>
+
                     <p>
-                        Áreas com menor aderência e maior dificuldade
-                        de movimentação.
+                        Área vertical com subidas, pedras e possibilidades
+                        de atalhos fora da estrada.
                     </p>
                 </div>
 
                 <div class="feature-card">
-                    <h3>Tempestades</h3>
+                    <h3>Lama</h3>
+
                     <p>
-                        Chuva, raios e redução de visibilidade modificam
-                        a experiência durante as missões.
+                        Região de baixa aderência que altera o comportamento
+                        da van e dificulta a progressão.
                     </p>
                 </div>
 
                 <div class="feature-card">
-                    <h3>Eventos Ambientais</h3>
+                    <h3>Água</h3>
+
                     <p>
-                        Árvores caindo, deslizamentos ou outros acontecimentos
-                        podem modificar o percurso.
+                        Trechos de água rasa poderão funcionar como obstáculos
+                        e rotas alternativas.
                     </p>
                 </div>
 
                 <div class="feature-card">
-                    <h3>Condições Extremas</h3>
+                    <h3>Área de Tempestade</h3>
+
                     <p>
-                        Conforme o jogo avança, os ambientes podem assumir
-                        características cada vez mais caóticas.
+                        Parte do mapa em que chuva, raios ou baixa visibilidade
+                        aumentam a dificuldade sem exigir um novo cenário.
                     </p>
                 </div>
 
             </div>
+
+
+            <h3>Estrutura Simplificada</h3>
+
+            <div class="map-concept">
+
+                <pre>
+                         ANTENA / MONTANHA
+                               ▲
+                               │
+                         estrada sinuosa
+                               │
+              ÁREA DE LAMA ─── BASE ─── TORRE
+                    │          │          │
+                    │          │          │
+                  ÁGUA ───── ESTRADA ─ ESTAÇÃO
+                </pre>
+
+            </div>
+
+            <p class="note">
+                A imagem e o diagrama representam apenas a organização
+                conceitual inicial. O layout definitivo será definido durante
+                o blockout e os primeiros testes de dirigibilidade.
+            </p>
 
         </section>
 
@@ -443,23 +643,22 @@
             <h2>Missões e Reparos</h2>
 
             <p>
-                As missões possuem objetivos simples para manter o foco
+                As missões terão objetivos simples para manter o foco
                 principalmente na direção e no percurso.
             </p>
 
             <p>
-                O jogador será enviado para estruturas localizadas em
-                diferentes regiões do mapa.
+                A versão inicial deverá utilizar poucos pontos de manutenção
+                distribuídos pelo mesmo mapa principal.
             </p>
 
-            <h3>Possíveis locais</h3>
+            <h3>Possíveis pontos de missão</h3>
 
             <ul class="gdd-list">
-                <li>Torres de comunicação</li>
-                <li>Antenas</li>
-                <li>Estações meteorológicas</li>
-                <li>Instalações elétricas</li>
-                <li>Sensores e equipamentos remotos</li>
+                <li>Antena localizada no alto da montanha</li>
+                <li>Torre de comunicação</li>
+                <li>Estação meteorológica</li>
+                <li>Gerador ou instalação localizada em área de lama</li>
             </ul>
 
             <h3>Possíveis reparos</h3>
@@ -472,9 +671,107 @@
                 <li>Reposicionar uma antena</li>
             </ul>
 
+
+            <h3>Fluxo do Reparo</h3>
+
+            <div class="game-loop">
+
+                <span>Chegar ao local</span>
+                <span>→</span>
+
+                <span>Posicionar a van</span>
+                <span>→</span>
+
+                <span>Pressionar E</span>
+                <span>→</span>
+
+                <span>Realizar interação</span>
+                <span>→</span>
+
+                <span>Concluir missão</span>
+
+            </div>
+
             <p>
-                Os reparos deverão ser rápidos e simples para não retirar
-                o foco da principal mecânica do jogo: dirigir a van.
+                O jogador não precisará sair fisicamente da van na versão
+                inicial. Os reparos poderão utilizar uma interação simples,
+                uma pequena interface ou um minigame curto.
+            </p>
+
+        </section>
+
+
+        <!-- PERFORMANCE -->
+
+        <section id="performance">
+
+            <h2>Performance e Otimização</h2>
+
+            <p>
+                A performance é um dos objetivos centrais do projeto e deverá
+                ser considerada desde o início do desenvolvimento, e não apenas
+                como uma etapa de otimização realizada no final.
+            </p>
+
+            <p>
+                A qualidade gráfica será propositalmente simples. O objetivo
+                é priorizar jogabilidade, responsividade e altas taxas de
+                quadros por segundo.
+            </p>
+
+            <div class="feature-grid">
+
+                <div class="feature-card">
+                    <h3>Hardware Modesto</h3>
+
+                    <p>
+                        O jogo deverá utilizar uma direção visual e sistemas
+                        suficientemente leves para funcionar em computadores
+                        modestos utilizando configurações reduzidas.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>60 FPS</h3>
+
+                    <p>
+                        A experiência deverá buscar manter 60 FPS em hardware
+                        compatível com os requisitos definidos durante os testes.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <h3>120 / 144+ FPS</h3>
+
+                    <p>
+                        Computadores mais potentes deverão poder aproveitar
+                        monitores de alta taxa de atualização, sem que o jogo
+                        fique artificialmente limitado a 60 FPS.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <h3>Diretrizes de Performance</h3>
+
+            <ul class="gdd-list">
+                <li>Modelos 3D low-poly</li>
+                <li>Materiais e shaders simples sempre que possível</li>
+                <li>Texturas pequenas e reutilizáveis</li>
+                <li>Quantidade controlada de luzes e sombras dinâmicas</li>
+                <li>Vegetação e objetos de cenário com baixo custo de renderização</li>
+                <li>Uso limitado de partículas e efeitos gráficos pesados</li>
+                <li>Evitar simulações físicas desnecessariamente complexas</li>
+                <li>Mapa compacto em vez de um mundo aberto muito extenso</li>
+                <li>Configurações gráficas ajustáveis</li>
+                <li>Gameplay independente da taxa de quadros</li>
+            </ul>
+
+            <p class="note">
+                Os requisitos mínimos e metas numéricas definitivas serão
+                estabelecidos somente depois dos primeiros testes em diferentes
+                computadores.
             </p>
 
         </section>
