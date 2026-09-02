@@ -26,7 +26,7 @@
 
 html {
     scroll-behavior: smooth;
-    scroll-padding-top: 110px;
+    scroll-padding-top: 120px;
 }
 
 body {
@@ -112,9 +112,9 @@ a {
     align-items: center;
     flex-wrap: wrap;
 
-    gap: 0.35rem;
+    gap: 0.3rem;
 
-    padding: 0.8rem 1.2rem;
+    padding: 0.75rem 1rem;
 
     background: rgba(17, 19, 21, 0.96);
 
@@ -124,13 +124,15 @@ a {
 }
 
 .navigation a {
-    padding: 0.45rem 0.7rem;
+    padding: 0.45rem 0.65rem;
 
     border-radius: 8px;
 
     color: var(--muted);
 
-    font-size: 0.86rem;
+    font-size: 0.82rem;
+
+    white-space: nowrap;
 
     transition:
         background 0.2s ease,
@@ -214,13 +216,16 @@ section p:last-child {
 
     transition:
         transform 0.2s ease,
-        background 0.2s ease;
+        background 0.2s ease,
+        border-color 0.2s ease;
 }
 
 .info-card:hover {
     transform: translateY(-2px);
 
     background: var(--panel-hover);
+
+    border-color: var(--accent-soft);
 }
 
 .info-card span {
@@ -257,6 +262,7 @@ section p:last-child {
     gap: 0.7rem;
 
     margin-top: 1rem;
+    margin-bottom: 1rem;
 
     background: var(--panel-soft);
 
@@ -276,6 +282,15 @@ section p:last-child {
 }
 
 
+/* FLUXO DE REPARO */
+
+.repair-loop {
+    border-left-color: var(--accent);
+
+    margin-bottom: 1.5rem;
+}
+
+
 /* IMAGENS E FIGURAS DO GDD */
 
 .gdd-figure {
@@ -289,6 +304,10 @@ section p:last-child {
     border-radius: 14px;
 
     overflow: hidden;
+
+    transition:
+        border-color 0.2s ease,
+        transform 0.2s ease;
 }
 
 .gdd-figure img {
@@ -315,16 +334,14 @@ section p:last-child {
     border-color: var(--accent-soft);
 }
 
-.gdd-figure-featured img {
-    width: 100%;
-}
-
 .gdd-figure:hover {
-    border-color: var(--accent-soft);
+    border-color: var(--accent);
+
+    transform: translateY(-2px);
 }
 
 
-/* CARDS DE MECÂNICAS */
+/* CARDS GERAIS */
 
 .feature-grid {
     display: grid;
@@ -347,13 +364,16 @@ section p:last-child {
 
     transition:
         transform 0.2s ease,
-        background 0.2s ease;
+        background 0.2s ease,
+        border-color 0.2s ease;
 }
 
 .feature-card:hover {
     transform: translateY(-2px);
 
     background: var(--panel-hover);
+
+    border-color: var(--accent-soft);
 }
 
 .feature-card h3 {
@@ -371,6 +391,24 @@ section p:last-child {
 
 .feature-grid + .note {
     margin-top: 1.5rem;
+}
+
+
+/* PRINCÍPIOS DE DESIGN */
+
+.design-principles {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.design-principles .feature-card {
+    min-height: 160px;
+}
+
+
+/* ÁREAS DO MAPA */
+
+.map-areas .feature-card {
+    min-height: 175px;
 }
 
 
@@ -406,6 +444,16 @@ section p:last-child {
     border-radius: 12px;
 
     padding: 1.2rem;
+
+    transition:
+        transform 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.control-card:hover {
+    transform: translateY(-2px);
+
+    border-color: var(--accent-soft);
 }
 
 .control-card span {
@@ -474,40 +522,88 @@ section p:last-child {
 }
 
 
-/* MAPA CONCEITUAL EM TEXTO */
+/* MISSÕES */
 
-.map-concept {
-    margin-top: 1rem;
-    margin-bottom: 1.5rem;
+.mission-list {
+    display: grid;
 
-    overflow-x: auto;
+    grid-template-columns: repeat(2, 1fr);
 
-    background: var(--bg);
+    gap: 1rem;
+
+    margin-top: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.mission-card {
+    display: flex;
+
+    gap: 1.2rem;
+
+    background: var(--panel-soft);
 
     border: 1px solid var(--border);
 
     border-radius: 12px;
 
-    padding: 2rem;
+    padding: 1.4rem;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
 }
 
-.map-concept pre {
-    width: max-content;
-    min-width: 100%;
+.mission-card:hover {
+    transform: translateY(-2px);
 
+    background: var(--panel-hover);
+
+    border-color: var(--accent-soft);
+}
+
+.mission-number {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    width: 48px;
+    height: 48px;
+
+    background: var(--bg);
+
+    border: 1px solid var(--accent-soft);
+
+    border-radius: 10px;
+
+    color: var(--accent);
+
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.mission-card h3 {
+    color: var(--accent);
+
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+
+    font-size: 1.05rem;
+}
+
+.mission-card p {
+    margin-bottom: 0.8rem;
+}
+
+.mission-card strong {
     color: var(--text);
 
-    font-family:
-        "SFMono-Regular",
-        Consolas,
-        "Liberation Mono",
-        Menlo,
-        monospace;
+    font-size: 0.9rem;
 
-    font-size: 0.95rem;
-    line-height: 1.7;
-
-    text-align: center;
+    font-weight: 600;
 }
 
 
@@ -557,13 +653,16 @@ section p:last-child {
 
     transition:
         transform 0.2s ease,
-        background 0.2s ease;
+        background 0.2s ease,
+        border-color 0.2s ease;
 }
 
 .technology-card:hover {
     transform: translateY(-2px);
 
     background: var(--panel-hover);
+
+    border-color: var(--accent-soft);
 }
 
 .technology-card h3 {
@@ -600,7 +699,7 @@ footer p {
 @media (max-width: 900px) {
 
     html {
-        scroll-padding-top: 130px;
+        scroll-padding-top: 140px;
     }
 
     .info-grid {
@@ -613,6 +712,14 @@ footer p {
 
     .controls-grid {
         grid-template-columns: repeat(2, 1fr);
+    }
+
+    .design-principles {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .mission-list {
+        grid-template-columns: 1fr;
     }
 
 }
@@ -688,7 +795,9 @@ footer p {
     .info-grid,
     .feature-grid,
     .controls-grid,
-    .technology-grid {
+    .technology-grid,
+    .design-principles,
+    .mission-list {
         grid-template-columns: 1fr;
     }
 
@@ -724,16 +833,21 @@ footer p {
     }
 
 
-    /* Mapa */
+    /* Missões */
 
-    .map-concept {
-        padding: 1rem;
+    .mission-card {
+        align-items: flex-start;
+
+        padding: 1.1rem;
+
+        gap: 0.9rem;
     }
 
-    .map-concept pre {
-        font-size: 0.75rem;
+    .mission-number {
+        width: 42px;
+        height: 42px;
 
-        text-align: left;
+        font-size: 0.9rem;
     }
 
 }
