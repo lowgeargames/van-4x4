@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://yrslti06iqq2"]
+
+[ext_resource type="Script" uid="uid://c7ole7u07n7y1" path="res://scripts/van_controller.gd" id="1_8js7r"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_racsl"]
+size = Vector3(2.2, 1.6, 4.2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_racsl"]
+size = Vector3(2.2, 1.6, 4.2)
+
+[node name="VanPrototype" type="VehicleBody3D" unique_id=1148736027]
+mass = 1000.0
+script = ExtResource("1_8js7r")
+
+[node name="BodyMesh" type="MeshInstance3D" parent="." unique_id=10515015]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+mesh = SubResource("BoxMesh_racsl")
+
+[node name="BodyCollision" type="CollisionShape3D" parent="." unique_id=1766523344]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+shape = SubResource("BoxShape3D_racsl")
+
+[node name="WheelFrontLeft" type="VehicleWheel3D" parent="." unique_id=1076398647]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.05, 0.25, -1.45)
+use_as_traction = true
+use_as_steering = true
+wheel_radius = 0.45
+wheel_rest_length = 0.25
+
+[node name="WheelFrontRight" type="VehicleWheel3D" parent="." unique_id=1587999977]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.05, 0.25, -1.45)
+use_as_traction = true
+use_as_steering = true
+wheel_radius = 0.45
+wheel_rest_length = 0.25
+
+[node name="WheelRearLeft" type="VehicleWheel3D" parent="." unique_id=1252843629]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.05, 0.25, 1.45)
+use_as_traction = true
+wheel_radius = 0.45
+wheel_rest_length = 0.25
+
+[node name="WheelRearRight" type="VehicleWheel3D" parent="." unique_id=657717099]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.05, 0.25, 1.45)
+use_as_traction = true
+wheel_radius = 0.45
+wheel_rest_length = 0.25

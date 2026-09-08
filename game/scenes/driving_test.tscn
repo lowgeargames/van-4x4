@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://ckifdo1i1cwp4"]
+
+[ext_resource type="PackedScene" uid="uid://yrslti06iqq2" path="res://scenes/van_prototype.tscn" id="1_eb0jr"]
+
+[node name="DrivingTest" type="Node3D" unique_id=1463350850]
+
+[node name="Ground" type="CSGBox3D" parent="." unique_id=1968552184]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+use_collision = true
+size = Vector3(40, 1, 40)
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=593331064]
+transform = Transform3D(0.8660254, 0.35355338, -0.35355338, 0, 0.70710677, 0.70710677, 0.5, -0.6123724, 0.6123724, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Ramp" type="CSGBox3D" parent="." unique_id=890237191]
+transform = Transform3D(1, 0, 0, 0, 0.9396926, 0.34202012, 0, -0.34202012, 0.9396926, -10, 1.5, 0)
+use_collision = true
+size = Vector3(6, 0.5, 10)
+
+[node name="SteepRamp" type="CSGBox3D" parent="." unique_id=905661859]
+transform = Transform3D(1, 0, 0, 0, 0.81915206, 0.57357645, 0, -0.57357645, 0.81915206, 10, 3.4, 0)
+use_collision = true
+size = Vector3(7, 0.5, 12)
+
+[node name="VanPrototype" parent="." unique_id=1148736027 instance=ExtResource("1_eb0jr")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8)
+
+[node name="TestCamera" type="Camera3D" parent="." unique_id=109550226]
+transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, 0, 6, 17)
+current = true
