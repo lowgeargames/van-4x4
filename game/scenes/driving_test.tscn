@@ -2,34 +2,42 @@
 
 [ext_resource type="PackedScene" uid="uid://yrslti06iqq2" path="res://scenes/van_prototype.tscn" id="1_eb0jr"]
 [ext_resource type="Script" uid="uid://deukatryh0cl5" path="res://scripts/camera_follow.gd" id="2_h5jfe"]
+[ext_resource type="Script" uid="uid://crchhpk8fv3ws" path="res://scripts/mud_zone.gd" id="3_ig6hn"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_racsl"]
+size = Vector3(50, 2, 50)
+
+[sub_resource type="BoxMesh" id="BoxMesh_tbjop"]
+size = Vector3(50, 0.08, 50)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6rkvg"]
+albedo_color = Color(0.3529412, 0.22745098, 0.13333334, 1)
 
 [node name="DrivingTest" type="Node3D" unique_id=1463350850]
 
 [node name="Ground" type="CSGBox3D" parent="." unique_id=1968552184]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
 use_collision = true
-size = Vector3(40, 1, 40)
+size = Vector3(180, 1, 180)
 
 [node name="Sun" type="DirectionalLight3D" parent="." unique_id=593331064]
 transform = Transform3D(0.8660254, 0.35355338, -0.35355338, 0, 0.70710677, 0.70710677, 0.5, -0.6123724, 0.6123724, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Ramp" type="CSGBox3D" parent="." unique_id=890237191]
-transform = Transform3D(1, 0, 0, 0, 0.9396926, 0.34202012, 0, -0.34202012, 0.9396926, -10, 1.5, 0)
+[node name="Ramp" type="CSGPolygon3D" parent="." unique_id=890237191]
+transform = Transform3D(7.54979e-08, 0, 1, 0, 1, 0, -1, 0, 7.54979e-08, -11.5, -0.08, -48)
 use_collision = true
-size = Vector3(6, 0.5, 10)
+polygon = PackedVector2Array(0, 0, 14, 0, 14, 4.5)
+depth = 7.0
 
-[node name="SteepRamp" type="CSGBox3D" parent="." unique_id=905661859]
-transform = Transform3D(1, 0, 0, 0, 0.81915206, 0.57357645, 0, -0.57357645, 0.81915206, 10, 2.8, 0)
+[node name="SteepRamp" type="CSGPolygon3D" parent="." unique_id=905661859]
+transform = Transform3D(7.54979e-08, 0, 1, 0, 1, 0, -1, 0, 7.54979e-08, 19, -0.08, -48)
 use_collision = true
-size = Vector3(7, 0.5, 12)
+polygon = PackedVector2Array(0, 0, 14, 0, 14, 7.5)
+depth = 8.0
 
 [node name="VanPrototype" parent="." unique_id=1148736027 instance=ExtResource("1_eb0jr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 8)
-
-[node name="TestCamera" type="Camera3D" parent="." unique_id=109550226]
-transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, 0, 6, 17)
-current = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 65)
 
 [node name="CameraRig" type="Node3D" parent="." unique_id=77647935]
 script = ExtResource("2_h5jfe")
@@ -37,3 +45,16 @@ script = ExtResource("2_h5jfe")
 [node name="FollowCamera" type="Camera3D" parent="CameraRig" unique_id=1341882006]
 transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, 0, 4, 8)
 current = true
+
+[node name="MudZone" type="Area3D" parent="." unique_id=2062915308]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -45, 0, 10)
+script = ExtResource("3_ig6hn")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="MudZone" unique_id=1704263944]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("BoxShape3D_racsl")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="MudZone" unique_id=1426817441]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0)
+mesh = SubResource("BoxMesh_tbjop")
+surface_material_override/0 = SubResource("StandardMaterial3D_6rkvg")
