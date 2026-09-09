@@ -27,7 +27,7 @@ height = 0.3
 [node name="VanPrototype" type="RigidBody3D" unique_id=1148736027]
 mass = 1000.0
 center_of_mass_mode = 1
-center_of_mass = Vector3(0, -0.2, 0)
+center_of_mass = Vector3(0, 0.55, 0)
 can_sleep = false
 continuous_cd = true
 linear_damp_mode = 1
@@ -45,41 +45,41 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
 shape = SubResource("ConvexPolygonShape3D_racsl")
 
 [node name="WheelFrontLeft" type="RayCast3D" parent="." unique_id=1076398647]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.05, 0.25, -1.45)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.05, 0.85, -1.45)
 enabled = false
-target_position = Vector3(0, -0.83, 0)
+target_position = Vector3(0, -1.43, 0)
 
 [node name="WheelVisual" type="MeshInstance3D" parent="WheelFrontLeft" unique_id=821692763]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, -0.38, 0)
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, -0.98, 0)
 mesh = SubResource("CylinderMesh_racsl")
 surface_material_override/0 = SubResource("StandardMaterial3D_tbjop")
 
 [node name="WheelFrontRight" type="RayCast3D" parent="." unique_id=1587999977]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.05, 0.25, -1.45)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.05, 0.85, -1.45)
 enabled = false
-target_position = Vector3(0, -0.83, 0)
+target_position = Vector3(0, -1.43, 0)
 
 [node name="WheelVisual" type="MeshInstance3D" parent="WheelFrontRight" unique_id=245268065]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, -0.38, 0)
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, -0.98, 0)
 mesh = SubResource("CylinderMesh_racsl")
 surface_material_override/0 = SubResource("StandardMaterial3D_tbjop")
 
 [node name="WheelRearLeft" type="RayCast3D" parent="." unique_id=1252843629]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.05, 0.25, 1.45)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.05, 0.85, 1.45)
 enabled = false
-target_position = Vector3(0, -0.83, 0)
+target_position = Vector3(0, -1.43, 0)
 
 [node name="WheelVisual" type="MeshInstance3D" parent="WheelRearLeft" unique_id=1045685208]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, -0.38, 0)
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, -0.98, 0)
 mesh = SubResource("CylinderMesh_racsl")
 surface_material_override/0 = SubResource("StandardMaterial3D_tbjop")
 
 [node name="WheelRearRight" type="RayCast3D" parent="." unique_id=657717099]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.05, 0.25, 1.45)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.05, 0.85, 1.45)
 enabled = false
-target_position = Vector3(0, -0.83, 0)
+target_position = Vector3(0, -1.43, 0)
 
 [node name="WheelVisual" type="MeshInstance3D" parent="WheelRearRight" unique_id=29812210]
-transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, -0.38, 0)
+transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, -0.98, 0)
 mesh = SubResource("CylinderMesh_racsl")
 surface_material_override/0 = SubResource("StandardMaterial3D_tbjop")

@@ -21,8 +21,17 @@ extends RigidBody3D
 @export_range(0.1, 12.0) var grip: float = 7.0
 @export_range(0.1, 5.0) var drift_grip: float = 1.4
 @export_range(0.0, 20.0) var stability: float = 6.0
+## Assistência plena até metade deste ângulo; desaparece neste limite, em graus.
+@export_range(10.0, 60.0) var stability_max_angle: float = 35.0
 ## Distância virtual abaixo do centro de massa, em metros; maior = mais roll nas curvas.
-@export_range(0.0, 3.0, 0.05) var roll_leverage: float = 1.65
+@export_range(0.0, 3.0, 0.05) var roll_leverage: float = 0.7
+
+@export_category("Manual Roll")
+## Aceleração angular em rad/s²; torque calculado a partir da inércia do corpo.
+@export_range(0.0, 20.0) var air_roll_strength: float = 8.0
+## Limite do giro comandado com A/D, em rad/s, também usado na recuperação.
+@export_range(0.5, 8.0) var air_max_angular_speed: float = 4.5
+@export_range(0.0, 60.0) var recovery_strength: float = 24.0
 
 @export_category("Suspension")
 ## Rigidez por unidade de massa apoiada; amortecimento calculado automaticamente.
@@ -31,6 +40,8 @@ extends RigidBody3D
 # Geometria compartilhada pelas quatro rodas; não são ajustes de dirigibilidade.
 const WHEEL_RADIUS: float = 0.45
 const SUSPENSION_LENGTH: float = 0.38
+# Apenas estende a consulta acima da roda; não aumenta o curso nem a força da suspensão.
+const RAY_ORIGIN_OFFSET: float = 0.6
 const MIN_GROUND_DOT: float = 0.35
 
 var in_mud: bool = false
@@ -40,6 +51,7 @@ var _steering: float = 0.0
 var _mud_weight: float = 0.0
 var _wheel_spin: float = 0.0
 var _reset_requested: bool = false
+var _recovering: bool = false
 var _spawn_transform: Transform3D
 var _wheel_visuals: Array[Node3D] = []
 
@@ -50,10 +62,12 @@ var _wheel_visuals: Array[Node3D] = []
 
 func _ready() -> void:
 	_spawn_transform = global_transform
+	# Contatos da carroceria distinguem um salto de uma van tombada no chão.
+	max_contacts_reported = 4
 	for ray in _rays:
 		# Atualizados explicitamente na integração, sem uma segunda consulta automática.
 		ray.enabled = false
-		ray.target_position = Vector3.DOWN * (SUSPENSION_LENGTH + WHEEL_RADIUS)
+		ray.target_position = Vector3.DOWN * (SUSPENSION_LENGTH + WHEEL_RADIUS + RAY_ORIGIN_OFFSET)
 		ray.add_exception(self)
 		_wheel_visuals.append(ray.get_node("WheelVisual"))
 
@@ -80,14 +94,12 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 
 	if _update_suspension(state):
 		_apply_handling(state)
-	# Sem apoio: somente gravidade, colisões e amortecimento angular leve do corpo.
+	_apply_manual_roll(state)
 
 
 func _update_suspension(state: PhysicsDirectBodyState3D) -> bool:
 	ground_contacts = 0
 	var normal_sum: Vector3 = Vector3.ZERO
-	var left_contact: bool = false
-	var right_contact: bool = false
 	var wheel_mass: float = mass / 4.0
 	var spring: float = wheel_mass * suspension_strength
 	var damper: float = 2.0 * sqrt(spring * wheel_mass) * 0.85
@@ -104,7 +116,7 @@ func _update_suspension(state: PhysicsDirectBodyState3D) -> bool:
 			if normal.dot(Vector3.UP) > MIN_GROUND_DOT and normal.dot(body_up) > 0.25:
 				var hit: Vector3 = ray.get_collision_point()
 				length = clampf(
-					ray.global_position.distance_to(hit) - WHEEL_RADIUS,
+					ray.global_position.distance_to(hit) - WHEEL_RADIUS - RAY_ORIGIN_OFFSET,
 					0.0, SUSPENSION_LENGTH
 				)
 				var offset: Vector3 = hit - state.transform.origin
@@ -116,17 +128,16 @@ func _update_suspension(state: PhysicsDirectBodyState3D) -> bool:
 				state.apply_force(normal * clampf(force, 0.0, max_force), offset)
 				ground_contacts += 1
 				normal_sum += normal
-				left_contact = left_contact or ray.position.x < 0.0
-				right_contact = right_contact or ray.position.x > 0.0
 
 		var visual: Node3D = _wheel_visuals[i]
-		visual.position = Vector3.DOWN * length
+		visual.position = Vector3.DOWN * (length + RAY_ORIGIN_OFFSET)
 		# O cilindro gira em torno do próprio centro, sem deslocamento excêntrico.
 		var steer_angle: float = _steering * 0.38 if i < 2 else 0.0
 		visual.basis = Basis(Vector3.UP, steer_angle) * Basis(Vector3.RIGHT, -_wheel_spin)
 		visual.basis *= Basis(Vector3.FORWARD, PI / 2.0)
 
-	if ground_contacts < 2 or not left_contact or not right_contact:
+	# Duas rodas ainda sustentam a direção, mesmo quando são do mesmo lado.
+	if ground_contacts < 2:
 		return false
 	var support_normal: Vector3 = normal_sum.normalized()
 	_ground_normal = _ground_normal.lerp(
@@ -186,15 +197,46 @@ func _apply_handling(state: PhysicsDirectBodyState3D) -> void:
 	var yaw_acceleration: float = clampf((target_yaw - yaw) * steering_response, -4.0, 4.0)
 	var angular_acceleration: Vector3 = _ground_normal * yaw_acceleration
 
-	# Corrige inclinações pequenas em relação ao terreno; não desvira um capotamento.
+	# A assistência diminui pelo ângulo, sem cortes ao alternar entre duas e quatro rodas.
 	var body_up: Vector3 = state.transform.basis.y
-	var assistance: float = smoothstep(0.5, 0.9, body_up.dot(_ground_normal))
+	var max_tilt: float = deg_to_rad(stability_max_angle)
+	var assistance: float = smoothstep(cos(max_tilt), cos(max_tilt * 0.5), body_up.dot(_ground_normal))
 	var tilt_velocity: Vector3 = state.angular_velocity.slide(_ground_normal)
 	angular_acceleration += (
 		body_up.cross(_ground_normal) * stability
 		- tilt_velocity * 2.0 * sqrt(stability)
 	) * assistance
 	state.apply_torque(state.inverse_inertia_tensor.inverse() * angular_acceleration.limit_length(12.0))
+
+
+func _apply_manual_roll(state: PhysicsDirectBodyState3D) -> void:
+	if ground_contacts >= 3:
+		_recovering = false
+	var roll_input: float = Input.get_axis("steer_right", "steer_left")
+	if is_zero_approx(roll_input):
+		return
+	var body_contact: bool = state.get_contact_count() > 0
+	if (
+		ground_contacts < 3 and body_contact and state.transform.basis.y.dot(Vector3.UP) < 0.5
+		and state.linear_velocity.length() < 2.0
+	):
+		_recovering = true
+	# Permite pausar e retomar a tentativa; sem A/D nunca aplica torque de recuperação.
+	var recovering: bool = (
+		_recovering and (body_contact or ground_contacts > 0)
+		and state.linear_velocity.length() < 2.0
+	)
+	# Curva sobre duas rodas não é voo: não mistura roll aéreo com a força lateral.
+	var airborne: bool = ground_contacts < 2 and not body_contact
+	if not recovering and not airborne:
+		return
+	var axis: Vector3 = state.transform.basis.z
+	var strength: float = recovery_strength if recovering else air_roll_strength
+	var roll_speed: float = state.angular_velocity.dot(axis)
+	var roll_acceleration: float = clampf(
+		(roll_input * air_max_angular_speed - roll_speed) / state.step, -strength, strength
+	)
+	state.apply_torque(state.inverse_inertia_tensor.inverse() * axis * roll_acceleration)
 
 
 func reset_vehicle() -> void:
@@ -228,6 +270,7 @@ func _apply_reset(state: PhysicsDirectBodyState3D) -> void:
 	_ground_normal = Vector3.UP
 	ground_contacts = 0
 	_reset_requested = false
+	_recovering = false
 	reset_physics_interpolation()
 
 
