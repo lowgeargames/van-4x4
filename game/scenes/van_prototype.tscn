@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://yrslti06iqq2"]
 
 [ext_resource type="Script" uid="uid://c7ole7u07n7y1" path="res://scripts/van_controller.gd" id="1_8js7r"]
+[ext_resource type="Script" path="res://scripts/van_surface_particles.gd" id="2_particles"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_racsl"]
 size = Vector3(2.2, 1.6, 4.2)
@@ -23,6 +24,28 @@ bottom_radius = 0.45
 height = 0.3
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tbjop"]
+
+[sub_resource type="Gradient" id="ParticleSoftEdge"]
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="ParticleTexture"]
+gradient = SubResource("ParticleSoftEdge")
+width = 32
+height = 32
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(1, 0.5)
+
+[sub_resource type="StandardMaterial3D" id="ParticleDrawMaterial"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = SubResource("ParticleTexture")
+billboard_mode = 3
+
+[sub_resource type="QuadMesh" id="ParticleMesh"]
+material = SubResource("ParticleDrawMaterial")
+size = Vector2(0.3, 0.3)
 
 [node name="VanPrototype" type="RigidBody3D" unique_id=1148736027]
 mass = 1000.0
@@ -83,3 +106,28 @@ target_position = Vector3(0, -1.43, 0)
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, -0.98, 0)
 mesh = SubResource("CylinderMesh_racsl")
 surface_material_override/0 = SubResource("StandardMaterial3D_tbjop")
+
+[node name="SurfaceParticles" type="Node3D" parent="."]
+script = ExtResource("2_particles")
+
+[node name="RearLeft" type="GPUParticles3D" parent="SurfaceParticles"]
+position = Vector3(-1.05, -0.3, 1.45)
+cast_shadow = 0
+emitting = false
+amount = 24
+lifetime = 0.65
+randomness = 0.25
+visibility_aabb = AABB(-32, -5, -32, 64, 14, 64)
+fixed_fps = 30
+draw_pass_1 = SubResource("ParticleMesh")
+
+[node name="RearRight" type="GPUParticles3D" parent="SurfaceParticles"]
+position = Vector3(1.05, -0.3, 1.45)
+cast_shadow = 0
+emitting = false
+amount = 24
+lifetime = 0.65
+randomness = 0.25
+visibility_aabb = AABB(-32, -5, -32, 64, 14, 64)
+fixed_fps = 30
+draw_pass_1 = SubResource("ParticleMesh")
