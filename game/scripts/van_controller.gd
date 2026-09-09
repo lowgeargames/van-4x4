@@ -44,7 +44,14 @@ const SUSPENSION_LENGTH: float = 0.38
 const RAY_ORIGIN_OFFSET: float = 0.6
 const MIN_GROUND_DOT: float = 0.35
 
+const WATER_DRAG: float = 0.8
+const WATER_ACCELERATION_MULTIPLIER: float = 0.6
+const WATER_MAX_SPEED: float = 8.0
+const WATER_TURBO_MAX_SPEED: float = 10.0
+const WATER_STEERING_MULTIPLIER: float = 0.75
+
 var in_mud: bool = false
+var in_water: bool = false
 var ground_contacts: int = 0
 var _ground_normal: Vector3 = Vector3.UP
 var _steering: float = 0.0
@@ -95,6 +102,12 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	if _update_suspension(state):
 		_apply_handling(state)
 	_apply_manual_roll(state)
+	if in_water:
+		# Resistência somente horizontal, sem frear a queda ou o salto.
+		var horizontal_velocity := Vector3(state.linear_velocity.x, 0.0, state.linear_velocity.z)
+		state.apply_central_force(
+			-horizontal_velocity * mass * (1.0 - exp(-WATER_DRAG * delta)) / delta
+		)
 
 
 func _update_suspension(state: PhysicsDirectBodyState3D) -> bool:
@@ -154,6 +167,8 @@ func _apply_handling(state: PhysicsDirectBodyState3D) -> void:
 	var throttle: float = Input.get_axis("reverse", "accelerate")
 	var handbrake: bool = Input.is_action_pressed("handbrake")
 	var power: float = lerpf(1.0, 0.78, _mud_weight)
+	if in_water:
+		power *= WATER_ACCELERATION_MULTIPLIER
 	var drag: float = lerpf(0.12, 0.42, _mud_weight)
 	var next_speed: float = speed
 
@@ -171,6 +186,9 @@ func _apply_handling(state: PhysicsDirectBodyState3D) -> void:
 				target = maxf(max_speed, turbo_max_speed)
 			if throttle < 0.0:
 				drive_acceleration *= 0.7
+			if in_water:
+				var water_limit: float = WATER_TURBO_MAX_SPEED if Input.is_action_pressed("turbo") else WATER_MAX_SPEED
+				target = clampf(target, -reverse_speed * 0.5, water_limit)
 			next_speed = move_toward(speed, target, drive_acceleration * state.step)
 	else:
 		next_speed = speed * exp(-drag * state.step)
@@ -180,6 +198,8 @@ func _apply_handling(state: PhysicsDirectBodyState3D) -> void:
 		next_speed *= exp(-drag * state.step)
 	var lateral_grip: float = drift_grip if handbrake else grip
 	lateral_grip *= lerpf(1.0, 0.35 if not handbrake else 0.5, _mud_weight)
+	if in_water:
+		lateral_grip = maxf(lateral_grip, grip)
 	var side_acceleration: float = -side_speed * (1.0 - exp(-lateral_grip * state.step)) / state.step
 	var drive_force: Vector3 = forward * ((next_speed - speed) / state.step)
 	state.apply_central_force(drive_force * mass)
@@ -192,6 +212,8 @@ func _apply_handling(state: PhysicsDirectBodyState3D) -> void:
 	var turn_limit: float = steering_strength / (1.0 + absf(speed) * 0.035)
 	if handbrake:
 		turn_limit *= lerpf(1.25, 1.55, _mud_weight)
+	if in_water:
+		turn_limit *= WATER_STEERING_MULTIPLIER
 	var target_yaw: float = _steering * minf(absf(speed) * 0.2, turn_limit) * signf(speed)
 	var yaw: float = state.angular_velocity.dot(_ground_normal)
 	var yaw_acceleration: float = clampf((target_yaw - yaw) * steering_response, -4.0, 4.0)
@@ -261,6 +283,7 @@ func _apply_reset(state: PhysicsDirectBodyState3D) -> void:
 		reset_transform = Transform3D(Basis(Vector3.UP, heading), hit.position + Vector3.UP * 1.25)
 	else:
 		in_mud = false
+		in_water = false
 	state.transform = reset_transform
 	state.linear_velocity = Vector3.ZERO
 	state.angular_velocity = Vector3.ZERO
@@ -280,3 +303,11 @@ func enter_mud() -> void:
 
 func exit_mud() -> void:
 	in_mud = false
+
+
+func enter_water() -> void:
+	in_water = true
+
+
+func exit_water() -> void:
+	in_water = false

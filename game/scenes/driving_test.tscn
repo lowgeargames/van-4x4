@@ -3,6 +3,11 @@
 [ext_resource type="PackedScene" uid="uid://yrslti06iqq2" path="res://scenes/van_prototype.tscn" id="1_eb0jr"]
 [ext_resource type="Script" uid="uid://deukatryh0cl5" path="res://scripts/camera_follow.gd" id="2_h5jfe"]
 [ext_resource type="Script" uid="uid://crchhpk8fv3ws" path="res://scripts/mud_zone.gd" id="3_ig6hn"]
+[ext_resource type="Script" uid="uid://dn8v1tvjru830" path="res://scripts/water_zone.gd" id="4_water"]
+
+[sub_resource type="StandardMaterial3D" id="GroundMaterial"]
+albedo_color = Color(0.36, 0.37, 0.39, 1)
+metallic_specular = 0.0
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_racsl"]
 size = Vector3(50, 2, 50)
@@ -13,31 +18,54 @@ size = Vector3(50, 0.08, 50)
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_6rkvg"]
 albedo_color = Color(0.3529412, 0.22745098, 0.13333334, 1)
 
+[sub_resource type="BoxShape3D" id="WaterShape"]
+size = Vector3(64, 1.3, 72)
+
+[sub_resource type="BoxMesh" id="WaterMesh"]
+size = Vector3(64, 0.06, 72)
+
+[sub_resource type="StandardMaterial3D" id="WaterMaterial"]
+albedo_color = Color(0.035, 0.32, 0.7, 1)
+metallic_specular = 0.0
+
+[sub_resource type="StandardMaterial3D" id="RampMaterial"]
+albedo_color = Color(0.62, 0.62, 0.6, 1)
+metallic_specular = 0.0
+
+[sub_resource type="StandardMaterial3D" id="SmallHoopMaterial"]
+albedo_color = Color(0.95, 0.68, 0.13, 1)
+metallic_specular = 0.0
+
+[sub_resource type="StandardMaterial3D" id="MediumHoopMaterial"]
+albedo_color = Color(0.95, 0.38, 0.1, 1)
+metallic_specular = 0.0
+
+[sub_resource type="StandardMaterial3D" id="LargeHoopMaterial"]
+albedo_color = Color(0.86, 0.89, 0.9, 1)
+metallic_specular = 0.0
+
+[sub_resource type="StandardMaterial3D" id="MountainMaterial"]
+albedo_color = Color(0.46, 0.47, 0.48, 1)
+metallic_specular = 0.0
+
+[sub_resource type="StandardMaterial3D" id="ObstacleMaterial"]
+albedo_color = Color(0.52, 0.5, 0.44, 1)
+metallic_specular = 0.0
+
 [node name="DrivingTest" type="Node3D" unique_id=1463350850]
 
 [node name="Ground" type="CSGBox3D" parent="." unique_id=1968552184]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.5, -70)
 use_collision = true
-size = Vector3(180, 1, 180)
+size = Vector3(420, 1, 620)
+material = SubResource("GroundMaterial")
 
 [node name="Sun" type="DirectionalLight3D" parent="." unique_id=593331064]
 transform = Transform3D(0.8660254, 0.35355338, -0.35355338, 0, 0.70710677, 0.70710677, 0.5, -0.6123724, 0.6123724, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Ramp" type="CSGPolygon3D" parent="." unique_id=890237191]
-transform = Transform3D(7.54979e-08, 0, 1, 0, 1, 0, -1, 0, 7.54979e-08, -11.5, -0.08, -48)
-use_collision = true
-polygon = PackedVector2Array(0, 0, 14, 0, 14, 4.5)
-depth = 7.0
-
-[node name="SteepRamp" type="CSGPolygon3D" parent="." unique_id=905661859]
-transform = Transform3D(7.54979e-08, 0, 1, 0, 1, 0, -1, 0, 7.54979e-08, 19, -0.08, -48)
-use_collision = true
-polygon = PackedVector2Array(0, 0, 14, 0, 14, 7.5)
-depth = 8.0
-
 [node name="VanPrototype" parent="." unique_id=1148736027 instance=ExtResource("1_eb0jr")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 65)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 150)
 
 [node name="CameraRig" type="Node3D" parent="." unique_id=77647935]
 script = ExtResource("2_h5jfe")
@@ -47,7 +75,7 @@ transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.965
 current = true
 
 [node name="MudZone" type="Area3D" parent="." unique_id=2062915308]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -45, 0, 10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -110, 0, 40)
 script = ExtResource("3_ig6hn")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="MudZone" unique_id=1704263944]
@@ -58,3 +86,118 @@ shape = SubResource("BoxShape3D_racsl")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.04, 0)
 mesh = SubResource("BoxMesh_tbjop")
 surface_material_override/0 = SubResource("StandardMaterial3D_6rkvg")
+
+[node name="WaterZone" type="Area3D" parent="." unique_id=852900854]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 110, 0, 40)
+collision_layer = 0
+script = ExtResource("4_water")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="WaterZone" unique_id=551328136]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.65, 0)
+shape = SubResource("WaterShape")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WaterZone" unique_id=1272874601]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.035, 0)
+mesh = SubResource("WaterMesh")
+surface_material_override/0 = SubResource("WaterMaterial")
+
+[node name="Jumps" type="Node3D" parent="." unique_id=19397390]
+
+[node name="SmallRamp" type="CSGPolygon3D" parent="Jumps" unique_id=1868801962]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, -64, -0.04, -45)
+use_collision = true
+polygon = PackedVector2Array(0, -0.04, 16, -0.04, 16, 3, 10, 1.3, 4, 0.25)
+depth = 12.0
+material = SubResource("RampMaterial")
+
+[node name="MediumRamp" type="CSGPolygon3D" parent="Jumps" unique_id=2125321517]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 7, -0.04, -45)
+use_collision = true
+polygon = PackedVector2Array(0, -0.04, 22, -0.04, 22, 5.5, 16, 2.8, 10, 1.1, 4, 0.25)
+depth = 14.0
+material = SubResource("RampMaterial")
+
+[node name="TurboRamp" type="CSGPolygon3D" parent="Jumps" unique_id=1014226216]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 78, -0.04, -45)
+use_collision = true
+polygon = PackedVector2Array(0, -0.04, 30, -0.04, 30, 8.5, 22, 4.5, 14, 1.8, 6, 0.35)
+depth = 16.0
+material = SubResource("RampMaterial")
+
+[node name="SmallHoop" type="CSGTorus3D" parent="Jumps" unique_id=368793600]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, -70, 6.5, -85)
+use_collision = true
+inner_radius = 6.0
+outer_radius = 6.65
+sides = 40
+smooth_faces = false
+material = SubResource("SmallHoopMaterial")
+
+[node name="MediumHoop" type="CSGTorus3D" parent="Jumps" unique_id=1952806346]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 9, -101)
+use_collision = true
+inner_radius = 7.5
+outer_radius = 8.15
+sides = 40
+smooth_faces = false
+material = SubResource("MediumHoopMaterial")
+
+[node name="TurboHoop" type="CSGTorus3D" parent="Jumps" unique_id=1412089617]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, -1, 0, 1, -4.371139e-08, 70, 14, -122)
+use_collision = true
+inner_radius = 10.0
+outer_radius = 10.65
+sides = 40
+smooth_faces = false
+material = SubResource("LargeHoopMaterial")
+
+[node name="Mountains" type="Node3D" parent="." unique_id=995842821]
+
+[node name="RidgeRoute" type="CSGPolygon3D" parent="Mountains" unique_id=1629448638]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 13, -0.04, -235)
+use_collision = true
+polygon = PackedVector2Array(0, -0.04, 106, -0.04, 106, 0, 86, 9, 74, 9, 58, 3, 40, 10, 28, 10, 12, 2)
+depth = 26.0
+material = SubResource("MountainMaterial")
+
+[node name="SideSlope" type="CSGPolygon3D" parent="Mountains" unique_id=2136095464]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 42, -0.04, -255)
+use_collision = true
+polygon = PackedVector2Array(0, -0.04, 22, -0.04, 22, 5)
+depth = 65.0
+material = SubResource("MountainMaterial")
+
+[node name="Obstacles" type="Node3D" parent="." unique_id=1553420175]
+
+[node name="Bump1" type="CSGPolygon3D" parent="Obstacles" unique_id=2099649222]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 115, -0.04, 120)
+use_collision = true
+polygon = PackedVector2Array(0, -0.04, 5, -0.04, 5, 0, 3, 0.25, 2, 0.25)
+depth = 10.0
+material = SubResource("ObstacleMaterial")
+
+[node name="Bump2" type="CSGPolygon3D" parent="Obstacles" unique_id=358463039]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 115, -0.04, 110)
+use_collision = true
+polygon = PackedVector2Array(0, -0.04, 5, -0.04, 5, 0, 3, 0.4, 2, 0.4)
+depth = 10.0
+material = SubResource("ObstacleMaterial")
+
+[node name="Bump3" type="CSGPolygon3D" parent="Obstacles" unique_id=1755101427]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 115, -0.04, 100)
+use_collision = true
+polygon = PackedVector2Array(0, -0.04, 5, -0.04, 5, 0, 3, 0.55, 2, 0.55)
+depth = 10.0
+material = SubResource("ObstacleMaterial")
+
+[node name="LowBlock1" type="CSGBox3D" parent="Obstacles" unique_id=389914633]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 140, 0.125, 115)
+use_collision = true
+size = Vector3(3, 0.25, 3)
+material = SubResource("ObstacleMaterial")
+
+[node name="LowBlock2" type="CSGBox3D" parent="Obstacles" unique_id=805692269]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 150, 0.2, 102)
+use_collision = true
+size = Vector3(3, 0.4, 3)
+material = SubResource("ObstacleMaterial")
