@@ -8,6 +8,11 @@ extends RigidBody3D
 @export_range(1.0, 15.0) var reverse_speed: float = 8.0
 @export_range(1.0, 25.0) var braking: float = 12.0
 
+@export_category("Turbo")
+@export_range(1.0, 4.0) var turbo_multiplier: float = 2.0
+## Limite em m/s, aplicado somente ao acelerar para frente com Shift.
+@export_range(5.0, 60.0) var turbo_max_speed: float = 36.0
+
 @export_category("Handling")
 ## Velocidade máxima de giro em rad/s, reduzida conforme a velocidade.
 @export_range(0.2, 2.0) var steering_strength: float = 1.1
@@ -15,7 +20,9 @@ extends RigidBody3D
 ## Rapidez com que a van recupera aderência lateral, em 1/s.
 @export_range(0.1, 12.0) var grip: float = 7.0
 @export_range(0.1, 5.0) var drift_grip: float = 1.4
-@export_range(0.0, 20.0) var stability: float = 10.0
+@export_range(0.0, 20.0) var stability: float = 6.0
+## Distância virtual abaixo do centro de massa, em metros; maior = mais roll nas curvas.
+@export_range(0.0, 3.0, 0.05) var roll_leverage: float = 1.65
 
 @export_category("Suspension")
 ## Rigidez por unidade de massa apoiada; amortecimento calculado automaticamente.
@@ -148,6 +155,9 @@ func _apply_handling(state: PhysicsDirectBodyState3D) -> void:
 		else:
 			var target: float = max_speed if throttle > 0.0 else -reverse_speed
 			var drive_acceleration: float = acceleration * power
+			if throttle > 0.0 and Input.is_action_pressed("turbo"):
+				drive_acceleration *= turbo_multiplier
+				target = maxf(max_speed, turbo_max_speed)
 			if throttle < 0.0:
 				drive_acceleration *= 0.7
 			next_speed = move_toward(speed, target, drive_acceleration * state.step)
@@ -161,8 +171,12 @@ func _apply_handling(state: PhysicsDirectBodyState3D) -> void:
 	lateral_grip *= lerpf(1.0, 0.35 if not handbrake else 0.5, _mud_weight)
 	var side_acceleration: float = -side_speed * (1.0 - exp(-lateral_grip * state.step)) / state.step
 	var drive_force: Vector3 = forward * ((next_speed - speed) / state.step)
-	drive_force += right * side_acceleration
 	state.apply_central_force(drive_force * mass)
+	# A mesma aderência lateral agora inclina a carroceria; aceleração e turbo ficam centrais.
+	state.apply_force(
+		right * side_acceleration * mass,
+		state.center_of_mass - _ground_normal * roll_leverage
+	)
 
 	var turn_limit: float = steering_strength / (1.0 + absf(speed) * 0.035)
 	if handbrake:
