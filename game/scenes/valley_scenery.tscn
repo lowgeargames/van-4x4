@@ -1,0 +1,213 @@
+[gd_scene format=3]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_nmg4k"]
+sky_top_color = Color(0.16, 0.43, 0.76, 1)
+sky_horizon_color = Color(0.73, 0.85, 0.91, 1)
+sky_curve = 0.2
+ground_bottom_color = Color(0.34, 0.39, 0.25, 1)
+ground_horizon_color = Color(0.73, 0.85, 0.91, 1)
+
+[sub_resource type="Sky" id="Sky_63euu"]
+sky_material = SubResource("ProceduralSkyMaterial_nmg4k")
+radiance_size = 2
+
+[sub_resource type="Environment" id="Environment_qkscn"]
+background_mode = 2
+sky = SubResource("Sky_63euu")
+ambient_light_source = 2
+ambient_light_color = Color(0.78, 0.85, 0.95, 1)
+ambient_light_energy = 0.5
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_a1upj"]
+albedo_color = Color(0.36, 0.43, 0.35, 1)
+metallic_specular = 0.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_5ndu2"]
+material = SubResource("StandardMaterial3D_a1upj")
+top_radius = 0.0
+bottom_radius = 1.0
+height = 1.0
+radial_segments = 5
+rings = 1
+
+[sub_resource type="MultiMesh" id="MultiMesh_s1p6x"]
+transform_format = 1
+instance_count = 11
+mesh = SubResource("CylinderMesh_5ndu2")
+buffer = PackedFloat32Array(26, 0, 0, -183, 0, 78, 0, 38.9, 0, 0, 56, 62, 26, 0, 0, -182, 0, 92, 0, 45.9, 0, 0, 56, -65, 26, 0, 0, -182, 0, 80, 0, 39.9, 0, 0, 56, -294, 56, 0, 0, -123, 0, 74, 0, 36.9, 0, 0, 24, -350, 56, 0, 0, 45, 0, 110, 0, 54.9, 0, 0, 24, -350, 56, 0, 0, 129, 0, 75, 0, 37.4, 0, 0, 24, -350, 26, 0, 0, 182, 0, 69, 0, 34.4, 0, 0, 56, -177, 26, 0, 0, 182, 0, 82, 0, 40.9, 0, 0, 56, -62, 56, 0, 0, -132, 0, 57, 0, 28.4, 0, 0, 24, 215, 56, 0, 0, -50, 0, 65, 0, 32.4, 0, 0, 24, 215, 56, 0, 0, 130, 0, 52, 0, 25.9, 0, 0, 24, 215)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ei3fh"]
+albedo_color = Color(0.43, 0.52, 0.53, 1)
+metallic_specular = 0.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_x20e6"]
+material = SubResource("StandardMaterial3D_ei3fh")
+top_radius = 0.0
+bottom_radius = 1.0
+height = 1.0
+radial_segments = 5
+rings = 1
+
+[sub_resource type="MultiMesh" id="MultiMesh_n38hi"]
+transform_format = 1
+instance_count = 6
+mesh = SubResource("CylinderMesh_x20e6")
+buffer = PackedFloat32Array(26, 0, 0, -182, 0, 65, 0, 32.4, 0, 0, 56, 177, 26, 0, 0, -182, 0, 68, 0, 33.9, 0, 0, 56, -182, 56, 0, 0, -43, 0, 90, 0, 44.9, 0, 0, 24, -350, 26, 0, 0, 182, 0, 85, 0, 42.4, 0, 0, 56, -290, 26, 0, 0, 182, 0, 67, 0, 33.4, 0, 0, 56, 140, 56, 0, 0, 43, 0, 72, 0, 35.9, 0, 0, 24, 215)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4nji8"]
+albedo_color = Color(0.32, 0.2, 0.11, 1)
+metallic_specular = 0.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_q2wuc"]
+material = SubResource("StandardMaterial3D_4nji8")
+top_radius = 0.28
+bottom_radius = 0.4
+height = 4.0
+radial_segments = 5
+rings = 1
+
+[sub_resource type="MultiMesh" id="MultiMesh_vir37"]
+transform_format = 1
+instance_count = 27
+mesh = SubResource("CylinderMesh_q2wuc")
+buffer = PackedFloat32Array(0.85, 0, 0, -61, 0, 0.85, 0, 1.7, 0, 0, 0.85, 157, 0.7648422, 0, 0.64421767, -48, 0, 1, 0, 2, -0.64421767, 0, 0.7648422, 159, 0.19546223, 0, 1.1332672, -55, 0, 1.15, 0, 2.3, -1.1332672, 0, 0.19546223, 169, 0.7648422, 0, 0.64421767, 52, 0, 1, 0, 2, -0.64421767, 0, 0.7648422, 153, 0.19546223, 0, 1.1332672, 65, 0, 1.15, 0, 2.3, -1.1332672, 0, 0.19546223, 155, -0.42911914, 0, 0.73372805, 58, 0, 0.85, 0, 1.7, -0.73372805, 0, -0.42911914, 165, 0.19546223, 0, 1.1332672, -161, 0, 1.15, 0, 2.3, -1.1332672, 0, 0.19546223, 69, -0.42911914, 0, 0.73372805, -148, 0, 0.85, 0, 1.7, -0.73372805, 0, -0.42911914, 71, -0.9422223, 0, 0.3349882, -155, 0, 1, 0, 2, -0.3349882, 0, -0.9422223, 81, -0.42911914, 0, 0.73372805, -162, 0, 0.85, 0, 1.7, -0.73372805, 0, -0.42911914, -16, -0.9422223, 0, 0.3349882, -149, 0, 1, 0, 2, -0.3349882, 0, -0.9422223, -14, -1.0769252, 0, -0.40340072, -156, 0, 1.15, 0, 2.3, 0.40340072, 0, -1.0769252, -4, -0.9422223, 0, 0.3349882, -6, 0, 1, 0, 2, -0.3349882, 0, -0.9422223, 92, -1.0769252, 0, -0.40340072, 7, 0, 1.15, 0, 2.3, 0.40340072, 0, -1.0769252, 94, -0.41672185, 0, -0.7408393, 0, 0, 0.85, 0, 1.7, 0.7408393, 0, -0.41672185, 104, -1.0769252, 0, -0.40340072, -134, 0, 1.15, 0, 2.3, 0.40340072, 0, -1.0769252, -166, -0.41672185, 0, -0.7408393, -121, 0, 0.85, 0, 1.7, 0.7408393, 0, -0.41672185, -164, 0.18651247, 0, -0.9824526, -128, 0, 1, 0, 2, 0.9824526, 0, 0.18651247, -154, -0.41672185, 0, -0.7408393, 114, 0, 0.85, 0, 1.7, 0.7408393, 0, -0.41672185, -194, 0.18651247, 0, -0.9824526, 127, 0, 1, 0, 2, 0.9824526, 0, 0.18651247, -192, 0.89190066, 0, -0.7259567, 120, 0, 1.15, 0, 2.3, 0.7259567, 0, 0.89190066, -182, 0.18651247, 0, -0.9824526, 166, 0, 1, 0, 2, 0.9824526, 0, 0.18651247, 80, 0.89190066, 0, -0.7259567, 179, 0, 1.15, 0, 2.3, 0.7259567, 0, 0.89190066, 82, 0.84987986, 0, 0.0142919775, 172, 0, 0.85, 0, 1.7, -0.0142919775, 0, 0.84987986, 92, 0.89190066, 0, -0.7259567, 167, 0, 1.15, 0, 2.3, 0.7259567, 0, 0.89190066, -28, 0.84987986, 0, 0.0142919775, 180, 0, 0.85, 0, 1.7, -0.0142919775, 0, 0.84987986, -26, 0.75390226, 0, 0.6569866, 173, 0, 1, 0, 2, -0.6569866, 0, 0.75390226, -16)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5rtlm"]
+albedo_color = Color(0.18, 0.36, 0.21, 1)
+metallic_specular = 0.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_lm30y"]
+material = SubResource("StandardMaterial3D_5rtlm")
+top_radius = 0.0
+bottom_radius = 3.8
+height = 6.0
+radial_segments = 5
+rings = 1
+
+[sub_resource type="MultiMesh" id="MultiMesh_fui3y"]
+transform_format = 1
+instance_count = 27
+mesh = SubResource("CylinderMesh_lm30y")
+buffer = PackedFloat32Array(0.85, 0, 0, -61, 0, 0.85, 0, 4.76, 0, 0, 0.85, 157, 0.7648422, 0, 0.64421767, -48, 0, 1, 0, 5.6, -0.64421767, 0, 0.7648422, 159, 0.19546223, 0, 1.1332672, -55, 0, 1.15, 0, 6.44, -1.1332672, 0, 0.19546223, 169, 0.7648422, 0, 0.64421767, 52, 0, 1, 0, 5.6, -0.64421767, 0, 0.7648422, 153, 0.19546223, 0, 1.1332672, 65, 0, 1.15, 0, 6.44, -1.1332672, 0, 0.19546223, 155, -0.42911914, 0, 0.73372805, 58, 0, 0.85, 0, 4.76, -0.73372805, 0, -0.42911914, 165, 0.19546223, 0, 1.1332672, -161, 0, 1.15, 0, 6.44, -1.1332672, 0, 0.19546223, 69, -0.42911914, 0, 0.73372805, -148, 0, 0.85, 0, 4.76, -0.73372805, 0, -0.42911914, 71, -0.9422223, 0, 0.3349882, -155, 0, 1, 0, 5.6, -0.3349882, 0, -0.9422223, 81, -0.42911914, 0, 0.73372805, -162, 0, 0.85, 0, 4.76, -0.73372805, 0, -0.42911914, -16, -0.9422223, 0, 0.3349882, -149, 0, 1, 0, 5.6, -0.3349882, 0, -0.9422223, -14, -1.0769252, 0, -0.40340072, -156, 0, 1.15, 0, 6.44, 0.40340072, 0, -1.0769252, -4, -0.9422223, 0, 0.3349882, -6, 0, 1, 0, 5.6, -0.3349882, 0, -0.9422223, 92, -1.0769252, 0, -0.40340072, 7, 0, 1.15, 0, 6.44, 0.40340072, 0, -1.0769252, 94, -0.41672185, 0, -0.7408393, 0, 0, 0.85, 0, 4.76, 0.7408393, 0, -0.41672185, 104, -1.0769252, 0, -0.40340072, -134, 0, 1.15, 0, 6.44, 0.40340072, 0, -1.0769252, -166, -0.41672185, 0, -0.7408393, -121, 0, 0.85, 0, 4.76, 0.7408393, 0, -0.41672185, -164, 0.18651247, 0, -0.9824526, -128, 0, 1, 0, 5.6, 0.9824526, 0, 0.18651247, -154, -0.41672185, 0, -0.7408393, 114, 0, 0.85, 0, 4.76, 0.7408393, 0, -0.41672185, -194, 0.18651247, 0, -0.9824526, 127, 0, 1, 0, 5.6, 0.9824526, 0, 0.18651247, -192, 0.89190066, 0, -0.7259567, 120, 0, 1.15, 0, 6.44, 0.7259567, 0, 0.89190066, -182, 0.18651247, 0, -0.9824526, 166, 0, 1, 0, 5.6, 0.9824526, 0, 0.18651247, 80, 0.89190066, 0, -0.7259567, 179, 0, 1.15, 0, 6.44, 0.7259567, 0, 0.89190066, 82, 0.84987986, 0, 0.0142919775, 172, 0, 0.85, 0, 4.76, -0.0142919775, 0, 0.84987986, 92, 0.89190066, 0, -0.7259567, 167, 0, 1.15, 0, 6.44, 0.7259567, 0, 0.89190066, -28, 0.84987986, 0, 0.0142919775, 180, 0, 0.85, 0, 4.76, -0.0142919775, 0, 0.84987986, -26, 0.75390226, 0, 0.6569866, 173, 0, 1, 0, 5.6, -0.6569866, 0, 0.75390226, -16)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_665y4"]
+albedo_color = Color(0.26, 0.46, 0.26, 1)
+metallic_specular = 0.0
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_wsrne"]
+material = SubResource("StandardMaterial3D_665y4")
+top_radius = 0.0
+bottom_radius = 3.8
+height = 6.0
+radial_segments = 5
+rings = 1
+
+[sub_resource type="MultiMesh" id="MultiMesh_ws77r"]
+transform_format = 1
+instance_count = 27
+mesh = SubResource("CylinderMesh_wsrne")
+buffer = PackedFloat32Array(0.5998008, 0, 0.12158564, -61, 0, 0.61200005, 0, 6.885, -0.12158564, 0, 0.5998008, 157, 0.4475592, 0, 0.5639954, -48, 0, 0.72, 0, 8.1, -0.5639954, 0, 0.4475592, 159, -0.024177225, 0, 0.8276469, -55, 0, 0.828, 0, 9.315, -0.8276469, 0, -0.024177225, 169, 0.4475592, 0, 0.5639954, 52, 0, 0.72, 0, 8.1, -0.5639954, 0, 0.4475592, 153, -0.024177225, 0, 0.8276469, 65, 0, 0.828, 0, 9.315, -0.8276469, 0, -0.024177225, 155, -0.40776092, 0, 0.45637164, 58, 0, 0.61200005, 0, 6.885, -0.45637164, 0, -0.40776092, 165, -0.024177225, 0, 0.8276469, -161, 0, 0.828, 0, 9.315, -0.8276469, 0, -0.024177225, 69, -0.40776092, 0, 0.45637164, -148, 0, 0.61200005, 0, 6.885, -0.45637164, 0, -0.40776092, 71, -0.7127946, 0, 0.101606406, -155, 0, 0.72, 0, 8.1, -0.101606406, 0, -0.7127946, 81, -0.40776092, 0, 0.45637164, -162, 0, 0.61200005, 0, 6.885, -0.45637164, 0, -0.40776092, -16, -0.7127946, 0, 0.101606406, -149, 0, 0.72, 0, 8.1, -0.101606406, 0, -0.7127946, -14, -0.7022268, 0, -0.43870437, -156, 0, 0.828, 0, 9.315, 0.43870437, 0, -0.7022268, -4, -0.7127946, 0, 0.101606406, -6, 0, 0.72, 0, 8.1, -0.101606406, 0, -0.7127946, 92, -0.7022268, 0, -0.43870437, 7, 0, 0.828, 0, 9.315, 0.43870437, 0, -0.7022268, 94, -0.18808767, 0, -0.58238053, 0, 0, 0.61200005, 0, 6.885, 0.58238053, 0, -0.18808767, 104, -0.7022268, 0, -0.43870437, -134, 0, 0.828, 0, 9.315, 0.43870437, 0, -0.7022268, -166, -0.18808767, 0, -0.58238053, -121, 0, 0.61200005, 0, 6.885, 0.58238053, 0, -0.18808767, -164, 0.27214393, 0, -0.66658664, -128, 0, 0.72, 0, 8.1, 0.66658664, 0, 0.27214393, -154, -0.18808767, 0, -0.58238053, 114, 0, 0.61200005, 0, 6.885, 0.58238053, 0, -0.18808767, -194, 0.27214393, 0, -0.66658664, 127, 0, 0.72, 0, 8.1, 0.66658664, 0, 0.27214393, -192, 0.73321027, 0, -0.3846905, 120, 0, 0.828, 0, 9.315, 0.3846905, 0, 0.73321027, -182, 0.27214393, 0, -0.66658664, 166, 0, 0.72, 0, 8.1, 0.66658664, 0, 0.27214393, 80, 0.73321027, 0, -0.3846905, 179, 0, 0.828, 0, 9.315, 0.3846905, 0, 0.73321027, 82, 0.5976717, 0, 0.13165344, 172, 0, 0.61200005, 0, 6.885, -0.13165344, 0, 0.5976717, 92, 0.73321027, 0, -0.3846905, 167, 0, 0.828, 0, 9.315, 0.3846905, 0, 0.73321027, -28, 0.5976717, 0, 0.13165344, 180, 0, 0.61200005, 0, 6.885, -0.13165344, 0, 0.5976717, -26, 0.43801308, 0, 0.5714408, 173, 0, 0.72, 0, 8.1, -0.5714408, 0, 0.43801308, -16)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1sxyc"]
+albedo_color = Color(0.49, 0.46, 0.36, 1)
+metallic_specular = 0.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_gft35"]
+material = SubResource("StandardMaterial3D_1sxyc")
+radius = 1.0
+height = 2.0
+radial_segments = 6
+rings = 3
+
+[sub_resource type="MultiMesh" id="MultiMesh_isg8u"]
+transform_format = 1
+instance_count = 18
+mesh = SubResource("SphereMesh_gft35")
+buffer = PackedFloat32Array(1.43, 0, 0, -69, 0, 0.825, 0, 0.308, 0, 0, 1.1, 159, 1.6630514, 0, 1.1377547, -66, 0, 1.1625, 0, 0.434, -0.8751958, 0, 1.2792702, 162, 0.94213, 0, 2.4233015, 74, 0, 1.5, 0, 0.56, -1.8640782, 0, 0.7247154, 157, -0.3248989, 0, 1.3926021, 79, 0, 0.825, 0, 0.308, -1.0712324, 0, -0.24992225, 162, -1.4858485, 0, 1.3610584, -150, 0, 1.1625, 0, 0.434, -1.0469679, 0, -1.1429603, 92, -2.5739803, 0, 0.36691198, -154, 0, 1.5, 0, 0.56, -0.28224, 0, -1.979985, 96, -1.2823645, 0, -0.6328041, -154, 0, 0.825, 0, 0.308, 0.4867724, 0, -0.9864343, -36, -0.98787594, 0, -1.756225, -150, 0, 1.1625, 0, 0.434, 1.3509423, 0, -0.7599045, -32, 0.22749783, 0, -2.5900278, 18, 0, 1.5, 0, 0.56, 1.9923292, 0, 0.17499834, 95, 0.9076109, 0, -1.1050531, 22, 0, 0.825, 0, 0.308, 0.8500409, 0, 0.69816226, 93, 1.9347432, 0, -0.56302226, -116, 0, 1.1625, 0, 0.434, 0.433094, 0, 1.4882638, -172, 2.4706047, 0, 0.8100073, -120, 0, 1.5, 0, 0.56, -0.6230825, 0, 1.9004653, -174, 0.86994255, 0, 1.1349448, 110, 0, 0.825, 0, 0.308, -0.87303454, 0, 0.66918665, -181, 0.108719796, 0, 2.012065, 115, 0, 1.1625, 0, 0.434, -1.5477422, 0, 0.08363061, -176, -1.3501495, 0, 2.2219577, 168, 0, 1.5, 0, 0.56, -1.7091982, 0, -1.0385766, -9, -1.3029162, 0, 0.5893294, 171, 0, 0.825, 0, 0.308, -0.45333037, 0, -1.0022433, -6, -1.984146, 0, -0.35126922, 178, 0, 1.1625, 0, 0.434, 0.27020708, 0, -1.5262661, 78, -1.857091, 0, -1.8196739, 183, 0, 1.5, 0, 0.56, 1.3997492, 0, -1.4285315, 81)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0v6x1"]
+albedo_color = Color(0.52, 0.38, 0.23, 1)
+metallic_specular = 0.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_2338u"]
+material = SubResource("StandardMaterial3D_0v6x1")
+size = Vector2(1, 1)
+
+[node name="ValleyScenery" type="Node3D" unique_id=1330622330]
+
+[node name="DaylightEnvironment" type="WorldEnvironment" parent="." unique_id=98840759]
+environment = SubResource("Environment_qkscn")
+
+[node name="BackgroundMountains" type="Node3D" parent="." unique_id=1100881049]
+
+[node name="OlivePeaks" type="MultiMeshInstance3D" parent="BackgroundMountains" unique_id=1423282856]
+cast_shadow = 0
+multimesh = SubResource("MultiMesh_s1p6x")
+
+[node name="BlueGreyPeaks" type="MultiMeshInstance3D" parent="BackgroundMountains" unique_id=1819463606]
+cast_shadow = 0
+multimesh = SubResource("MultiMesh_n38hi")
+
+[node name="TreeClusters" type="Node3D" parent="." unique_id=214284386]
+
+[node name="Trunks" type="MultiMeshInstance3D" parent="TreeClusters" unique_id=708651385]
+multimesh = SubResource("MultiMesh_vir37")
+
+[node name="LowerCrowns" type="MultiMeshInstance3D" parent="TreeClusters" unique_id=801955695]
+multimesh = SubResource("MultiMesh_fui3y")
+
+[node name="UpperCrowns" type="MultiMeshInstance3D" parent="TreeClusters" unique_id=2095111841]
+multimesh = SubResource("MultiMesh_ws77r")
+
+[node name="RockClusters" type="Node3D" parent="." unique_id=1554331462]
+
+[node name="Boulders" type="MultiMeshInstance3D" parent="RockClusters" unique_id=1012438763]
+cast_shadow = 0
+multimesh = SubResource("MultiMesh_isg8u")
+
+[node name="DirtPaths" type="Node3D" parent="." unique_id=76597210]
+
+[node name="ToMud1" type="MeshInstance3D" parent="DirtPaths" unique_id=804261354]
+transform = Transform3D(-7, 0, -2.6357966e-06, 0, 1, 0, 6.119594e-07, 0, -30.15, 0, 0.012, 148)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_2338u")
+
+[node name="ToMud2" type="MeshInstance3D" parent="DirtPaths" unique_id=829502334]
+transform = Transform3D(-4.309508, 0, -32.118206, 0, 1, 0, 5.516171, 0, -25.092344, -16, 0.012, 120.5)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_2338u")
+
+[node name="ToMud3" type="MeshInstance3D" parent="DirtPaths" unique_id=1384721845]
+transform = Transform3D(-3.1304946, 0, -40.134167, 0, 1, 0, 6.2609906, 0, -20.06708, -52, 0.012, 98)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_2338u")
+
+[node name="ToMud4" type="MeshInstance3D" parent="DirtPaths" unique_id=8233094]
+transform = Transform3D(-3.1304946, 0, -38.134167, 0, 1, 0, 6.2609906, 0, -19.06708, -91, 0.012, 78.5)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_2338u")
+
+[node name="ToWater1" type="MeshInstance3D" parent="DirtPaths" unique_id=323344997]
+transform = Transform3D(1.5513477, 0, 22.146269, 0, 1, 0, -6.82593, 0, 5.033243, -71, 0.012, 29.5)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_2338u")
+
+[node name="ToWater2" type="MeshInstance3D" parent="DirtPaths" unique_id=1173345224]
+transform = Transform3D(0.9251458, 0, 60.148685, 0, 1, 0, -6.9385953, 0, 8.019823, -30, 0.012, 36)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_2338u")
+
+[node name="ToWater3" type="MeshInstance3D" parent="DirtPaths" unique_id=1182631226]
+transform = Transform3D(-3.059797e-07, 0, 76.15, 0, 1, 0, -7, 0, -3.3286224e-06, 38, 0.012, 40)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_2338u")
+
+[node name="PumpAccess1" type="MeshInstance3D" parent="DirtPaths" unique_id=1045419760]
+transform = Transform3D(-3.059797e-07, 0, 18.15, 0, 1, 0, -7, 0, -7.9336166e-07, 153, 0.012, 40)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_2338u")
+
+[node name="ToRamps1" type="MeshInstance3D" parent="DirtPaths" unique_id=710434764]
+transform = Transform3D(-7, 0, -6.482399e-06, 0, 1, 0, 6.119594e-07, 0, -74.15, 0, 0.012, 3)
+cast_shadow = 0
+mesh = SubResource("PlaneMesh_2338u")
