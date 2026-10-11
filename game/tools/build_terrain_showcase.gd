@@ -13,6 +13,25 @@ var heights: PackedFloat32Array
 var distances: PackedFloat32Array
 var foliage_count: int = 0
 var road_length: float = 0.0
+var soil_patches: FastNoiseLite
+var soil_grain: FastNoiseLite
+var rock_vertices: Dictionary = {}
+var fitted_rocks: int = 0
+var relocated_rocks: int = 0
+var tree_locations: Array[Vector2] = []
+
+
+func setup_soil_colors() -> void:
+	soil_patches = FastNoiseLite.new()
+	soil_patches.seed = 41721
+	soil_patches.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	soil_patches.frequency = 0.055
+	soil_patches.fractal_octaves = 3
+	soil_grain = FastNoiseLite.new()
+	soil_grain.seed = 8365
+	soil_grain.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	soil_grain.frequency = 0.24
+	soil_grain.fractal_octaves = 2
 
 
 func _initialize() -> void:
@@ -87,11 +106,19 @@ func terrain_height(x: float, z: float) -> float:
 	return grid_height(ix + 1, iz + 1) + (1.0 - u) * (grid_height(ix, iz + 1) - grid_height(ix + 1, iz + 1)) + (1.0 - v) * (grid_height(ix + 1, iz) - grid_height(ix + 1, iz + 1))
 
 
-func ground_material() -> StandardMaterial3D:
+func ground_material(textured: bool = false) -> StandardMaterial3D:
 	var mat = StandardMaterial3D.new()
 	mat.vertex_color_use_as_albedo = true
 	mat.roughness = 1.0
 	mat.metallic_specular = 0.0
+	if textured:
+		mat.albedo_texture = load(DIR + "ground_detail.png")
+		mat.uv1_triplanar = true
+		mat.uv1_world_triplanar = true
+		mat.uv1_triplanar_sharpness = 4.0
+		mat.uv1_scale = Vector3.ONE * 0.22
+		mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
+		save_resource(mat, DIR + "ground_surface.tres")
 	return mat
 
 
@@ -116,13 +143,20 @@ func terrain_mesh() -> ArrayMesh:
 			var dx = (grid_height(ix + 1, iz) - grid_height(ix - 1, iz)) / (STEP * (mini(ix + 1, GRID - 1) - maxi(ix - 1, 0)))
 			var dz = (grid_height(ix, iz + 1) - grid_height(ix, iz - 1)) / (STEP * (mini(iz + 1, GRID - 1) - maxi(iz - 1, 0)))
 			normals.append(Vector3(-dx, 1, -dz).normalized())
-			var variation = 0.018 * sin(x * 0.09) * cos(z * 0.07)
-			var grass = Color(0.32 + variation, 0.41 + variation, 0.25 + variation)
-			grass = grass.lerp(Color(0.42, 0.4, 0.31), clampf((absf(dx) + absf(dz) - 0.4) * 0.3, 0, 0.45))
+			# Somente cores: posições, normais e índices continuam inalterados.
+			var patch = soil_patches.get_noise_2d(x, z)
+			var grain = soil_grain.get_noise_2d(x, z)
+			var variation = patch * 0.045 + grain * 0.012
+			var grass = Color(0.32 + variation, 0.41 + variation * 1.25, 0.25 + variation * 0.7)
+			var slope = Vector2(dx, dz).length()
+			var exposed = smoothstep(0.35, 0.85, slope) * (0.2 + smoothstep(-0.2, 0.3, patch) * 0.23)
+			exposed += smoothstep(0.12, 0.45, patch) * 0.28
+			grass = grass.lerp(Color(0.4 + grain * 0.01, 0.365 + grain * 0.01, 0.255), minf(exposed, 0.48))
 			var width = 4.1 + 0.22 * sin(x * 0.33 + z * 0.17)
 			var dirt = 1.0 - smoothstep(width - 0.9, width + 2.0, distances[iz * GRID + ix])
 			var clearing = maxf(1.0 - smoothstep(7.0, 13.0, Vector2(x + 75, z - 94).length()), 1.0 - smoothstep(6.0, 12.0, Vector2(x + 19, z + 3).length()))
-			colors.append(grass.lerp(Color(0.43 + variation, 0.33 + variation, 0.22 + variation), maxf(dirt, clearing)))
+			var road_variation = patch * 0.012 + grain * 0.008
+			colors.append(grass.lerp(Color(0.43 + road_variation, 0.33 + road_variation, 0.22 + road_variation), maxf(dirt, clearing)))
 			if ix < GRID - 1 and iz < GRID - 1:
 				var a = iz * GRID + ix
 				indices.append_array(PackedInt32Array([a, a + 1, a + GRID, a + 1, a + GRID + 1, a + GRID]))
@@ -134,7 +168,7 @@ func terrain_mesh() -> ArrayMesh:
 	arrays[Mesh.ARRAY_INDEX] = indices
 	var mesh = ArrayMesh.new()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
-	mesh.surface_set_material(0, ground_material())
+	mesh.surface_set_material(0, ground_material(true))
 	return mesh
 
 
@@ -192,10 +226,120 @@ func add_group(parent: Node3D, group_name: String) -> Node3D:
 	return node
 
 
+func surface_normal(point: Vector2) -> Vector3:
+	var dx = terrain_height(point.x + 0.5, point.y) - terrain_height(point.x - 0.5, point.y)
+	var dz = terrain_height(point.x, point.y + 0.5) - terrain_height(point.x, point.y - 0.5)
+	return Vector3(-dx, 1, -dz).normalized()
+
+
+func rock_fit(model_name: String, point: Vector2, original_basis: Basis) -> Dictionary:
+	if not rock_vertices.has(model_name):
+		var mesh: ArrayMesh = load(NATURE + model_name + ".res")
+		rock_vertices[model_name] = mesh.surface_get_arrays(0)[Mesh.ARRAY_VERTEX]
+	var vertices: PackedVector3Array = rock_vertices[model_name]
+	var mesh: ArrayMesh = load(NATURE + model_name + ".res")
+	var bounds = mesh.get_aabb()
+	var normal = surface_normal(point)
+	var angle = acos(clampf(normal.dot(Vector3.UP), -1, 1))
+	var fitted_normal = Vector3.UP.slerp(normal, minf(1.0, deg_to_rad(20.0) / maxf(angle, 0.001)))
+	var basis = Basis(Quaternion(Vector3.UP, fitted_normal)) * original_basis
+	var minimum_support = INF
+	var maximum_support = -INF
+	# A faixa inferior representa a base real, não os cantos de uma caixa.
+	for vertex in vertices:
+		if vertex.y > bounds.position.y + bounds.size.y * 0.22:
+			continue
+		var local = basis * vertex
+		var required_y = terrain_height(point.x + local.x, point.y + local.z) - local.y
+		minimum_support = minf(minimum_support, required_y)
+		maximum_support = maxf(maximum_support, required_y)
+	var y = minimum_support - 0.06
+	var visible_vertices = 0
+	for vertex in vertices:
+		var local = basis * vertex
+		if y + local.y > terrain_height(point.x + local.x, point.y + local.z) + 0.02:
+			visible_vertices += 1
+	var visible_fraction = float(visible_vertices) / vertices.size()
+	return {"transform": Transform3D(basis, Vector3(point.x, y, point.y)), "slope": angle, "span": maximum_support - minimum_support, "visible": visible_fraction}
+
+
+func place_rock(model_name: String, point: Vector2, basis: Basis) -> Transform3D:
+	var best: Dictionary = {}
+	var best_score = INF
+	var mesh: ArrayMesh = load(NATURE + model_name + ".res")
+	var bounds = mesh.get_aabb()
+	var radius_to_tree = (maxf(maxf(absf(bounds.position.x), absf(bounds.end.x)), maxf(absf(bounds.position.z), absf(bounds.end.z))) + bounds.size.y * 0.2) * basis.get_scale().x + 0.55
+	# Busca local e determinística apenas durante a autoria.
+	for radius in [0.0, 3.0, 6.0, 9.0, 12.0]:
+		for direction in range(1 if radius == 0 else 8):
+			var angle = float(direction) * TAU / 8.0
+			var candidate = point + Vector2(cos(angle), sin(angle)) * radius
+			if absf(candidate.x) > 102 or absf(candidate.y) > 102 or sculpt(candidate.x, candidate.y).y < 10.0:
+				continue
+			if candidate.distance_to(Vector2(-75,94)) < 17 or candidate.distance_to(Vector2(-19,-3)) < 16:
+				continue
+			var overlaps_trunk = false
+			for tree in tree_locations:
+				if candidate.distance_to(tree) < radius_to_tree:
+					overlaps_trunk = true
+					break
+			if overlaps_trunk:
+				continue
+			var fit = rock_fit(model_name, candidate, basis)
+			if fit.visible < 0.48 or fit.slope > deg_to_rad(32):
+				continue
+			var score = fit.span * 3.0 + fit.slope * 0.8 + radius * 0.09 + (1.0 - fit.visible) * 0.6
+			if score < best_score:
+				best_score = score
+				best = fit
+	assert(not best.is_empty(), "Nenhum apoio adequado para " + model_name + " em " + str(point))
+	var result: Transform3D = best.transform
+	fitted_rocks += 1
+	if Vector2(result.origin.x, result.origin.z).distance_to(point) > 0.1:
+		relocated_rocks += 1
+	return result
+
+
+func ground_cover(placements: Dictionary, zone_name: String, salt: int) -> void:
+	var patches = {
+		"FirstBendWoods": [Vector2(-89,72),Vector2(-80,32),Vector2(-46,24),Vector2(-26,24)],
+		"UphillPines": [Vector2(-19,62),Vector2(8,79),Vector2(65,53)],
+		"CentralHollow": [Vector2(89,3),Vector2(42,-11),Vector2(4,-32)],
+		"RidgePass": [Vector2(48,-66),Vector2(72,-63),Vector2(22,-72)],
+		"OutlookWoods": [Vector2(-38,-75),Vector2(-88,-37),Vector2(-64,12),Vector2(-34,20)]
+	}
+	var offsets = [Vector2(-0.85,0.35),Vector2(1.3,-0.4),Vector2(0.2,1.1),Vector2(-0.1,-1.0),Vector2(-1.5,-0.75),Vector2(1.8,0.75),Vector2(-0.65,-1.6)]
+	var centers: Array = patches[zone_name]
+	for i in centers.size():
+		# Grupos com quantidades e espaçamentos distintos, deixando espaços vazios.
+		for j in range(5 + (i + salt) % 3):
+			var yaw = float(i * 13 + salt * 7) * 0.43
+			var offset: Vector2 = offsets[j].rotated(yaw) * (0.85 + i % 3 * 0.2)
+			var p: Vector2 = centers[i] + offset
+			if sculpt(p.x, p.y).y < 6.8 or p.distance_to(Vector2(-75,94)) < 17 or p.distance_to(Vector2(-19,-3)) < 16:
+				continue
+			var model_name = "Fern_1" if j == 2 and i % 3 == 0 else "Grass_Common_Short"
+			var scale_value = 0.5 + float((i * 3 + j + salt) % 5) * 0.055
+			if j >= 5 and i % 3 == 0:
+				model_name = "Bush_Common_Flowers"
+				scale_value = 0.38 + float((i + j) % 3) * 0.035
+			var tilt = Vector3.UP.slerp(surface_normal(p), 0.35)
+			var basis = Basis(Quaternion(Vector3.UP, tilt)) * Basis(Vector3.UP, yaw + j) * Basis.from_scale(Vector3.ONE * scale_value)
+			if not placements.has(model_name):
+				placements[model_name] = []
+			placements[model_name].append(Transform3D(basis, Vector3(p.x, terrain_height(p.x,p.y) - 0.04, p.y)))
+
+
 func nature(parent: Node3D, zone_name: String, anchors: Array[Vector2], salt: int) -> void:
 	var zone = add_group(parent, zone_name)
 	var placements: Dictionary = {}
 	var models = ["CommonTree_1", "CommonTree_3", "CommonTree_5", "Pine_1", "Pine_3", "Rock_Medium_1", "Rock_Medium_2", "Rock_Medium_3", "Bush_Common", "Bush_Common_Flowers", "Grass_Common_Short", "Fern_1"]
+	# Antecipar os troncos da região impede que a busca de apoio os atravesse.
+	for anchor in anchors:
+		for offset in [Vector2(-3,-2), Vector2(3,3)]:
+			var p: Vector2 = anchor + offset
+			if absf(p.x) <= 102 and absf(p.y) <= 102 and sculpt(p.x,p.y).y >= 10.0 and p.distance_to(Vector2(-75,94)) >= 17 and p.distance_to(Vector2(-19,-3)) >= 16:
+				tree_locations.append(p)
 	for i in anchors.size():
 		for j in range(7):
 			var kind = (i + salt) % 5 if j < 2 else (5 + i % 3 if j == 2 else ((9 if i % 7 == 0 else 8) if j < 5 else (10 if j == 5 else 11)))
@@ -209,9 +353,12 @@ func nature(parent: Node3D, zone_name: String, anchors: Array[Vector2], salt: in
 			var model_name = models[kind]
 			var size_value = (1.2 if j < 2 else (1.4 if j < 5 else 0.65)) * (0.88 + float((i * 7 + j * 3 + salt) % 11) * 0.026)
 			var transform_value = Transform3D(Basis(Vector3.UP, float(i * 17 + j * 11 + salt) * 0.37) * Basis.from_scale(Vector3.ONE * size_value), Vector3(point.x, terrain_height(point.x, point.y), point.y))
+			if model_name.begins_with("Rock_"):
+				transform_value = place_rock(model_name, point, transform_value.basis)
 			if not placements.has(model_name):
 				placements[model_name] = []
 			placements[model_name].append(transform_value)
+	ground_cover(placements, zone_name, salt)
 	for model_name in placements:
 		var multi = MultiMesh.new()
 		multi.transform_format = MultiMesh.TRANSFORM_3D
@@ -242,19 +389,37 @@ func save_resource(resource: Resource, path: String) -> void:
 
 func build() -> void:
 	DirAccess.make_dir_recursive_absolute(DIR)
+	setup_soil_colors()
 	route = make_route()
 	road_length = route.get_baked_length()
 	for i in range(ceili(road_length / 2.0) + 1):
 		samples.append(route.sample_baked(minf(float(i) * 2.0, road_length), true))
 	print("Building 220x220 terrain; route: ", road_length, " m")
 	var mesh = terrain_mesh()
-	var collision = mesh.create_trimesh_shape()
-	var mountains = mountain_mesh()
+	if ResourceLoader.exists(DIR + "terrain_mesh.res"):
+		var previous_mesh: ArrayMesh = load(DIR + "terrain_mesh.res")
+		assert(mesh.get_faces() == previous_mesh.get_faces(), "Polimento não pode alterar a geometria aprovada")
+	var collision: ConcavePolygonShape3D
+	if ResourceLoader.exists(DIR + "terrain_collision.res"):
+		collision = load(DIR + "terrain_collision.res")
+		assert(mesh.get_faces() == collision.get_faces(), "Colisão aprovada diverge do visual")
+	else:
+		collision = mesh.create_trimesh_shape()
+		save_resource(collision, DIR + "terrain_collision.res")
+	var mountains: ArrayMesh
+	if ResourceLoader.exists(DIR + "background_mesh.res"):
+		mountains = load(DIR + "background_mesh.res")
+	else:
+		mountains = mountain_mesh()
+		save_resource(mountains, DIR + "background_mesh.res")
 	save_resource(mesh, DIR + "terrain_mesh.res")
-	save_resource(collision, DIR + "terrain_collision.res")
-	save_resource(mountains, DIR + "background_mesh.res")
-	assert(ResourceSaver.save(route, DIR + "route_curve.tres") == OK)
-	route.take_over_path(DIR + "route_curve.tres")
+	if ResourceLoader.exists(DIR + "route_curve.tres"):
+		var previous_route: Curve3D = load(DIR + "route_curve.tres")
+		assert(route.get_baked_points() == previous_route.get_baked_points(), "Traçado aprovado não pode mudar")
+		route = previous_route
+	else:
+		assert(ResourceSaver.save(route, DIR + "route_curve.tres") == OK)
+		route.take_over_path(DIR + "route_curve.tres")
 	var scene = Node3D.new()
 	scene.name = "TerrainShowcase"
 	var ground = StaticBody3D.new()
@@ -350,6 +515,7 @@ func build() -> void:
 		output.store_string(scene_text)
 		output.close()
 	print("SHOWCASE SAVED: 24200 terrain triangles / one static collider / ", foliage_count, " nature instances")
+	print("ROCKS FITTED: ", fitted_rocks, " / RELOCATED: ", relocated_rocks)
 	scene.free()
 	await process_frame
 	finish.call_deferred()

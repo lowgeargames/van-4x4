@@ -18,7 +18,7 @@ o reposicionamento original. Não há missões nem interface nesta experiência.
   físicos não são ajustados.
 - O anel montanhoso ao fundo tem 1.728 triângulos e não possui colisão. Sua
   junção se estende discretamente sob a borda do terreno para evitar frestas.
-- 230 instâncias de natureza em grupos de MultiMesh, reaproveitando os meshes
+- 325 instâncias de natureza em grupos de MultiMesh, reaproveitando os meshes
   e materiais já disponíveis do Quaternius. A altura de cada elemento é
   interpolada a partir dos triângulos reais do terreno. A vegetação permanece
   vertical, sem física individual, fora da faixa principal de circulação.
@@ -70,3 +70,70 @@ sombras têm custo gráfico; não foi feito benchmark em computador modesto.
 
 Os arquivos do mapa principal e as mudanças locais anteriores foram preservados.
 Esta experiência não foi integrada ao mapa principal.
+
+## Polimento visual do solo e das rochas
+
+A superfície original possui uma única superfície, cores de vértice e nenhum
+UV. O polimento mantém essas características e o material padrão: duas escalas
+de ruído determinístico são avaliadas apenas na ferramenta de autoria para
+preparar as cores. Elas introduzem variações suaves de verde, tons mais secos
+nas encostas e pequenos trechos de terra exposta. O peso da cor da estrada e
+suas bordas continua usando exatamente o traçado anterior.
+
+Foram adicionadas 63 instâncias de grama/samambaia em pequenos agrupamentos
+assimétricos, aproveitando os MultiMeshes já existentes. Naquela etapa não foram criadas texturas,
+materiais, nós de plantas ou sombras de vegetação rasteira.
+
+As 29 rochas usam amostras dos vértices da faixa inferior de cada modelo para
+assentar suas bases. A ferramenta considera escala, rotação, altura e normal
+da superfície; limita a inclinação visual a 20° e busca apoio próximo nas
+encostas mais fortes. Quatorze rochas foram reposicionadas. A busca preserva
+distância da estrada, clareiras e troncos. Uma pequena porção da base fica
+enterrada, e uma verificação limita o enterramento excessivo.
+
+O teste no Compatibility verificou todas as bases, mantendo pelo menos 59%
+dos vértices de cada rocha acima do terreno. Também comparou exatamente os
+vértices, índices e normais do terreno com a versão aprovada. A travessia
+automatizada repetiu 54,2 segundos e 1,76 m de desvio máximo. Os arquivos de
+colisão, curva e montanhas permaneceram sem alterações.
+
+Ao reconstruir, a ferramenta reutiliza os recursos físicos aprovados e impede
+que o polimento substitua uma geometria ou um traçado divergente. A quantidade
+de triângulos, superfícies e colisões do terreno não mudou. O custo adicional
+durante o jogo está nas 63 plantas; as buscas de apoio e o ruído não executam
+durante o gameplay. Não foi realizado benchmark em computador modesto.
+
+## Detalhe repetível de superfície
+
+`ground_detail.png` é uma textura neutra estilizada, criada com a ferramenta
+built-in imagegen. `ground_surface.tres` usa StandardMaterial3D para multiplicar
+essa textura pelas cores de vértice existentes. Não foi necessário shader
+personalizado. As cores de vértice, posições, índices e normais foram preservados.
+
+A projeção triplanar em coordenadas mundiais repete o detalhe a cada 4,55 m
+aproximadamente e evita o esticamento típico de uma projeção plana nas encostas.
+O recurso importado tem 512 × 512 pixels, mipmaps e filtragem anisotrópica. O PNG
+fonte permanece na resolução retornada pelo gerador de imagem. O material é
+opaco, com rugosidade máxima, sem normal map, parallax ou deslocamento.
+
+Foram adicionadas 32 instâncias de vegetação rasteira, incluindo cinco pequenos
+arbustos floridos. A quantidade de nós e MultiMeshes permaneceu igual: as
+instâncias reutilizam os grupos e materiais do Quaternius. Árvores e rochas
+mantêm os posicionamentos da etapa anterior.
+
+A comparação antes/depois foi capturada durante uma travessia com a câmera
+original. A textura é visível perto da van e nas encostas, sem exigir câmera
+aproximada. A travessia repetiu os mesmos 54,2 segundos. Textura triplanar,
+repetição e resolução importada foram verificadas no Compatibility.
+
+O custo adicional é uma textura e suas leituras triplanares por pixel, além das
+32 plantas. Não foram adicionados materiais por pedaço de terreno, colisões ou
+processamento de superfície em runtime. O padrão perde detalhes à distância
+por causa dos mipmaps e pode revelar repetição ao observar uma área extensa.
+Não foi realizado benchmark em computador modesto.
+
+### Prompt da textura (built-in imagegen)
+
+```text
+Use case: stylized-concept. Asset type: seamless square tileable grayscale albedo detail texture for a low-poly off-road game terrain, 1024x1024. Primary request: an evenly distributed, non-photorealistic hand-painted ground microtexture: short tiny irregular brush strokes suggesting clipped grass, interspersed with tiny rounded grit flecks and fine earthy grains. This neutral texture will multiply existing green grass and brown road vertex colors, so use ONLY neutral grayscale values predominantly light gray 75-95%, with moderate small darker flecks 50-65%; no black, no bright white. Flat orthographic top-down texture only, filling the entire square. No objects, horizons, text, logos, perspective, lighting gradients, cast shadows, large rocks, tall grass clumps, repetitive stripes, grid, or visible borders. Small clustered marks with irregular empty gaps; consistent density across the image. Stylized painterly grain visible when tiled across a 4-5 meter terrain patch during third-person driving, never photorealistic. Seamlessly matching left/right and top/bottom edges. No transparency.
+```
