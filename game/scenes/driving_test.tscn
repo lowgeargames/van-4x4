@@ -5,6 +5,8 @@
 [ext_resource type="Script" uid="uid://crchhpk8fv3ws" path="res://scripts/mud_zone.gd" id="3_ig6hn"]
 [ext_resource type="Script" uid="uid://dn8v1tvjru830" path="res://scripts/water_zone.gd" id="4_water"]
 [ext_resource type="PackedScene" path="res://scenes/repair_antenna.tscn" id="5_antenna"]
+[ext_resource type="PackedScene" path="res://scenes/repair_water_pump.tscn" id="6_pump"]
+[ext_resource type="Script" path="res://scripts/service_sequence.gd" id="7_sequence"]
 
 [sub_resource type="StandardMaterial3D" id="GroundMaterial"]
 albedo_color = Color(0.36, 0.37, 0.39, 1)
@@ -206,3 +208,12 @@ material = SubResource("ObstacleMaterial")
 [node name="RepairAntenna" parent="." instance=ExtResource("5_antenna")]
 position = Vector3(-110, 0, 27)
 van_path = NodePath("../VanPrototype")
+
+[node name="RepairWaterPump" parent="." instance=ExtResource("6_pump")]
+position = Vector3(153, 0, 40)
+van_path = NodePath("../VanPrototype")
+
+[node name="ServiceSequence" type="Node" parent="."]
+script = ExtResource("7_sequence")
+antenna_path = NodePath("../RepairAntenna")
+pump_path = NodePath("../RepairWaterPump")
