@@ -1,0 +1,732 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://assets/environment/terrain_showcase/terrain_mesh.res" id="1_t3p43"]
+[ext_resource type="Shape3D" path="res://assets/environment/terrain_showcase/terrain_collision.res" id="2_1cp8g"]
+[ext_resource type="ArrayMesh" path="res://assets/environment/terrain_showcase/background_mesh.res" id="3_eytua"]
+[ext_resource type="ArrayMesh" path="res://assets/environment/quaternius_nature/meshes/CommonTree_3.res" id="4_mlt4q"]
+[ext_resource type="ArrayMesh" path="res://assets/environment/quaternius_nature/meshes/Rock_Medium_1.res" id="5_3dwa0"]
+[ext_resource type="ArrayMesh" path="res://assets/environment/quaternius_nature/meshes/Bush_Common_Flowers.res" id="6_80dc3"]
+[ext_resource type="ArrayMesh" path="res://assets/environment/quaternius_nature/meshes/Grass_Common_Short.res" id="7_m2dcw"]
+[ext_resource type="ArrayMesh" path="res://assets/environment/quaternius_nature/meshes/Fern_1.res" id="8_r7l4a"]
+[ext_resource type="ArrayMesh" path="res://assets/environment/quaternius_nature/meshes/CommonTree_5.res" id="9_wswuw"]
+[ext_resource type="ArrayMesh" path="res://assets/environment/quaternius_nature/meshes/Rock_Medium_2.res" id="10_vblaq"]
+[ext_resource type="ArrayMesh" path="res://assets/environment/quaternius_nature/meshes/Bush_Common.res" id="11_56wym"]
+[ext_resource type="ArrayMesh" path="res://assets/environment/quaternius_nature/meshes/Pine_1.res" id="12_qgt1c"]
+[ext_resource type="ArrayMesh" path="res://assets/environment/quaternius_nature/meshes/Rock_Medium_3.res" id="13_iigqa"]
+[ext_resource type="ArrayMesh" path="res://assets/environment/quaternius_nature/meshes/Pine_3.res" id="14_yyuad"]
+[ext_resource type="ArrayMesh" path="res://assets/environment/quaternius_nature/meshes/CommonTree_1.res" id="15_x8hry"]
+[ext_resource type="PackedScene" path="res://scenes/van_prototype.tscn" id="16_0cnxw"]
+[ext_resource type="Script" path="res://scripts/van_controller.gd" id="17_dap86"]
+[ext_resource type="Script" path="res://scripts/camera_follow.gd" id="18_ep16m"]
+[ext_resource type="Curve3D" path="res://assets/environment/terrain_showcase/route_curve.tres" id="19_tf8c1"]
+
+[sub_resource type="MultiMesh" id="MultiMesh_8ockq"]
+transform_format = 1
+instance_count = 4
+mesh = ExtResource("4_mlt4q")
+buffer = PackedFloat32Array(1.0136263, 0, 0.39314833, -97, 0, 1.0872, 0, 16.992748, -0.39314833, 0, 1.0136263, 64, -0.31767422, 0, -1.137265, -91, 0, 1.1808, 0, 11.648204, 1.137265, 0, -0.31767422, 69, 1.0570196, 0, 0.45198447, -25, 0, 1.1496, 0, 9.221001, -0.45198447, 0, 1.0570196, 24, -0.2934781, 0, -1.2080632, -19, 0, 1.2432, 0, 6.990049, 1.2080632, 0, -0.2934781, 29)
+
+[sub_resource type="MultiMesh" id="MultiMesh_fkbr8"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("5_3dwa0")
+buffer = PackedFloat32Array(-0.90689844, 0, 1.1781805, -89, 0, 1.4868, 0, 8.915045, -1.1781805, 0, -0.90689844, 63, -0.9080051, 0, 1.1310115, -57, 0, 1.4504, 0, 8.920752, -1.1310115, 0, -0.9080051, 21)
+
+[sub_resource type="MultiMesh" id="MultiMesh_hqcy3"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("6_80dc3")
+buffer = PackedFloat32Array(1.5958518, 0, 0.021751704, -97, 0, 1.596, 0, 16.691257, -0.021751704, 0, 1.5958518, 70, -0.76740813, 0, -1.0552667, -93, 0, 1.3048, 0, 14.4357, 1.0552667, 0, -0.76740813, 62)
+
+[sub_resource type="MultiMesh" id="MultiMesh_5kp06"]
+transform_format = 1
+instance_count = 6
+mesh = ExtResource("7_m2dcw")
+buffer = PackedFloat32Array(-0.19378763, 0, 0.6272468, -95, 0, 0.6565, 0, 15.500076, -0.6272468, 0, -0.19378763, 69, -0.17766409, 0, 0.5614612, -97, 0, 0.5889, 0, 19.045633, -0.5614612, 0, -0.17766409, 43, -0.21794291, 0, 0.67277986, -86, 0, 0.7072, 0, 14.482651, -0.67277986, 0, -0.21794291, 31, -0.20125261, 0, 0.60711247, -63, 0, 0.6396, 0, 7.7323503, -0.60711247, 0, -0.20125261, 27, -0.18367833, 0, 0.54170686, -49, 0, 0.572, 0, 7.746284, -0.54170686, 0, -0.18367833, 23, -0.2261143, 0, 0.6522165, -23, 0, 0.6903, 0, 5.958846, -0.6522165, 0, -0.2261143, 29)
+
+[sub_resource type="MultiMesh" id="MultiMesh_rri4v"]
+transform_format = 1
+instance_count = 6
+mesh = ExtResource("8_r7l4a")
+buffer = PackedFloat32Array(0.6660673, 0, -0.2376682, -90, 0, 0.7072, 0, 10.365019, 0.2376682, 0, 0.6660673, 66, 0.6038497, 0, -0.21084039, -92, 0, 0.6396, 0, 16.407244, 0.21084039, 0, 0.6038497, 40, 0.5413005, 0, -0.18487251, -81, 0, 0.572, 0, 12.747955, 0.18487251, 0, 0.5413005, 28, 0.6547566, 0, -0.21865004, -58, 0, 0.6903, 0, 8.066392, 0.21865004, 0, 0.6547566, 24, 0.5919679, 0, -0.19320787, -44, 0, 0.6227, 0, 9.403602, 0.19320787, 0, 0.5919679, 20, 0.70598006, 0, -0.22510694, -18, 0, 0.741, 0, 9.893806, 0.22510694, 0, 0.70598006, 26)
+
+[sub_resource type="MultiMesh" id="MultiMesh_qnmr6"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("9_wswuw")
+buffer = PackedFloat32Array(1.214001, 0, 0.48040906, -99, 0, 1.3056, 0, 21.010248, -0.48040906, 0, 1.214001, 38, -0.27716187, 0, -1.0189785, -93, 0, 1.056, 0, 16.61448, 1.0189785, 0, -0.27716187, 43)
+
+[sub_resource type="MultiMesh" id="MultiMesh_jjht7"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("10_vblaq")
+buffer = PackedFloat32Array(-0.82531095, 0, 1.0572035, -91, 0, 1.3412, 0, 16.243, -1.0572035, 0, -0.82531095, 37, -0.82376784, 0, 1.0118842, -43, 0, 1.3048, 0, 12.260001, -1.0118842, 0, -0.82376784, 17)
+
+[sub_resource type="MultiMesh" id="MultiMesh_ne3r4"]
+transform_format = 1
+instance_count = 10
+mesh = ExtResource("11_56wym")
+buffer = PackedFloat32Array(1.4500968, 0, 0.029651243, -99, 0, 1.4504, 0, 20.229382, -0.029651243, 0, 1.4500968, 44, -0.9086488, 0, -1.2675605, -95, 0, 1.5596, 0, 18.700254, 1.2675605, 0, -0.9086488, 36, 1.3043153, 0, 0.035562642, -88, 0, 1.3048, 0, 15.321844, -0.035562642, 0, 1.3043153, 32, -0.81597024, 0, -1.1548111, -84, 0, 1.414, 0, 14.595488, 1.1548111, 0, -0.81597024, 24, 1.5586947, 0, 0.053131882, -65, 0, 1.5596, 0, 7.8100433, -0.053131882, 0, 1.5586947, 28, -0.7248723, 0, -1.0408643, -61, 0, 1.2684, 0, 9.437174, 1.0408643, 0, -0.7248723, 20, 1.4128181, 0, 0.05780212, -51, 0, 1.414, 0, 7.2983894, -0.05780212, 0, 1.4128181, 24, -0.86194754, 0, -1.2558602, -47, 0, 1.5232, 0, 13.344795, 1.2558602, 0, -0.86194754, 16, 1.2669572, 0, 0.0604818, -25, 0, 1.2684, 0, 5.2067556, -0.0604818, 0, 1.2669572, 30, -0.77180046, 0, -1.1410985, -21, 0, 1.3776, 0, 11.379576, 1.1410985, 0, -0.77180046, 22)
+
+[sub_resource type="MultiMesh" id="MultiMesh_n0c4a"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("12_qgt1c")
+buffer = PackedFloat32Array(1.0949705, 0, 0.44195962, -88, 0, 1.1808, 0, 16.172262, -0.44195962, 0, 1.0949705, 26, -0.32609499, 0, -1.2319729, -82, 0, 1.2744, 0, 12.703098, 1.2319729, 0, -0.32609499, 31)
+
+[sub_resource type="MultiMesh" id="MultiMesh_piocl"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("13_iigqa")
+buffer = PackedFloat32Array(-0.99065304, 0, 1.2513282, -80, 0, 1.596, 0, 12.817464, -1.2513282, 0, -0.99065304, 25, -0.99285275, 0, 1.202745, -17, 0, 1.5596, 0, 11.845626, -1.202745, 0, -0.99285275, 23)
+
+[sub_resource type="MultiMesh" id="MultiMesh_wbpd8"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("14_yyuad")
+buffer = PackedFloat32Array(0.97652566, 0, 0.40191245, -65, 0, 1.056, 0, 9.446474, -0.40191245, 0, 0.97652566, 22, -0.286582, 0, -1.1133063, -59, 0, 1.1496, 0, 6.723128, 1.1133063, 0, -0.286582, 27)
+
+[sub_resource type="MultiMesh" id="MultiMesh_tr53f"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("15_x8hry")
+buffer = PackedFloat32Array(1.1751558, 0, 0.49305603, -51, 0, 1.2744, 0, 10.311422, -0.49305603, 0, 1.1751558, 18, -0.33198938, 0, -1.3271048, -45, 0, 1.368, 0, 7.588256, 1.3271048, 0, -0.33198938, 23)
+
+[sub_resource type="MultiMesh" id="MultiMesh_1ka5d"]
+transform_format = 1
+instance_count = 4
+mesh = ExtResource("12_qgt1c")
+buffer = PackedFloat32Array(0.51118284, 0, 1.0296953, -19, 0, 1.1496, 0, 7.180305, -1.0296953, 0, 0.51118284, 66, 0.5603785, 0, -1.1097397, -13, 0, 1.2432, 0, 8.491552, 1.1097397, 0, 0.5603785, 71, 0.50163287, 0, 1.103317, 96, 0, 1.212, 0, 19.484253, -1.103317, 0, 0.50163287, 62, 0.62786835, 0, -1.1447152, 102, 0, 1.3056, 0, 22.495598, 1.1447152, 0, 0.62786835, 67)
+
+[sub_resource type="MultiMesh" id="MultiMesh_nsq6i"]
+transform_format = 1
+instance_count = 3
+mesh = ExtResource("5_3dwa0")
+buffer = PackedFloat32Array(-1.5358398, 0, 0.27119803, -11, 0, 1.5596, 0, 8.948211, -0.27119803, 0, -1.5358398, 65, -1.5050957, 0, 0.234148, 55, 0, 1.5232, 0, 18.682346, -0.234148, 0, -1.5050957, 93, -1.4734936, 0, 0.19847067, 70, 0, 1.4868, 0, 15.653225, -0.19847067, 0, -1.4734936, 41)
+
+[sub_resource type="MultiMesh" id="MultiMesh_ob071"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("6_80dc3")
+buffer = PackedFloat32Array(0.92493033, 0, 0.86795294, -19, 0, 1.2684, 0, 7.3434625, -0.86795294, 0, 0.92493033, 72, 0.15292808, 0, -1.3690853, -15, 0, 1.3776, 0, 8.09952, 1.3690853, 0, 0.15292808, 64)
+
+[sub_resource type="MultiMesh" id="MultiMesh_wtqcv"]
+transform_format = 1
+instance_count = 7
+mesh = ExtResource("7_m2dcw")
+buffer = PackedFloat32Array(-0.5951942, 0, 0.34965408, -17, 0, 0.6903, 0, 7.690398, -0.34965408, 0, -0.5951942, 71, -0.539045, 0, 0.3117463, 0, 0, 0.6227, 0, 11.96495, -0.3117463, 0, -0.539045, 85, -0.6439658, 0, 0.3665912, 22, 0, 0.741, 0, 16.228256, -0.3665912, 0, -0.6439658, 92, -0.587475, 0, 0.32915142, 49, 0, 0.6734, 0, 21.593315, -0.32915142, 0, -0.587475, 99, -0.5305054, 0, 0.2925023, 65, 0, 0.6058, 0, 17.657352, -0.2925023, 0, -0.5305054, 90, -0.63647014, 0, 0.345292, 98, 0, 0.7241, 0, 20.675758, -0.345292, 0, -0.63647014, 67, -0.57917124, 0, 0.30911627, 64, 0, 0.6565, 0, 17.931662, -0.30911627, 0, -0.57917124, 47)
+
+[sub_resource type="MultiMesh" id="MultiMesh_dpc3c"]
+transform_format = 1
+instance_count = 6
+mesh = ExtResource("8_r7l4a")
+buffer = PackedFloat32Array(0.6832944, 0, 0.28668746, -12, 0, 0.741, 0, 8.668996, -0.28668746, 0, 0.6832944, 68, 0.61916924, 0, 0.26475847, 5, 0, 0.6734, 0, 12.229355, -0.26475847, 0, 0.61916924, 82, 0.55537695, 0, 0.24197122, 27, 0, 0.6058, 0, 15.567989, -0.24197122, 0, 0.55537695, 89, 0.6618438, 0, 0.29374078, 54, 0, 0.7241, 0, 20.401026, -0.29374078, 0, 0.6618438, 96, 0.5982278, 0, 0.27039918, 70, 0, 0.6565, 0, 16.273527, -0.27039918, 0, 0.5982278, 87, 0.6403973, 0, 0.3000385, 69, 0, 0.7072, 0, 16.023148, -0.3000385, 0, 0.6403973, 44)
+
+[sub_resource type="MultiMesh" id="MultiMesh_53owh"]
+transform_format = 1
+instance_count = 4
+mesh = ExtResource("14_yyuad")
+buffer = PackedFloat32Array(0.5999327, 0, 1.2294328, -2, 0, 1.368, 0, 10.9899025, -1.2294328, 0, 0.5999327, 80, 0.51091635, 0, -0.9948784, 4, 0, 1.1184, 0, 12.507414, 0.9948784, 0, 0.51091635, 85, 0.44322756, 0, 0.99275035, 62, 0, 1.0872, 0, 19.165619, -0.99275035, 0, 0.44322756, 42, 0.5748905, 0, -1.0314018, 68, 0, 1.1808, 0, 16.23324, 1.0314018, 0, 0.5748905, 47)
+
+[sub_resource type="MultiMesh" id="MultiMesh_onbw8"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("10_vblaq")
+buffer = PackedFloat32Array(-1.3941013, 0, 0.23638499, 6, 0, 1.414, 0, 12.11323, -0.23638499, 0, -1.3941013, 79, -1.3626374, 0, 0.20248635, 71, 0, 1.3776, 0, 14.346299, -0.20248635, 0, -1.3626374, 84)
+
+[sub_resource type="MultiMesh" id="MultiMesh_lnb4m"]
+transform_format = 1
+instance_count = 12
+mesh = ExtResource("11_56wym")
+buffer = PackedFloat32Array(1.1036035, 0, 1.049856, -2, 0, 1.5232, 0, 11.867501, -1.049856, 0, 1.1036035, 86, 0.14510664, 0, -1.2234247, 2, 0, 1.232, 0, 11.464956, 1.2234247, 0, 0.14510664, 78, 0.99161917, 0, 0.9562808, 20, 0, 1.3776, 0, 16.317135, -0.9562808, 0, 0.99161917, 93, 0.18517329, 0, -1.4752237, 24, 0, 1.4868, 0, 13.964525, 1.4752237, 0, 0.18517329, 85, 0.88096625, 0, 0.8612331, 47, 0, 1.232, 0, 21.955975, -0.8612331, 0, 0.88096625, 100, 0.176103, 0, -1.3295884, 51, 0, 1.3412, 0, 17.49266, 1.3295884, 0, 0.176103, 92, 1.0560576, 0, 1.0465738, 63, 0, 1.4868, 0, 18.101906, -1.0465738, 0, 1.0560576, 91, 0.22033748, 0, -1.5807173, 67, 0, 1.596, 0, 13.29117, 1.5807173, 0, 0.22033748, 83, 0.94618297, 0, 0.9505552, 96, 0, 1.3412, 0, 19.808716, -0.9505552, 0, 0.94618297, 68, 0.2100225, 0, -1.4351134, 100, 0, 1.4504, 0, 21.650023, 1.4351134, 0, 0.2100225, 60, 1.1182024, 0, 1.1387885, 62, 0, 1.596, 0, 18.144182, -1.1387885, 0, 1.1182024, 48, 0.19773398, 0, -1.2897303, 66, 0, 1.3048, 0, 18.493776, 1.2897303, 0, 0.19773398, 40)
+
+[sub_resource type="MultiMesh" id="MultiMesh_tbjgt"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("15_x8hry")
+buffer = PackedFloat32Array(0.537576, 0, 1.120963, 20, 0, 1.2432, 0, 14.721419, -1.120963, 0, 0.537576, 87, 0.618777, 0, -1.184968, 26, 0, 1.3368, 0, 16.651857, 1.184968, 0, 0.618777, 92)
+
+[sub_resource type="MultiMesh" id="MultiMesh_4chmb"]
+transform_format = 1
+instance_count = 1
+mesh = ExtResource("13_iigqa")
+buffer = PackedFloat32Array(-1.2519661, 0, 0.2035174, 28, 0, 1.2684, 0, 13.991223, -0.2035174, 0, -1.2519661, 86)
+
+[sub_resource type="MultiMesh" id="MultiMesh_0tdsk"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("4_mlt4q")
+buffer = PackedFloat32Array(0.47672758, 0, 1.0117062, 47, 0, 1.1184, 0, 18.848457, -1.0117062, 0, 0.47672758, 94, 0.5683168, 0, -1.0704951, 53, 0, 1.212, 0, 21.828617, 1.0704951, 0, 0.5683168, 99)
+
+[sub_resource type="MultiMesh" id="MultiMesh_u8fp8"]
+transform_format = 1
+instance_count = 1
+mesh = ExtResource("9_wswuw")
+buffer = PackedFloat32Array(0.51633, 0, -0.9567692, 69, 0, 1.0872, 0, 18.029522, 0.9567692, 0, 0.51633, 90)
+
+[sub_resource type="MultiMesh" id="MultiMesh_e8o4c"]
+transform_format = 1
+instance_count = 4
+mesh = ExtResource("15_x8hry")
+buffer = PackedFloat32Array(-0.3340154, 0, 1.1650655, 95, 0, 1.212, 0, 18.035942, -1.1650655, 0, -0.3340154, 14, 1.2204357, 0, -0.46381897, 101, 0, 1.3056, 0, 21.976925, 0.46381897, 0, 1.2204357, 19, -0.39274102, 0, 1.2123736, -14, 0, 1.2744, 0, 19.809381, -1.2123736, 0, -0.39274102, -26, 1.2945787, 0, -0.44214264, -8, 0, 1.368, 0, 13.1032295, 0.44214264, 0, 1.2945787, -21)
+
+[sub_resource type="MultiMesh" id="MultiMesh_ebma0"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("6_80dc3")
+buffer = PackedFloat32Array(0.10339305, 0, 1.3372087, 95, 0, 1.3412, 0, 14.667878, -1.3372087, 0, 0.10339305, 20, 1.0908428, 0, -0.9558881, 99, 0, 1.4504, 0, 21.350784, 0.9558881, 0, 1.0908428, 12)
+
+[sub_resource type="MultiMesh" id="MultiMesh_qftdp"]
+transform_format = 1
+instance_count = 7
+mesh = ExtResource("7_m2dcw")
+buffer = PackedFloat32Array(-0.70836496, 0, -0.15013285, 97, 0, 0.7241, 0, 18.380219, 0.15013285, 0, -0.70836496, 19, -0.64129156, 0, -0.14048965, 81, 0, 0.6565, 0, 17.364843, 0.14048965, 0, -0.64129156, -3, -0.5743856, 0, -0.12994008, 54, 0, 0.5889, 0, 17.433123, 0.12994008, 0, -0.5743856, -13, -0.6886903, 0, -0.16074036, 35, 0, 0.7072, 0, 24.048409, 0.16074036, 0, -0.6886903, 25, -0.62185436, 0, -0.14961722, 16, 0, 0.6396, 0, 20.74076, 0.14961722, 0, -0.62185436, 29, -0.5552051, 0, -0.13759126, -12, 0, 0.572, 0, 18.288593, 0.13759126, 0, -0.5552051, -21, -0.66888493, 0, -0.17060785, -10, 0, 0.6903, 0, 16.885595, 0.17060785, 0, -0.66888493, -41)
+
+[sub_resource type="MultiMesh" id="MultiMesh_ms2n4"]
+transform_format = 1
+instance_count = 7
+mesh = ExtResource("8_r7l4a")
+buffer = PackedFloat32Array(0.24738705, 0, 0.5344183, 102, 0, 0.5889, 0, 22.54918, -0.5344183, 0, 0.24738705, 16, 0.29270196, 0, 0.6437836, 86, 0, 0.7072, 0, 18.96282, -0.6437836, 0, 0.29270196, -6, 0.26075086, 0, 0.5840352, 59, 0, 0.6396, 0, 17.66599, -0.5840352, 0, 0.26075086, -16, 0.22962658, 0, 0.5238852, 40, 0, 0.572, 0, 23.41925, -0.5238852, 0, 0.22962658, 22, 0.27280205, 0, 0.6341081, 21, 0, 0.6903, 0, 22.027096, -0.6341081, 0, 0.27280205, 26, 0.24218269, 0, 0.5736748, -7, 0, 0.6227, 0, 13.038412, -0.5736748, 0, 0.24218269, -24, 0.28353295, 0, 0.6846094, -5, 0, 0.741, 0, 15.0442505, -0.6846094, 0, 0.28353295, -44)
+
+[sub_resource type="MultiMesh" id="MultiMesh_8tht6"]
+transform_format = 1
+instance_count = 4
+mesh = ExtResource("4_mlt4q")
+buffer = PackedFloat32Array(-0.3067371, 0, 1.0430323, 79, 0, 1.0872, 0, 18.34602, -1.0430323, 0, -0.3067371, -8, 1.1066093, 0, -0.41195178, 85, 0, 1.1808, 0, 18.545456, 0.41195178, 0, 1.1066093, -3, -0.3617261, 0, 1.0912077, -12, 0, 1.1496, 0, 16.37603, -1.0912077, 0, -0.3617261, -46, 1.1791879, 0, -0.39377913, -6, 0, 1.2432, 0, 15.743048, 0.39377913, 0, 1.1791879, -41)
+
+[sub_resource type="MultiMesh" id="MultiMesh_yjfn6"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("10_vblaq")
+buffer = PackedFloat32Array(-1.250101, 0, -0.8048736, 87, 0, 1.4868, 0, 19.220997, 0.8048736, 0, -1.250101, -9, -1.2031896, 0, -0.8099352, 22, 0, 1.4504, 0, 21.764366, 0.8099352, 0, -1.2031896, 23)
+
+[sub_resource type="MultiMesh" id="MultiMesh_sauen"]
+transform_format = 1
+instance_count = 12
+mesh = ExtResource("11_56wym")
+buffer = PackedFloat32Array(0.11218898, 0, 1.592052, 79, 0, 1.596, 0, 15.749084, -1.592052, 0, 0.11218898, -2, 0.98717546, 0, -0.8532219, 83, 0, 1.3048, 0, 18.755224, 0.8532219, 0, 0.98717546, -10, 0.09209376, 0, 1.4474733, 52, 0, 1.4504, 0, 17.08244, -1.4474733, 0, 0.09209376, -12, 1.1868715, 0, -1.0117748, 56, 0, 1.5596, 0, 17.21091, 1.0117748, 0, 1.1868715, -20, 0.07397191, 0, 1.3027015, 33, 0, 1.3048, 0, 24.04882, -1.3027015, 0, 0.07397191, 26, 1.0822955, 0, -0.9099629, 37, 0, 1.414, 0, 16.319271, 0.9099629, 0, 1.0822955, 18, 0.07780257, 0, 1.5576582, 14, 0, 1.5596, 0, 20.127966, -1.5576582, 0, 0.07780257, 30, 0.9763919, 0, -0.80962783, 18, 0, 1.2684, 0, 20.786957, 0.80962783, 0, 0.9763919, 22, 0.06091769, 0, 1.4126872, -14, 0, 1.414, 0, 19.583841, -1.4126872, 0, 0.06091769, -20, 1.1791319, 0, -0.9642544, -10, 0, 1.5232, 0, 17.587187, 0.9642544, 0, 1.1791319, -28, 0.046006884, 0, 1.2675653, -12, 0, 1.2684, 0, 17.618727, -1.2675653, 0, 0.046006884, -40, 1.0723363, 0, -0.86479855, -8, 0, 1.3776, 0, 15.031559, 0.86479855, 0, 1.0723363, -48)
+
+[sub_resource type="MultiMesh" id="MultiMesh_xec6g"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("9_wswuw")
+buffer = PackedFloat32Array(-0.37688252, 0, 1.2500204, 52, 0, 1.3056, 0, 17.24411, -1.2500204, 0, -0.37688252, -18, 0.99213827, 0, -0.36165956, 58, 0, 1.056, 0, 17.6558, 0.36165956, 0, 0.99213827, -13)
+
+[sub_resource type="MultiMesh" id="MultiMesh_14fpo"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("13_iigqa")
+buffer = PackedFloat32Array(-1.1227074, 0, -0.7337203, 60, 0, 1.3412, 0, 17.467823, 0.7337203, 0, -1.1227074, -19, -1.0774177, 0, -0.73598516, -6, 0, 1.3048, 0, 12.955183, 0.73598516, 0, -1.0774177, -27)
+
+[sub_resource type="MultiMesh" id="MultiMesh_wtymc"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("12_qgt1c")
+buffer = PackedFloat32Array(-0.34855208, 0, 1.1281843, 33, 0, 1.1808, 0, 20.207773, -1.1281843, 0, -0.34855208, 20, 1.2002774, 0, -0.4282867, 39, 0, 1.2744, 0, 24.109676, 0.4282867, 0, 1.2002774, 25)
+
+[sub_resource type="MultiMesh" id="MultiMesh_7fnrg"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("5_3dwa0")
+buffer = PackedFloat32Array(-1.3300166, 0, -0.88219714, 41, 0, 1.596, 0, 19.780922, 0.88219714, 0, -1.3300166, 19, -1.2817891, 0, -0.88846433, -4, 0, 1.5596, 0, 14.319911, 0.88846433, 0, -1.2817891, -47)
+
+[sub_resource type="MultiMesh" id="MultiMesh_jds20"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("14_yyuad")
+buffer = PackedFloat32Array(-0.31858253, 0, 1.0067974, 14, 0, 1.056, 0, 20.033895, -1.0067974, 0, -0.31858253, 24, 1.0853435, 0, -0.3789589, 20, 0, 1.1496, 0, 21.867863, 0.3789589, 0, 1.0853435, 29)
+
+[sub_resource type="MultiMesh" id="MultiMesh_ele8w"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("9_wswuw")
+buffer = PackedFloat32Array(-1.085395, 0, 0.66784215, 24, 0, 1.2744, 0, 11.182464, -0.66784215, 0, -1.085395, -68, 1.2720232, 0, 0.5033698, 30, 0, 1.368, 0, 11.346513, -0.5033698, 0, 1.2720232, -63)
+
+[sub_resource type="MultiMesh" id="MultiMesh_m21db"]
+transform_format = 1
+instance_count = 1
+mesh = ExtResource("5_3dwa0")
+buffer = PackedFloat32Array(-0.3424629, 0, -1.2590561, 32, 0, 1.3048, 0, 11.478004, 1.2590561, 0, -0.3424629, -69)
+
+[sub_resource type="MultiMesh" id="MultiMesh_k1cgr"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("6_80dc3")
+buffer = PackedFloat32Array(-0.87010866, 0, 1.1145883, 24, 0, 1.414, 0, 11.004206, -1.1145883, 0, -0.87010866, -62, 1.5228817, 0, 0.03113953, 28, 0, 1.5232, 0, 11.446241, -0.03113953, 0, 1.5228817, -70)
+
+[sub_resource type="MultiMesh" id="MultiMesh_1glhb"]
+transform_format = 1
+instance_count = 7
+mesh = ExtResource("7_m2dcw")
+buffer = PackedFloat32Array(-0.3332567, 0, -0.4648914, 26, 0, 0.572, 0, 11.072785, 0.4648914, 0, -0.3332567, -63, -0.39834812, 0, -0.56376666, 44, 0, 0.6903, 0, 11.981634, 0.56376666, 0, -0.39834812, -65, -0.35586405, 0, -0.5109951, 60, 0, 0.6227, 0, 12.591621, 0.5109951, 0, -0.35586405, -64, -0.41931665, 0, -0.61094564, 98, 0, 0.741, 0, 21.97945, 0.61094564, 0, -0.41931665, -49, -0.37727237, 0, -0.5577931, 96, 0, 0.6734, 0, 17.99512, 0.5577931, 0, -0.37727237, -78, -0.33597153, 0, -0.5040999, 57, 0, 0.6058, 0, 13.594656, 0.5040999, 0, -0.33597153, -100, -0.39746377, 0, -0.605263, 0, 0, 0.7241, 0, 19.000551, 0.605263, 0, -0.39746377, -98)
+
+[sub_resource type="MultiMesh" id="MultiMesh_pvpda"]
+transform_format = 1
+instance_count = 5
+mesh = ExtResource("8_r7l4a")
+buffer = PackedFloat32Array(-0.18786111, 0, 0.59368634, 31, 0, 0.6227, 0, 11.249311, -0.59368634, 0, -0.18786111, -66, -0.22835931, 0, 0.7049348, 49, 0, 0.741, 0, 12.157162, -0.7049348, 0, -0.22835931, -68, -0.21188791, 0, 0.6391956, 65, 0, 0.6734, 0, 12.753522, -0.6391956, 0, -0.21188791, -67, -0.2371858, 0, 0.68415177, 101, 0, 0.7241, 0, 20.974754, -0.68415177, 0, -0.2371858, -81, -0.20046619, 0, 0.55372965, 5, 0, 0.5889, 0, 20.831594, -0.55372965, 0, -0.20046619, -101)
+
+[sub_resource type="MultiMesh" id="MultiMesh_bw3l1"]
+transform_format = 1
+instance_count = 3
+mesh = ExtResource("12_qgt1c")
+buffer = PackedFloat32Array(-0.9831867, 0, 0.59575504, 42, 0, 1.1496, 0, 11.948163, -0.59575504, 0, -0.9831867, -70, 1.1528347, 0, 0.46531522, 48, 0, 1.2432, 0, 12.147447, -0.46531522, 0, 1.1528347, -65, 1.1933479, 0, 0.529634, 4, 0, 1.3056, 0, 18.191801, -0.529634, 0, 1.1933479, -98)
+
+[sub_resource type="MultiMesh" id="MultiMesh_ajr5a"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("10_vblaq")
+buffer = PackedFloat32Array(-0.3990723, 0, -1.5076782, 50, 0, 1.5596, 0, 12.360293, 1.5076782, 0, -0.3990723, -71, -0.3595768, 0, -1.4801496, 102, 0, 1.5232, 0, 21.18218, 1.4801496, 0, -0.3595768, -84)
+
+[sub_resource type="MultiMesh" id="MultiMesh_pdo6r"]
+transform_format = 1
+instance_count = 10
+mesh = ExtResource("11_56wym")
+buffer = PackedFloat32Array(-0.78730845, 0, 0.9944766, 42, 0, 1.2684, 0, 11.978592, -0.9944766, 0, -0.78730845, -64, 1.3770882, 0, 0.03754682, 46, 0, 1.3776, 0, 12.273269, -0.03754682, 0, 1.3770882, -72, -0.9535807, 0, 1.1877804, 58, 0, 1.5232, 0, 12.592946, -1.1877804, 0, -0.9535807, -63, 1.2312849, 0, 0.041971326, 62, 0, 1.232, 0, 12.788872, -0.041971326, 0, 1.2312849, -71, -0.86972904, 0, 1.0683413, 96, 0, 1.3776, 0, 21.039955, -1.0683413, 0, -0.86972904, -48, 1.4855572, 0, 0.060778063, 100, 0, 1.4868, 0, 22.296543, -0.060778063, 0, 1.4855572, -56, -0.78430015, 0, 0.95010376, 94, 0, 1.232, 0, 17.02369, -0.95010376, 0, -0.78430015, -77, 1.3396744, 0, 0.06395316, 98, 0, 1.3412, 0, 19.091425, -0.06395316, 0, 1.3396744, -85, -0.9543004, 0, 1.1401249, 55, 0, 1.4868, 0, 13.149603, -1.1401249, 0, -0.9543004, -99, -0.8678369, 0, 1.0225832, -2, 0, 1.3412, 0, 18.435734, -1.0225832, 0, -0.8678369, -97)
+
+[sub_resource type="MultiMesh" id="MultiMesh_hwi86"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("14_yyuad")
+buffer = PackedFloat32Array(-1.1747756, 0, 0.7009467, 58, 0, 1.368, 0, 12.567613, -0.7009467, 0, -1.1747756, -69, 1.0342294, 0, 0.4256618, 64, 0, 1.1184, 0, 12.711858, -0.4256618, 0, 1.0342294, -64)
+
+[sub_resource type="MultiMesh" id="MultiMesh_pmlm4"]
+transform_format = 1
+instance_count = 1
+mesh = ExtResource("13_iigqa")
+buffer = PackedFloat32Array(-0.35249385, 0, -1.369359, 66, 0, 1.414, 0, 12.907853, 1.369359, 0, -0.35249385, -70)
+
+[sub_resource type="MultiMesh" id="MultiMesh_xfqdl"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("15_x8hry")
+buffer = PackedFloat32Array(-1.0719186, 0, 0.6297116, 96, 0, 1.2432, 0, 19.74554, -0.6297116, 0, -1.0719186, -54, 1.2326963, 0, 0.51719815, 102, 0, 1.3368, 0, 23.7524, -0.51719815, 0, 1.2326963, -49)
+
+[sub_resource type="MultiMesh" id="MultiMesh_xjoni"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("4_mlt4q")
+buffer = PackedFloat32Array(-0.96815145, 0, 0.5599118, 94, 0, 1.1184, 0, 17.034426, -0.5599118, 0, -0.96815145, -83, 1.1143943, 0, 0.47651806, 100, 0, 1.212, 0, 20.691996, -0.47651806, 0, 1.1143943, -78)
+
+[sub_resource type="MultiMesh" id="MultiMesh_2qtpj"]
+transform_format = 1
+instance_count = 4
+mesh = ExtResource("14_yyuad")
+buffer = PackedFloat32Array(-1.3131437, 0, -0.2503754, -28, 0, 1.3368, 0, 15.303131, 0.2503754, 0, -1.3131437, -92, 0.47678858, 0, 0.9770756, -22, 0, 1.0872, 0, 14.520867, -0.9770756, 0, 0.47678858, -87, -1.029973, 0, -0.2330051, -81, 0, 1.056, 0, 15.027058, 0.2330051, 0, -1.029973, 14, 0.46866664, 0, 1.0497293, -75, 0, 1.1496, 0, 12.197493, -1.0497293, 0, 0.46866664, 19)
+
+[sub_resource type="MultiMesh" id="MultiMesh_g5v2j"]
+transform_format = 1
+instance_count = 3
+mesh = ExtResource("5_3dwa0")
+buffer = PackedFloat32Array(0.6293261, 0, -1.2254511, -20, 0, 1.3776, 0, 16.187977, 1.2254511, 0, 0.6293261, -93, 0.63695896, 0, -1.1802969, -93, 0, 1.3412, 0, 20.544268, 1.1802969, 0, 0.63695896, -44, 0.64301485, 0, -1.1353568, -52, 0, 1.3048, 0, 10.243666, 1.1353568, 0, 0.64301485, 18)
+
+[sub_resource type="MultiMesh" id="MultiMesh_x0gtq"]
+transform_format = 1
+instance_count = 4
+mesh = ExtResource("6_80dc3")
+buffer = PackedFloat32Array(-1.4658767, 0, 0.24855529, -28, 0, 1.4868, 0, 14.044489, -0.24855529, 0, -1.4658767, -86, 1.1563492, 0, 1.1000329, -24, 0, 1.596, 0, 16.19144, -1.1000329, 0, 1.1563492, -94, -1.2592388, 0, 0.15217128, -25, 0, 1.2684, 0, 9.853927, -0.15217128, 0, -1.2592388, 23, 0.9517009, 0, 0.9960155, -21, 0, 1.3776, 0, 13.551231, -0.9960155, 0, 0.9517009, 15)
+
+[sub_resource type="MultiMesh" id="MultiMesh_ace0e"]
+transform_format = 1
+instance_count = 8
+mesh = ExtResource("7_m2dcw")
+buffer = PackedFloat32Array(0.07135195, 0, -0.6015833, -26, 0, 0.6058, 0, 14.33304, 0.6015833, 0, 0.07135195, -87, 0.09018293, 0, -0.7184621, -47, 0, 0.7241, 0, 12.396171, 0.7184621, 0, 0.09018293, -76, 0.08620013, 0, -0.65081626, -72, 0, 0.6565, 0, 12.040258, 0.65081626, 0, 0.08620013, -65, 0.08130123, 0, -0.58326095, -99, 0, 0.5889, 0, 23.907867, 0.58326095, 0, 0.08130123, -38, 0.10240479, 0, -0.69974643, -95, 0, 0.7072, 0, 23.536026, 0.69974643, 0, 0.10240479, -7, 0.096927226, 0, -0.632213, -79, 0, 0.6396, 0, 13.457121, 0.632213, 0, 0.096927226, 19, 0.09053219, 0, -0.5647902, -58, 0, 0.572, 0, 8.066392, 0.5647902, 0, 0.09053219, 24, 0.113898836, 0, -0.6808385, -23, 0, 0.6903, 0, 10.970814, 0.6808385, 0, 0.113898836, 22)
+
+[sub_resource type="MultiMesh" id="MultiMesh_u8a8h"]
+transform_format = 1
+instance_count = 8
+mesh = ExtResource("8_r7l4a")
+buffer = PackedFloat32Array(-0.56830424, 0, 0.32866782, -21, 0, 0.6565, 0, 15.263386, -0.32866782, 0, -0.56830424, -90, -0.51178336, 0, 0.29134354, -42, 0, 0.5889, 0, 12.683664, -0.29134354, 0, -0.51178336, -79, -0.61696213, 0, 0.34567255, -67, 0, 0.7072, 0, 11.088236, -0.34567255, 0, -0.61696213, -68, -0.5601044, 0, 0.30882218, -94, 0, 0.6396, 0, 21.326296, -0.30882218, 0, -0.5601044, -41, -0.50277716, 0, 0.2727621, -90, 0, 0.572, 0, 20.880014, -0.2727621, 0, -0.50277716, -10, -0.60898995, 0, 0.3250312, -74, 0, 0.6903, 0, 12.495439, -0.3250312, 0, -0.60898995, 16, -0.551337, 0, 0.28945252, -53, 0, 0.6227, 0, 8.795662, -0.28945252, 0, -0.551337, 21, -0.65841186, 0, 0.33996293, -18, 0, 0.741, 0, 12.625221, -0.33996293, 0, -0.65841186, 19)
+
+[sub_resource type="MultiMesh" id="MultiMesh_noarr"]
+transform_format = 1
+instance_count = 4
+mesh = ExtResource("15_x8hry")
+buffer = PackedFloat32Array(-1.1889776, 0, -0.23510893, -49, 0, 1.212, 0, 12.137232, 0.23510893, 0, -1.1889776, -81, 0.5645586, 0, 1.1772277, -43, 0, 1.3056, 0, 12.759781, -1.1772277, 0, 0.5645586, -76, -1.2410449, 0, -0.28965995, -60, 0, 1.2744, 0, 9.689479, 0.28965995, 0, -1.2410449, 19, 0.5491769, 0, 1.2529281, -54, 0, 1.368, 0, 7.6162024, -1.2529281, 0, 0.5491769, 24)
+
+[sub_resource type="MultiMesh" id="MultiMesh_14ivv"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("10_vblaq")
+buffer = PackedFloat32Array(0.57026726, 0, -1.092071, -41, 0, 1.232, 0, 12.808344, 1.092071, 0, 0.57026726, -82, 0.77781343, 0, -1.3517983, -17, 0, 1.5596, 0, 13.4033785, 1.3517983, 0, 0.77781343, 16)
+
+[sub_resource type="MultiMesh" id="MultiMesh_w1ny2"]
+transform_format = 1
+instance_count = 12
+mesh = ExtResource("11_56wym")
+buffer = PackedFloat32Array(-1.3238229, 0, 0.21519834, -49, 0, 1.3412, 0, 12.311606, -0.21519834, 0, -1.3238229, -75, 1.0440218, 0, 1.006816, -45, 0, 1.4504, 0, 12.563635, -1.006816, 0, 1.0440218, -83, -1.5770304, 0, 0.24533889, -74, 0, 1.596, 0, 12.4433365, -0.24533889, 0, -1.5770304, -64, 0.9330234, 0, 0.9121242, -70, 0, 1.3048, 0, 10.416349, -0.9121242, 0, 0.9330234, -72, -1.4346468, 0, 0.21318686, -101, 0, 1.4504, 0, 25.02342, -0.21318686, 0, -1.4346468, -37, 1.1077666, 0, 1.0978184, -97, 0, 1.5596, 0, 21.976454, -1.0978184, 0, 1.1077666, -45, -1.2919054, 0, 0.18298505, -97, 0, 1.3048, 0, 24.588463, -0.18298505, 0, -1.2919054, -6, 0.99754155, 0, 1.0021511, -93, 0, 1.414, 0, 21.917057, -1.0021511, 0, 0.99754155, -14, -1.5456421, 0, 0.20818862, -81, 0, 1.5596, 0, 14.01173, -0.20818862, 0, -1.5456421, 20, 0.88867664, 0, 0.9050371, -77, 0, 1.2684, 0, 14.151215, -0.9050371, 0, 0.88867664, 12, -1.4025985, 0, 0.17920274, -60, 0, 1.414, 0, 7.9243565, -0.17920274, 0, -1.4025985, 25, 1.0597687, 0, 1.0940881, -56, 0, 1.5232, 0, 10.980852, -1.0940881, 0, 1.0597687, 17)
+
+[sub_resource type="MultiMesh" id="MultiMesh_w4a4b"]
+transform_format = 1
+instance_count = 4
+mesh = ExtResource("4_mlt4q")
+buffer = PackedFloat32Array(-1.0650862, 0, -0.2181629, -74, 0, 1.0872, 0, 10.963177, 0.2181629, 0, -1.0650862, -70, 0.5033261, 0, 1.0681533, -68, 0, 1.1808, 0, 12.149229, -1.0681533, 0, 0.5033261, -65, -1.1177045, 0, -0.26891804, -25, 0, 1.1496, 0, 12.360436, 0.26891804, 0, -1.1177045, 17, 0.49130452, 0, 1.1420008, -19, 0, 1.2432, 0, 11.79068, -1.1420008, 0, 0.49130452, 22)
+
+[sub_resource type="MultiMesh" id="MultiMesh_6xu7i"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("13_iigqa")
+buffer = PackedFloat32Array(0.6971728, 0, -1.3132113, -66, 0, 1.4868, 0, 10.864826, 1.3132113, 0, 0.6971728, -71, 0.70614934, 0, -1.2668912, -73, 0, 1.4504, 0, 13.159405, 1.2668912, 0, 0.70614934, 13)
+
+[sub_resource type="MultiMesh" id="MultiMesh_alw78"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("9_wswuw")
+buffer = PackedFloat32Array(-1.2772287, 0, -0.2706994, -101, 0, 1.3056, 0, 24.165102, 0.2706994, 0, -1.2772287, -43, 0.44360796, 0, 0.9583047, -95, 0, 1.056, 0, 22.09105, -0.9583047, 0, 0.44360796, -38)
+
+[sub_resource type="MultiMesh" id="MultiMesh_6uo51"]
+transform_format = 1
+instance_count = 2
+mesh = ExtResource("12_qgt1c")
+buffer = PackedFloat32Array(-1.1534457, 0, -0.25268877, -97, 0, 1.1808, 0, 24.639912, 0.25268877, 0, -1.1534457, -12, 0.5274595, 0, 1.1601214, -91, 0, 1.2744, 0, 21.496258, -1.1601214, 0, 0.5274595, -7)
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_6ul5t"]
+sky_top_color = Color(0.16, 0.43, 0.76, 1)
+sky_horizon_color = Color(0.73, 0.85, 0.91, 1)
+sky_curve = 0.2
+ground_bottom_color = Color(0.34, 0.39, 0.25, 1)
+ground_horizon_color = Color(0.73, 0.85, 0.91, 1)
+
+[sub_resource type="Sky" id="Sky_ise7c"]
+sky_material = SubResource("ProceduralSkyMaterial_6ul5t")
+radiance_size = 2
+
+[sub_resource type="Environment" id="Environment_vms16"]
+background_mode = 2
+sky = SubResource("Sky_ise7c")
+ambient_light_source = 2
+ambient_light_color = Color(0.78, 0.85, 0.95, 1)
+ambient_light_energy = 0.5
+fog_enabled = true
+fog_light_color = Color(0.65, 0.76, 0.83, 1)
+fog_density = 0.0009
+fog_sky_affect = 0.0
+
+[node name="TerrainShowcase" type="Node3D" unique_id=1029812219]
+metadata/route_length_m = 750.64075
+metadata/playable_size_m = 220.0
+
+[node name="Terrain" type="StaticBody3D" parent="." unique_id=84049201]
+
+[node name="TerrainMesh" type="MeshInstance3D" parent="Terrain" unique_id=981030366]
+mesh = ExtResource("1_t3p43")
+
+[node name="TerrainCollision" type="CollisionShape3D" parent="Terrain" unique_id=55523551]
+shape = ExtResource("2_1cp8g")
+
+[node name="DistantRidges" type="MeshInstance3D" parent="." unique_id=697277289]
+cast_shadow = 0
+mesh = ExtResource("3_eytua")
+
+[node name="NatureClusters" type="Node3D" parent="." unique_id=1802399723]
+
+[node name="FirstBendWoods" type="Node3D" parent="NatureClusters" unique_id=1470719066]
+
+[node name="CommonTree_3" type="MultiMeshInstance3D" parent="NatureClusters/FirstBendWoods" unique_id=1221783395]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_8ockq")
+
+[node name="Rock_Medium_1" type="MultiMeshInstance3D" parent="NatureClusters/FirstBendWoods" unique_id=1322359944]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_fkbr8")
+
+[node name="Bush_Common_Flowers" type="MultiMeshInstance3D" parent="NatureClusters/FirstBendWoods" unique_id=1645983545]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_hqcy3")
+
+[node name="Grass_Common_Short" type="MultiMeshInstance3D" parent="NatureClusters/FirstBendWoods" unique_id=1032937329]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_5kp06")
+
+[node name="Fern_1" type="MultiMeshInstance3D" parent="NatureClusters/FirstBendWoods" unique_id=433761485]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_rri4v")
+
+[node name="CommonTree_5" type="MultiMeshInstance3D" parent="NatureClusters/FirstBendWoods" unique_id=1770861625]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_qnmr6")
+
+[node name="Rock_Medium_2" type="MultiMeshInstance3D" parent="NatureClusters/FirstBendWoods" unique_id=283235073]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_jjht7")
+
+[node name="Bush_Common" type="MultiMeshInstance3D" parent="NatureClusters/FirstBendWoods" unique_id=368957166]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_ne3r4")
+
+[node name="Pine_1" type="MultiMeshInstance3D" parent="NatureClusters/FirstBendWoods" unique_id=2062087760]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_n0c4a")
+
+[node name="Rock_Medium_3" type="MultiMeshInstance3D" parent="NatureClusters/FirstBendWoods" unique_id=615452419]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_piocl")
+
+[node name="Pine_3" type="MultiMeshInstance3D" parent="NatureClusters/FirstBendWoods" unique_id=674703573]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_wbpd8")
+
+[node name="CommonTree_1" type="MultiMeshInstance3D" parent="NatureClusters/FirstBendWoods" unique_id=387307434]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_tr53f")
+
+[node name="UphillPines" type="Node3D" parent="NatureClusters" unique_id=1194236633]
+
+[node name="Pine_1" type="MultiMeshInstance3D" parent="NatureClusters/UphillPines" unique_id=1358966705]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_1ka5d")
+
+[node name="Rock_Medium_1" type="MultiMeshInstance3D" parent="NatureClusters/UphillPines" unique_id=1254866640]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_nsq6i")
+
+[node name="Bush_Common_Flowers" type="MultiMeshInstance3D" parent="NatureClusters/UphillPines" unique_id=1464700428]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_ob071")
+
+[node name="Grass_Common_Short" type="MultiMeshInstance3D" parent="NatureClusters/UphillPines" unique_id=1589388158]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_wtqcv")
+
+[node name="Fern_1" type="MultiMeshInstance3D" parent="NatureClusters/UphillPines" unique_id=1690753205]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_dpc3c")
+
+[node name="Pine_3" type="MultiMeshInstance3D" parent="NatureClusters/UphillPines" unique_id=681139952]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_53owh")
+
+[node name="Rock_Medium_2" type="MultiMeshInstance3D" parent="NatureClusters/UphillPines" unique_id=1750374965]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_onbw8")
+
+[node name="Bush_Common" type="MultiMeshInstance3D" parent="NatureClusters/UphillPines" unique_id=1013659115]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_lnb4m")
+
+[node name="CommonTree_1" type="MultiMeshInstance3D" parent="NatureClusters/UphillPines" unique_id=179222299]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_tbjgt")
+
+[node name="Rock_Medium_3" type="MultiMeshInstance3D" parent="NatureClusters/UphillPines" unique_id=687301349]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_4chmb")
+
+[node name="CommonTree_3" type="MultiMeshInstance3D" parent="NatureClusters/UphillPines" unique_id=608150671]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_0tdsk")
+
+[node name="CommonTree_5" type="MultiMeshInstance3D" parent="NatureClusters/UphillPines" unique_id=278405751]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_u8fp8")
+
+[node name="CentralHollow" type="Node3D" parent="NatureClusters" unique_id=713529878]
+
+[node name="CommonTree_1" type="MultiMeshInstance3D" parent="NatureClusters/CentralHollow" unique_id=1706814845]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_e8o4c")
+
+[node name="Bush_Common_Flowers" type="MultiMeshInstance3D" parent="NatureClusters/CentralHollow" unique_id=118302811]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_ebma0")
+
+[node name="Grass_Common_Short" type="MultiMeshInstance3D" parent="NatureClusters/CentralHollow" unique_id=1968155135]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_qftdp")
+
+[node name="Fern_1" type="MultiMeshInstance3D" parent="NatureClusters/CentralHollow" unique_id=1516633526]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_ms2n4")
+
+[node name="CommonTree_3" type="MultiMeshInstance3D" parent="NatureClusters/CentralHollow" unique_id=147204110]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_8tht6")
+
+[node name="Rock_Medium_2" type="MultiMeshInstance3D" parent="NatureClusters/CentralHollow" unique_id=178003850]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_yjfn6")
+
+[node name="Bush_Common" type="MultiMeshInstance3D" parent="NatureClusters/CentralHollow" unique_id=1383840517]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_sauen")
+
+[node name="CommonTree_5" type="MultiMeshInstance3D" parent="NatureClusters/CentralHollow" unique_id=2084967312]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_xec6g")
+
+[node name="Rock_Medium_3" type="MultiMeshInstance3D" parent="NatureClusters/CentralHollow" unique_id=910648610]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_14fpo")
+
+[node name="Pine_1" type="MultiMeshInstance3D" parent="NatureClusters/CentralHollow" unique_id=1817253752]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_wtymc")
+
+[node name="Rock_Medium_1" type="MultiMeshInstance3D" parent="NatureClusters/CentralHollow" unique_id=1325779683]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_7fnrg")
+
+[node name="Pine_3" type="MultiMeshInstance3D" parent="NatureClusters/CentralHollow" unique_id=1434714078]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_jds20")
+
+[node name="RidgePass" type="Node3D" parent="NatureClusters" unique_id=1380940287]
+
+[node name="CommonTree_5" type="MultiMeshInstance3D" parent="NatureClusters/RidgePass" unique_id=1453958001]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_ele8w")
+
+[node name="Rock_Medium_1" type="MultiMeshInstance3D" parent="NatureClusters/RidgePass" unique_id=1915957166]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_m21db")
+
+[node name="Bush_Common_Flowers" type="MultiMeshInstance3D" parent="NatureClusters/RidgePass" unique_id=1221179359]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_k1cgr")
+
+[node name="Grass_Common_Short" type="MultiMeshInstance3D" parent="NatureClusters/RidgePass" unique_id=1063473356]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_1glhb")
+
+[node name="Fern_1" type="MultiMeshInstance3D" parent="NatureClusters/RidgePass" unique_id=215944907]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_pvpda")
+
+[node name="Pine_1" type="MultiMeshInstance3D" parent="NatureClusters/RidgePass" unique_id=1526479164]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_bw3l1")
+
+[node name="Rock_Medium_2" type="MultiMeshInstance3D" parent="NatureClusters/RidgePass" unique_id=1119678575]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_ajr5a")
+
+[node name="Bush_Common" type="MultiMeshInstance3D" parent="NatureClusters/RidgePass" unique_id=790101805]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_pdo6r")
+
+[node name="Pine_3" type="MultiMeshInstance3D" parent="NatureClusters/RidgePass" unique_id=1588320240]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_hwi86")
+
+[node name="Rock_Medium_3" type="MultiMeshInstance3D" parent="NatureClusters/RidgePass" unique_id=1943775472]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_pmlm4")
+
+[node name="CommonTree_1" type="MultiMeshInstance3D" parent="NatureClusters/RidgePass" unique_id=619238158]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_xfqdl")
+
+[node name="CommonTree_3" type="MultiMeshInstance3D" parent="NatureClusters/RidgePass" unique_id=911484667]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_xjoni")
+
+[node name="OutlookWoods" type="Node3D" parent="NatureClusters" unique_id=727076654]
+
+[node name="Pine_3" type="MultiMeshInstance3D" parent="NatureClusters/OutlookWoods" unique_id=400110731]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_2qtpj")
+
+[node name="Rock_Medium_1" type="MultiMeshInstance3D" parent="NatureClusters/OutlookWoods" unique_id=506593619]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_g5v2j")
+
+[node name="Bush_Common_Flowers" type="MultiMeshInstance3D" parent="NatureClusters/OutlookWoods" unique_id=807648840]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_x0gtq")
+
+[node name="Grass_Common_Short" type="MultiMeshInstance3D" parent="NatureClusters/OutlookWoods" unique_id=994393440]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_ace0e")
+
+[node name="Fern_1" type="MultiMeshInstance3D" parent="NatureClusters/OutlookWoods" unique_id=650250395]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_u8a8h")
+
+[node name="CommonTree_1" type="MultiMeshInstance3D" parent="NatureClusters/OutlookWoods" unique_id=1551482964]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_noarr")
+
+[node name="Rock_Medium_2" type="MultiMeshInstance3D" parent="NatureClusters/OutlookWoods" unique_id=568735094]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_14ivv")
+
+[node name="Bush_Common" type="MultiMeshInstance3D" parent="NatureClusters/OutlookWoods" unique_id=2103042934]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_w1ny2")
+
+[node name="CommonTree_3" type="MultiMeshInstance3D" parent="NatureClusters/OutlookWoods" unique_id=1326782071]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_w4a4b")
+
+[node name="Rock_Medium_3" type="MultiMeshInstance3D" parent="NatureClusters/OutlookWoods" unique_id=562794683]
+cast_shadow = 0
+visibility_range_end = 95.0
+multimesh = SubResource("MultiMesh_6xu7i")
+
+[node name="CommonTree_5" type="MultiMeshInstance3D" parent="NatureClusters/OutlookWoods" unique_id=2040593243]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_alw78")
+
+[node name="Pine_1" type="MultiMeshInstance3D" parent="NatureClusters/OutlookWoods" unique_id=1786941773]
+visibility_range_end = 185.0
+multimesh = SubResource("MultiMesh_6uo51")
+
+[node name="DaylightEnvironment" type="WorldEnvironment" parent="." unique_id=245168443]
+environment = SubResource("Environment_vms16")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=1994319644]
+transform = Transform3D(0.81915206, 0.43938506, -0.36868784, 0, 0.64278764, 0.76604444, 0.57357645, -0.62750685, 0.5265408, 0, 0, 0)
+light_color = Color(1, 0.96, 0.87, 1)
+shadow_enabled = true
+shadow_bias = 0.3
+shadow_normal_bias = 3.0
+directional_shadow_mode = 1
+directional_shadow_max_distance = 85.0
+
+[node name="VanPrototype" type="RigidBody3D" parent="." unique_id=1148736027 instance=ExtResource("16_0cnxw")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -75, 3.3, 94)
+
+[node name="CameraRig" type="Node3D" parent="." unique_id=543055594]
+script = ExtResource("18_ep16m")
+
+[node name="FollowCamera" type="Camera3D" parent="CameraRig" unique_id=1537895706]
+transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, 0, 4, 8)
+current = true
+far = 450.0
+
+[node name="RouteGuide" type="Path3D" parent="." unique_id=1943655739]
+curve = ExtResource("19_tf8c1")

@@ -1,0 +1,14 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/environment/quaternius_nature/Leaves_NormalTree_C.png" id="1_77fie"]
+
+[resource]
+resource_name = "Leaves_TwistedTree"
+transparency = 2
+alpha_scissor_threshold = 0.2
+alpha_antialiasing_mode = 0
+cull_mode = 2
+albedo_color = Color(0.82, 0.89, 0.76, 1)
+albedo_texture = ExtResource("1_77fie")
+metallic_specular = 0.0
+metadata/_gltf_primary_texture_coord = 0

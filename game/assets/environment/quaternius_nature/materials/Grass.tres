@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" format=3]
+
+[ext_resource type="Texture2D" path="res://assets/environment/quaternius_nature/Grass.png" id="1_sts20"]
+
+[resource]
+resource_name = "Grass"
+cull_mode = 2
+albedo_color = Color(0.82, 0.89, 0.76, 1)
+albedo_texture = ExtResource("1_sts20")
+metallic_specular = 0.0
+metadata/_gltf_primary_texture_coord = 0
