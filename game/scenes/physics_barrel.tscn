@@ -1,0 +1,56 @@
+[gd_scene format=3]
+
+[sub_resource type="PhysicsMaterial" id="Physics"]
+friction = 0.5
+bounce = 0.08
+
+[sub_resource type="StandardMaterial3D" id="Metal"]
+albedo_color = Color(0.27, 0.4, 0.43, 1)
+roughness = 0.8
+metallic = 0.25
+
+[sub_resource type="StandardMaterial3D" id="Bands"]
+albedo_color = Color(0.18, 0.22, 0.24, 1)
+roughness = 0.9
+
+[sub_resource type="CylinderMesh" id="Body"]
+top_radius = 0.4
+bottom_radius = 0.4
+height = 1.2
+radial_segments = 12
+rings = 1
+
+[sub_resource type="CylinderMesh" id="Band"]
+top_radius = 0.42
+bottom_radius = 0.42
+height = 0.09
+radial_segments = 12
+rings = 1
+
+[sub_resource type="CylinderShape3D" id="Shape"]
+radius = 0.42
+height = 1.2
+
+[node name="PhysicsBarrel" type="RigidBody3D"]
+mass = 18.0
+physics_material_override = SubResource("Physics")
+continuous_cd = true
+linear_damp = 0.15
+angular_damp = 0.18
+
+[node name="Body" type="MeshInstance3D" parent="."]
+mesh = SubResource("Body")
+material_override = SubResource("Metal")
+
+[node name="UpperBand" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.42, 0)
+mesh = SubResource("Band")
+material_override = SubResource("Bands")
+
+[node name="LowerBand" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.42, 0)
+mesh = SubResource("Band")
+material_override = SubResource("Bands")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("Shape")

@@ -3,6 +3,9 @@
 [ext_resource type="PackedScene" uid="uid://xhuatwvnqsyp" path="res://scenes/terrain_showcase.tscn" id="1_terrain"]
 [ext_resource type="PackedScene" path="res://scenes/repair_antenna.tscn" id="2_antenna"]
 [ext_resource type="Script" uid="uid://dxsinqipmovx5" path="res://scripts/antenna_mission_ui.gd" id="3_ui"]
+[ext_resource type="PackedScene" path="res://scenes/physics_crate.tscn" id="4_crate"]
+[ext_resource type="PackedScene" path="res://scenes/physics_cone.tscn" id="5_cone"]
+[ext_resource type="PackedScene" path="res://scenes/physics_barrel.tscn" id="6_barrel"]
 
 [node name="MissionLevel" unique_id=237866557 instance=ExtResource("1_terrain")]
 
@@ -22,3 +25,29 @@ theme_override_colors/font_outline_color = Color(0.05, 0.06, 0.07, 1)
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 18
 text = "ANTENA"
+
+[node name="PhysicsProps" type="Node3D" parent="." index="11" unique_id=2055395000]
+
+[node name="CrateA" parent="PhysicsProps" index="0" unique_id=347909195 instance=ExtResource("4_crate")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -70, 3.05, 72)
+
+[node name="ConeA" parent="PhysicsProps" index="1" unique_id=1185826736 instance=ExtResource("5_cone")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -68, 3.07, 72)
+
+[node name="BarrelA" parent="PhysicsProps" index="2" unique_id=196111045 instance=ExtResource("6_barrel")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -70, 3.12, 69)
+
+[node name="CrateB" parent="PhysicsProps" index="3" unique_id=2054825406 instance=ExtResource("4_crate")]
+transform = Transform3D(0.9553365, 0, 0.29552022, 0, 1, 0, -0.29552022, 0, 0.9553365, -68, 3.18, 69)
+
+[node name="ConeB" parent="PhysicsProps" index="4" unique_id=1892926221 instance=ExtResource("5_cone")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -70, 2.98, 66)
+
+[node name="BarrelB" parent="PhysicsProps" index="5" unique_id=2003947517 instance=ExtResource("6_barrel")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -68, 3.21, 66)
+
+[node name="CrateC" parent="PhysicsProps" index="6" unique_id=626729549 instance=ExtResource("4_crate")]
+transform = Transform3D(0.9800666, 0, -0.19866933, 0, 1, 0, 0.19866933, 0, 0.9800666, -70, 3.08, 63)
+
+[node name="ConeC" parent="PhysicsProps" index="7" unique_id=781060047 instance=ExtResource("5_cone")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -68, 3.07, 63)

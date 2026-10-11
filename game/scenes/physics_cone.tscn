@@ -1,0 +1,69 @@
+[gd_scene format=3]
+
+[sub_resource type="PhysicsMaterial" id="Physics"]
+friction = 0.55
+bounce = 0.12
+
+[sub_resource type="StandardMaterial3D" id="Orange"]
+albedo_color = Color(0.95, 0.34, 0.06, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="White"]
+albedo_color = Color(0.9, 0.9, 0.8, 1)
+roughness = 0.9
+
+[sub_resource type="StandardMaterial3D" id="Rubber"]
+albedo_color = Color(0.12, 0.14, 0.15, 1)
+roughness = 1.0
+
+[sub_resource type="CylinderMesh" id="Cone"]
+top_radius = 0.025
+bottom_radius = 0.26
+height = 0.82
+radial_segments = 8
+rings = 1
+
+[sub_resource type="CylinderMesh" id="Stripe"]
+top_radius = 0.107
+bottom_radius = 0.148
+height = 0.14
+radial_segments = 8
+rings = 1
+
+[sub_resource type="BoxMesh" id="Base"]
+size = Vector3(0.65, 0.08, 0.65)
+
+[sub_resource type="ConvexPolygonShape3D" id="ConeShape"]
+points = PackedVector3Array(0.26, -0.37, 0, 0.184, -0.37, 0.184, 0, -0.37, 0.26, -0.184, -0.37, 0.184, -0.26, -0.37, 0, -0.184, -0.37, -0.184, 0, -0.37, -0.26, 0.184, -0.37, -0.184, 0, 0.45, 0)
+
+[sub_resource type="BoxShape3D" id="BaseShape"]
+size = Vector3(0.65, 0.08, 0.65)
+
+[node name="PhysicsCone" type="RigidBody3D"]
+mass = 2.5
+physics_material_override = SubResource("Physics")
+continuous_cd = true
+linear_damp = 0.12
+angular_damp = 0.2
+
+[node name="Cone" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.04, 0)
+mesh = SubResource("Cone")
+material_override = SubResource("Orange")
+
+[node name="Stripe" type="MeshInstance3D" parent="."]
+position = Vector3(0, 0.1, 0)
+mesh = SubResource("Stripe")
+material_override = SubResource("White")
+
+[node name="Base" type="MeshInstance3D" parent="."]
+position = Vector3(0, -0.41, 0)
+mesh = SubResource("Base")
+material_override = SubResource("Rubber")
+
+[node name="ConeCollision" type="CollisionShape3D" parent="."]
+shape = SubResource("ConeShape")
+
+[node name="BaseCollision" type="CollisionShape3D" parent="."]
+position = Vector3(0, -0.41, 0)
+shape = SubResource("BaseShape")
