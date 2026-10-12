@@ -1,133 +1,62 @@
-[gd_scene format=3 uid="uid://yrslti06iqq2"]
+[gd_scene format=4 uid="uid://yrslti06iqq2"]
 
-[ext_resource type="Script" uid="uid://c7ole7u07n7y1" path="res://scripts/van_controller.gd" id="1_8js7r"]
-[ext_resource type="Script" path="res://scripts/van_surface_particles.gd" id="2_particles"]
+[ext_resource type="Script" uid="uid://c7ole7u07n7y1" path="res://scripts/van_controller.gd" id="1_erg2n"]
+[ext_resource type="Script" path="res://scripts/van_surface_particles.gd" id="2_3ty1i"]
 
-[sub_resource type="BoxMesh" id="BoxMesh_racsl"]
-size = Vector3(2.0, 0.49, 4.0)
+[sub_resource type="StandardMaterial3D" id="PaintBlue"]
+albedo_color = Color(0.19, 0.3, 0.34, 1)
+metallic_specular = 0.0
+roughness = 0.85
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_ge56e"]
+_surfaces = [{
+"aabb": AABB(-1, 0.14, -2, 2, 0.64, 4),
+"format": 34359738375,
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 288,
+"vertex_data": PackedByteArray("AACAvylcDz4AAADAAACAvxSuRz8AAADAAACAvxSuRz+amfm/AACAvylcDz4AAADAAACAvxSuRz+amfm/AACAv4ltNz6amfm/AACAPylcDz4AAADAAACAPxSuRz+amfm/AACAPxSuRz8AAADAAACAPylcDz4AAADAAACAP4ltNz6amfm/AACAPxSuRz+amfm/AACAvylcDz4AAADAAACAP4ltNz6amfm/AACAPylcDz4AAADAAACAvylcDz4AAADAAACAv4ltNz6amfm/AACAP4ltNz6amfm/AACAv4ltNz6amfm/AACAvxSuRz+amfm/AACAvxSuRz/NzOy/AACAv4ltNz6amfm/AACAvxSuRz/NzOy/AACAv/+spz7NzOy/AACAP4ltNz6amfm/AACAPxSuRz/NzOy/AACAPxSuRz+amfm/AACAP4ltNz6amfm/AACAP/+spz7NzOy/AACAPxSuRz/NzOy/AACAv4ltNz6amfm/AACAP/+spz7NzOy/AACAP4ltNz6amfm/AACAv4ltNz6amfm/AACAv/+spz7NzOy/AACAP/+spz7NzOy/AACAv/+spz7NzOy/AACAvxSuRz/NzOy/AACAvxSuRz+amdm/AACAv/+spz7NzOy/AACAvxSuRz+amdm/AACAv0464T6amdm/AACAP/+spz7NzOy/AACAPxSuRz+amdm/AACAPxSuRz/NzOy/AACAP/+spz7NzOy/AACAP0464T6amdm/AACAPxSuRz+amdm/AACAv/+spz7NzOy/AACAP0464T6amdm/AACAP/+spz7NzOy/AACAv/+spz7NzOy/AACAv0464T6amdm/AACAP0464T6amdm/AACAv0464T6amdm/AACAvxSuRz+amdm/AACAvxSuRz+ambm/AACAv0464T6amdm/AACAvxSuRz+ambm/AACAvwAAAD+ambm/AACAP0464T6amdm/AACAPxSuRz+ambm/AACAPxSuRz+amdm/AACAP0464T6amdm/AACAPwAAAD+ambm/AACAPxSuRz+ambm/AACAv0464T6amdm/AACAPwAAAD+ambm/AACAP0464T6amdm/AACAv0464T6amdm/AACAvwAAAD+ambm/AACAPwAAAD+ambm/AACAvwAAAD+ambm/AACAvxSuRz+ambm/AACAvxSuRz+amZm/AACAvwAAAD+ambm/AACAvxSuRz+amZm/AACAv0464T6amZm/AACAPwAAAD+ambm/AACAPxSuRz+amZm/AACAPxSuRz+ambm/AACAPwAAAD+ambm/AACAP0464T6amZm/AACAPxSuRz+amZm/AACAvwAAAD+ambm/AACAP0464T6amZm/AACAPwAAAD+ambm/AACAvwAAAD+ambm/AACAv0464T6amZm/AACAP0464T6amZm/AACAv0464T6amZm/AACAvxSuRz+amZm/AACAvxSuRz9mZoa/AACAv0464T6amZm/AACAvxSuRz9mZoa/AACAv/+spz5mZoa/AACAP0464T6amZm/AACAPxSuRz9mZoa/AACAPxSuRz+amZm/AACAP0464T6amZm/AACAP/+spz5mZoa/AACAPxSuRz9mZoa/AACAv0464T6amZm/AACAP/+spz5mZoa/AACAP0464T6amZm/AACAv0464T6amZm/AACAv/+spz5mZoa/AACAP/+spz5mZoa/AACAv/+spz5mZoa/AACAvxSuRz9mZoa/AACAvxSuRz8zM3O/AACAv/+spz5mZoa/AACAvxSuRz8zM3O/AACAv4ltNz4zM3O/AACAP/+spz5mZoa/AACAPxSuRz8zM3O/AACAPxSuRz9mZoa/AACAP/+spz5mZoa/AACAP4ltNz4zM3O/AACAPxSuRz8zM3O/AACAv/+spz5mZoa/AACAP4ltNz4zM3O/AACAP/+spz5mZoa/AACAv/+spz5mZoa/AACAv4ltNz4zM3O/AACAP4ltNz4zM3O/AACAv4ltNz4zM3O/AACAvxSuRz8zM3O/AACAvxSuRz8zM3M/AACAv4ltNz4zM3O/AACAvxSuRz8zM3M/AACAv4ltNz4zM3M/AACAP4ltNz4zM3O/AACAPxSuRz8zM3M/AACAPxSuRz8zM3O/AACAP4ltNz4zM3O/AACAP4ltNz4zM3M/AACAPxSuRz8zM3M/AACAv4ltNz4zM3O/AACAP4ltNz4zM3M/AACAP4ltNz4zM3O/AACAv4ltNz4zM3O/AACAv4ltNz4zM3M/AACAP4ltNz4zM3M/AACAv4ltNz4zM3M/AACAvxSuRz8zM3M/AACAvxSuRz9mZoY/AACAv4ltNz4zM3M/AACAvxSuRz9mZoY/AACAv/+spz5mZoY/AACAP4ltNz4zM3M/AACAPxSuRz9mZoY/AACAPxSuRz8zM3M/AACAP4ltNz4zM3M/AACAP/+spz5mZoY/AACAPxSuRz9mZoY/AACAv4ltNz4zM3M/AACAP/+spz5mZoY/AACAP4ltNz4zM3M/AACAv4ltNz4zM3M/AACAv/+spz5mZoY/AACAP/+spz5mZoY/AACAv/+spz5mZoY/AACAvxSuRz9mZoY/AACAvxSuRz+amZk/AACAv/+spz5mZoY/AACAvxSuRz+amZk/AACAv0464T6amZk/AACAP/+spz5mZoY/AACAPxSuRz+amZk/AACAPxSuRz9mZoY/AACAP/+spz5mZoY/AACAP0464T6amZk/AACAPxSuRz+amZk/AACAv/+spz5mZoY/AACAP0464T6amZk/AACAP/+spz5mZoY/AACAv/+spz5mZoY/AACAv0464T6amZk/AACAP0464T6amZk/AACAv0464T6amZk/AACAvxSuRz+amZk/AACAvxSuRz+ambk/AACAv0464T6amZk/AACAvxSuRz+ambk/AACAvwAAAD+ambk/AACAP0464T6amZk/AACAPxSuRz+ambk/AACAPxSuRz+amZk/AACAP0464T6amZk/AACAPwAAAD+ambk/AACAPxSuRz+ambk/AACAv0464T6amZk/AACAPwAAAD+ambk/AACAP0464T6amZk/AACAv0464T6amZk/AACAvwAAAD+ambk/AACAPwAAAD+ambk/AACAvwAAAD+ambk/AACAvxSuRz+ambk/AACAvxSuRz+amdk/AACAvwAAAD+ambk/AACAvxSuRz+amdk/AACAv0464T6amdk/AACAPwAAAD+ambk/AACAPxSuRz+amdk/AACAPxSuRz+ambk/AACAPwAAAD+ambk/AACAP0464T6amdk/AACAPxSuRz+amdk/AACAvwAAAD+ambk/AACAP0464T6amdk/AACAPwAAAD+ambk/AACAvwAAAD+ambk/AACAv0464T6amdk/AACAP0464T6amdk/AACAv0464T6amdk/AACAvxSuRz+amdk/AACAvxSuRz/NzOw/AACAv0464T6amdk/AACAvxSuRz/NzOw/AACAv/+spz7NzOw/AACAP0464T6amdk/AACAPxSuRz/NzOw/AACAPxSuRz+amdk/AACAP0464T6amdk/AACAP/+spz7NzOw/AACAPxSuRz/NzOw/AACAv0464T6amdk/AACAP/+spz7NzOw/AACAP0464T6amdk/AACAv0464T6amdk/AACAv/+spz7NzOw/AACAP/+spz7NzOw/AACAv/+spz7NzOw/AACAvxSuRz/NzOw/AACAvxSuRz+amfk/AACAv/+spz7NzOw/AACAvxSuRz+amfk/AACAv4ltNz6amfk/AACAP/+spz7NzOw/AACAPxSuRz+amfk/AACAPxSuRz/NzOw/AACAP/+spz7NzOw/AACAP4ltNz6amfk/AACAPxSuRz+amfk/AACAv/+spz7NzOw/AACAP4ltNz6amfk/AACAP/+spz7NzOw/AACAv/+spz7NzOw/AACAv4ltNz6amfk/AACAP4ltNz6amfk/AACAv4ltNz6amfk/AACAvxSuRz+amfk/AACAvxSuRz8AAABAAACAv4ltNz6amfk/AACAvxSuRz8AAABAAACAvylcDz4AAABAAACAP4ltNz6amfk/AACAPxSuRz8AAABAAACAPxSuRz+amfk/AACAP4ltNz6amfk/AACAPylcDz4AAABAAACAPxSuRz8AAABAAACAv4ltNz6amfk/AACAPylcDz4AAABAAACAP4ltNz6amfk/AACAv4ltNz6amfk/AACAvylcDz4AAABAAACAPylcDz4AAABAAACAvxSuRz8AAADAAACAPxSuRz8AAADAAACAPxSuRz8AAABAAACAvxSuRz8AAADAAACAPxSuRz8AAABAAACAvxSuRz8AAABAAACAvylcDz4AAADAAACAPylcDz4AAADAAACAPxSuRz8AAADAAACAvylcDz4AAADAAACAPxSuRz8AAADAAACAvxSuRz8AAADAAACAvylcDz4AAABAAACAPxSuRz8AAABAAACAPylcDz4AAABAAACAvylcDz4AAABAAACAvxSuRz8AAABAAACAPxSuRz8AAABAAAD/f/9//78AAP9//3//vwAA/3//f/+/AAD/f/9//78AAP9//3//vwAA/3//f/+/////f/9//7////9//3//v////3//f/+/////f/9//7////9//3//v////3//f/+//38xOLoguJr/fzE4uiC4mv9/MTi6ILia/38xOLoguJr/fzE4uiC4mv9/MTi6ILiaAAD/f/9//78AAP9//3//vwAA/3//f/+/AAD/f/9//78AAP9//3//vwAA/3//f/+/////f/9//7////9//3//v////3//f/+/////f/9//7////9//3//v////3//f/+//392TCM8qI3/f3ZMIzyojf9/dkwjPKiN/392TCM8qI3/f3ZMIzyojf9/dkwjPKiNAAD/f/9//78AAP9//3//vwAA/3//f/+/AAD/f/9//78AAP9//3//vwAA/3//f/+/////f/9//7////9//3//v////3//f/+/////f/9//7////9//3//v////3//f/+//3/UNhofsZv/f9Q2Gh+xm/9/1DYaH7Gb/3/UNhofsZv/f9Q2Gh+xm/9/1DYaH7GbAAD/f/9//78AAP9//3//vwAA/3//f/+/AAD/f/9//78AAP9//3//vwAA/3//f/+/////f/9//7////9//3//v////3//f/+/////f/9//7////9//3//v////3//f/+//3/OGLIFS7H/f84YsgVLsf9/zhiyBUux/3/OGLIFS7H/f84YsgVLsf9/zhiyBUuxAAD/f/9//78AAP9//3//vwAA/3//f/+/AAD/f/9//78AAP9//3//vwAA/3//f/+/////f/9//7////9//3//v////3//f/+/////f/9//7////9//3//v////3//f/+/zpgAAGYdJb3OmAAAZh0lvc6YAABmHSW9zpgAAGYdJb3OmAAAZh0lvc6YAABmHSW9AAD/f/9//78AAP9//3//vwAA/3//f/+/AAD/f/9//78AAP9//3//vwAA/3//f/+/////f/9//7////9//3//v////3//f/+/////f/9//7////9//3//v////3//f/+/1LYAAJxIcbDUtgAAnEhxsNS2AACcSHGw1LYAAJxIcbDUtgAAnEhxsNS2AACcSHGwAAD/f/9//78AAP9//3//vwAA/3//f/+/AAD/f/9//78AAP9//3//vwAA/3//f/+/////f/9//7////9//3//v////3//f/+/////f/9//7////9//3//v////3//f/+/dcwAAK1k7aF1zAAArWTtoXXMAACtZO2hdcwAAK1k7aF1zAAArWTtoXXMAACtZO2hAAD/f/9//78AAP9//3//vwAA/3//f/+/AAD/f/9//78AAP9//3//vwAA/3//f/+/////f/9//7////9//3//v////3//f/+/////f/9//7////9//3//v////3//f/+//38AAAAA/7//fwAAAAD/v/9/AAAAAP+//38AAAAA/7//fwAAAAD/v/9/AAAAAP+/AAD/f/9//78AAP9//3//vwAA/3//f/+/AAD/f/9//78AAP9//3//vwAA/3//f/+/////f/9//7////9//3//v////3//f/+/////f/9//7////9//3//v////3//f/+//392TCM8qI3/f3ZMIzyojf9/dkwjPKiN/392TCM8qI3/f3ZMIzyojf9/dkwjPKiNAAD/f/9//78AAP9//3//vwAA/3//f/+/AAD/f/9//78AAP9//3//vwAA/3//f/+/////f/9//7////9//3//v////3//f/+/////f/9//7////9//3//v////3//f/+//3/UNhofsZv/f9Q2Gh+xm/9/1DYaH7Gb/3/UNhofsZv/f9Q2Gh+xm/9/1DYaH7GbAAD/f/9//78AAP9//3//vwAA/3//f/+/AAD/f/9//78AAP9//3//vwAA/3//f/+/////f/9//7////9//3//v////3//f/+/////f/9//7////9//3//v////3//f/+//3/OGLIFS7H/f84YsgVLsf9/zhiyBUux/3/OGLIFS7H/f84YsgVLsf9/zhiyBUuxAAD/f/9//78AAP9//3//vwAA/3//f/+/AAD/f/9//78AAP9//3//vwAA/3//f/+/////f/9//7////9//3//v////3//f/+/////f/9//7////9//3//v////3//f/+/zpgAAGYdJb3OmAAAZh0lvc6YAABmHSW9zpgAAGYdJb3OmAAAZh0lvc6YAABmHSW9AAD/f/9//78AAP9//3//vwAA/3//f/+/AAD/f/9//78AAP9//3//vwAA/3//f/+/////f/9//7////9//3//v////3//f/+/////f/9//7////9//3//v////3//f/+/1LYAAJxIcbDUtgAAnEhxsNS2AACcSHGw1LYAAJxIcbDUtgAAnEhxsNS2AACcSHGwAAD/f/9//78AAP9//3//vwAA/3//f/+/AAD/f/9//78AAP9//3//vwAA/3//f/+/////f/9//7////9//3//v////3//f/+/////f/9//7////9//3//v////3//f/+/dcwAAK1k7aF1zAAArWTtoXXMAACtZO2hdcwAAK1k7aF1zAAArWTtoXXMAACtZO2hAAD/f/9//78AAP9//3//vwAA/3//f/+/AAD/f/9//78AAP9//3//vwAA/3//f/+/////f/9//7////9//3//v////3//f/+/////f/9//7////9//3//v////3//f/+/MLgAAI1Koa8wuAAAjUqhrzC4AACNSqGvMLgAAI1Koa8wuAAAjUqhrzC4AACNSqGv/3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/7//f///AAD/v/9///8AAP+///////9/AID//////38AgP//////fwCA//////9/AID//////38AgP//////fwCA/3//f/9/AID/f/9//38AgP9//3//fwCA/3//f/9/AID/f/9//38AgP9//3//fwCA")
+}]
 
 [sub_resource type="ConvexPolygonShape3D" id="ConvexPolygonShape3D_racsl"]
-points = PackedVector3Array(
-	-1, -0.5, -1.3,
-	1, -0.5, -1.3,
-	-1, -0.5, 1.3,
-	1, -0.5, 1.3,
-	-1, 0.7, -2,
-	1, 0.7, -2,
-	-1, 0.7, 2,
-	1, 0.7, 2
-)
+points = PackedVector3Array(-1, -0.5, -1.3, 1, -0.5, -1.3, -1, -0.5, 1.3, 1, -0.5, 1.3, -1, 0.7, -2, 1, 0.7, -2, -1, 0.7, 2, 1, 0.7, 2)
 
 [sub_resource type="CylinderMesh" id="CylinderMesh_racsl"]
-top_radius = 0.45
-bottom_radius = 0.45
+top_radius = 0.43
+bottom_radius = 0.43
 height = 0.3
 radial_segments = 12
 rings = 1
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_tbjop"]
 albedo_color = Color(0.045, 0.05, 0.055, 1)
-roughness = 1.0
-metallic_specular = 0.0
-
-[sub_resource type="StandardMaterial3D" id="PaintCream"]
-albedo_color = Color(0.89, 0.86, 0.76, 1)
-roughness = 0.85
-metallic_specular = 0.0
-
-[sub_resource type="StandardMaterial3D" id="PaintBlue"]
-albedo_color = Color(0.19, 0.32, 0.4, 1)
-roughness = 0.85
-metallic_specular = 0.0
-
-[sub_resource type="StandardMaterial3D" id="PaintStripe"]
-albedo_color = Color(0.75, 0.24, 0.12, 1)
-roughness = 0.85
-metallic_specular = 0.0
-
-[sub_resource type="StandardMaterial3D" id="GlassDark"]
-albedo_color = Color(0.055, 0.10, 0.13, 1)
-roughness = 0.45
-metallic_specular = 0.15
-
-[sub_resource type="StandardMaterial3D" id="TrimDark"]
-albedo_color = Color(0.10, 0.12, 0.13, 1)
-roughness = 0.9
 metallic_specular = 0.0
 
 [sub_resource type="StandardMaterial3D" id="MetalSilver"]
-albedo_color = Color(0.52, 0.56, 0.58, 1)
-roughness = 0.7
+albedo_color = Color(0.48, 0.5, 0.46, 1)
+metallic = 0.12
 metallic_specular = 0.15
-
-[sub_resource type="StandardMaterial3D" id="HeadlightMaterial"]
-shading_mode = 0
-albedo_color = Color(1, 0.9, 0.65, 1)
-
-[sub_resource type="StandardMaterial3D" id="TaillightMaterial"]
-shading_mode = 0
-albedo_color = Color(0.85, 0.07, 0.035, 1)
-
-[sub_resource type="BoxMesh" id="CargoMesh"]
-size = Vector3(2.0, 0.72, 2.88)
-
-[sub_resource type="BoxMesh" id="CabinMesh"]
-size = Vector3(2.0, 0.71, 0.53)
-
-[sub_resource type="BoxMesh" id="HoodMesh"]
-size = Vector3(2.0, 0.23, 0.58)
-
-[sub_resource type="BoxMesh" id="StripeMesh"]
-size = Vector3(2.025, 0.055, 4.025)
-
-[sub_resource type="BoxMesh" id="WindshieldMesh"]
-size = Vector3(1.68, 0.46, 0.02)
-
-[sub_resource type="BoxMesh" id="SideWindowMesh"]
-size = Vector3(0.025, 0.46, 0.43)
-
-[sub_resource type="BoxMesh" id="RearWindowMesh"]
-size = Vector3(1.58, 0.42, 0.025)
-
-[sub_resource type="BoxMesh" id="BumperMesh"]
-size = Vector3(2.1, 0.16, 0.12)
-
-[sub_resource type="BoxMesh" id="GrilleMesh"]
-size = Vector3(1.12, 0.25, 0.025)
-
-[sub_resource type="BoxMesh" id="GrilleBarMesh"]
-size = Vector3(1.0, 0.035, 0.015)
-
-[sub_resource type="BoxMesh" id="HeadlightMesh"]
-size = Vector3(0.30, 0.23, 0.03)
-
-[sub_resource type="BoxMesh" id="TaillightMesh"]
-size = Vector3(0.15, 0.28, 0.03)
-
-[sub_resource type="BoxMesh" id="MirrorMesh"]
-size = Vector3(0.14, 0.25, 0.16)
-
-[sub_resource type="BoxMesh" id="HandleMesh"]
-size = Vector3(0.025, 0.045, 0.16)
-
-[sub_resource type="BoxMesh" id="RearDoorSeamMesh"]
-size = Vector3(0.018, 0.95, 0.025)
-
-[sub_resource type="BoxMesh" id="RackSideMesh"]
-size = Vector3(0.07, 0.16, 2.5)
-
-[sub_resource type="BoxMesh" id="RackEndMesh"]
-size = Vector3(1.65, 0.16, 0.07)
-
-[sub_resource type="BoxMesh" id="RackSupportMesh"]
-size = Vector3(1.7, 0.075, 0.12)
+roughness = 0.9
 
 [sub_resource type="CylinderMesh" id="WheelHubMesh"]
-top_radius = 0.21
-bottom_radius = 0.21
+top_radius = 0.205
+bottom_radius = 0.205
 height = 0.32
 radial_segments = 12
 rings = 1
+
+[sub_resource type="StandardMaterial3D" id="TrimDark"]
+albedo_color = Color(0.1, 0.12, 0.13, 1)
+metallic_specular = 0.0
+roughness = 0.9
+
+[sub_resource type="BoxMesh" id="BoxMesh_sdpt1"]
+
+[sub_resource type="MultiMesh" id="MultiMesh_lfqto"]
+transform_format = 1
+instance_count = 25
+mesh = SubResource("BoxMesh_sdpt1")
+buffer = PackedFloat32Array(0.07829545, 0, 0.007391827, 0.08829127, 0, 0.13, 0, -0.085, -0.016426282, 0, 0.03523295, 0.42083803, 0.07601898, 0, 0.011214966, 0.13395654, 0, 0.13, 0, 0.085, -0.024922146, 0, 0.034208544, 0.40860206, 0.059592705, 0, 0.024017986, 0.2868815, 0, 0.13, 0, -0.085, -0.053373303, 0, 0.026816716, 0.3203108, 0.053373296, 0, 0.026816718, 0.3203108, 0, 0.13, 0, 0.085, -0.05959271, 0, 0.024017984, 0.2868815, 0.024922144, 0, 0.034208544, 0.40860206, 0, 0.13, 0, -0.085, -0.07601899, 0, 0.011214964, 0.13395654, 0.016426278, 0, 0.03523295, 0.42083803, 0, 0.13, 0, 0.085, -0.07829545, 0, 0.0073918253, 0.08829127, -0.016426286, 0, 0.03523295, 0.42083803, 0, 0.13, 0, -0.085, -0.07829545, 0, -0.0073918286, -0.08829127, -0.02492215, 0, 0.034208544, 0.40860206, 0, 0.13, 0, 0.085, -0.07601898, 0, -0.011214967, -0.13395654, -0.053373296, 0, 0.026816718, 0.3203108, 0, 0.13, 0, -0.085, -0.05959271, 0, -0.024017984, -0.2868815, -0.05959271, 0, 0.024017984, 0.2868815, 0, 0.13, 0, 0.085, -0.053373296, 0, -0.026816718, -0.3203108, -0.07601899, 0, 0.011214962, 0.13395654, 0, 0.13, 0, -0.085, -0.02492214, 0, -0.034208544, -0.40860206, -0.07829545, 0, 0.007391828, 0.08829127, 0, 0.13, 0, 0.085, -0.016426286, 0, -0.03523295, -0.42083803, -0.07829545, 0, -0.007391826, -0.08829127, 0, 0.13, 0, -0.085, 0.01642628, 0, -0.03523295, -0.42083803, -0.07601898, 0, -0.011214969, -0.13395654, 0, 0.13, 0, 0.085, 0.024922153, 0, -0.034208544, -0.40860206, -0.059592698, 0, -0.024017988, -0.2868815, 0, 0.13, 0, -0.085, 0.053373307, 0, -0.026816715, -0.3203108, -0.053373303, 0, -0.026816716, -0.3203108, 0, 0.13, 0, 0.085, 0.059592705, 0, -0.024017986, -0.2868815, -0.024922127, 0, -0.034208547, -0.40860206, 0, 0.13, 0, -0.085, 0.076019, 0, -0.011214957, -0.13395654, -0.016426291, 0, -0.03523295, -0.42083803, 0, 0.13, 0, 0.085, 0.07829545, 0, -0.007391831, -0.08829127, 0.016426293, 0, -0.03523295, -0.42083803, 0, 0.13, 0, -0.085, 0.07829545, 0, 0.007391832, 0.08829127, 0.024922129, 0, -0.034208547, -0.40860206, 0, 0.13, 0, 0.085, 0.076019, 0, 0.0112149585, 0.13395654, 0.053373303, 0, -0.026816716, -0.3203108, 0, 0.13, 0, -0.085, 0.059592705, 0, 0.024017986, 0.2868815, 0.059592713, 0, -0.02401798, -0.2868815, 0, 0.13, 0, 0.085, 0.053373292, 0, 0.02681672, 0.3203108, 0.07601898, 0, -0.011214968, -0.13395654, 0, 0.13, 0, -0.085, 0.024922151, 0, 0.034208544, 0.40860206, 0.07829545, 0, -0.007391825, -0.08829127, 0, 0.13, 0, 0.085, 0.016426278, 0, 0.03523295, 0.42083803, 0.11, 0, 0, 0, 0, 0.334, 0, 0, 0, 0, 0.11, 0)
 
 [sub_resource type="Gradient" id="ParticleSoftEdge"]
 colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0)
@@ -146,10 +75,157 @@ shading_mode = 0
 vertex_color_use_as_albedo = true
 albedo_texture = SubResource("ParticleTexture")
 billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
 
 [sub_resource type="QuadMesh" id="ParticleMesh"]
 material = SubResource("ParticleDrawMaterial")
 size = Vector2(0.3, 0.3)
+
+[sub_resource type="StandardMaterial3D" id="PaintCream"]
+albedo_color = Color(0.84, 0.8, 0.67, 1)
+metallic_specular = 0.0
+roughness = 0.85
+
+[sub_resource type="BoxMesh" id="CargoMesh"]
+size = Vector3(2, 0.72, 2.58)
+
+[sub_resource type="ArrayMesh" id="ArrayMesh_bnak1"]
+_surfaces = [{
+"aabb": AABB(-1, 0.78, -1.55, 2, 0.72, 0.96999997),
+"format": 34359738375,
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 36,
+"vertex_data": PackedByteArray("AACAvxSuRz9mZsa/AACAPxSuRz9mZsa/AACAPwAAwD9mZqa/AACAvxSuRz9mZsa/AACAPwAAwD9mZqa/AACAvwAAwD9mZqa/AACAvxSuRz/hehS/AACAPwAAwD/hehS/AACAPxSuRz/hehS/AACAvxSuRz/hehS/AACAvwAAwD/hehS/AACAPwAAwD/hehS/AACAvxSuRz9mZsa/AACAvwAAwD9mZqa/AACAvwAAwD/hehS/AACAvxSuRz9mZsa/AACAvwAAwD/hehS/AACAvxSuRz/hehS/AACAPxSuRz9mZsa/AACAPwAAwD/hehS/AACAPwAAwD9mZqa/AACAPxSuRz9mZsa/AACAPxSuRz/hehS/AACAPwAAwD/hehS/AACAvwAAwD9mZqa/AACAPwAAwD9mZqa/AACAPwAAwD/hehS/AACAvwAAwD9mZqa/AACAPwAAwD/hehS/AACAvwAAwD/hehS/AACAvxSuRz9mZsa/AACAPxSuRz/hehS/AACAPxSuRz9mZsa/AACAvxSuRz9mZsa/AACAvxSuRz/hehS/AACAPxSuRz/hehS/Ad///zRXQYUB3///NFdBhQHf//80V0GFAd///zRXQYUB3///NFdBhQHf//80V0GF/3//f/9/AID/f/9//38AgP9//3//fwCA/3//f/9/AID/f/9//38AgP9//3//fwCAAAD/f/9//78AAP9//3//vwAA/3//f/+/AAD/f/9//78AAP9//3//vwAA/3//f/+/////f/9//7////9//3//v////3//f/+/////f/9//7////9//3//v////3//f/+//3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/7//f///AAD/v/9///8AAP+//38AAAAA/7//fwAAAAD/v/9/AAAAAP+//38AAAAA/7//fwAAAAD/v/9/AAAAAP+/")
+}]
+
+[sub_resource type="BoxMesh" id="HoodMesh"]
+size = Vector3(2, 0.23, 0.58)
+
+[sub_resource type="StandardMaterial3D" id="PaintStripe"]
+albedo_color = Color(0.73, 0.29, 0.13, 1)
+metallic_specular = 0.0
+roughness = 0.85
+
+[sub_resource type="BoxMesh" id="StripeMesh"]
+size = Vector3(2.025, 0.055, 4.025)
+
+[sub_resource type="StandardMaterial3D" id="GlassDark"]
+albedo_color = Color(0.055, 0.1, 0.13, 1)
+metallic_specular = 0.15
+roughness = 0.45
+
+[sub_resource type="BoxMesh" id="WindshieldMesh"]
+size = Vector3(1.68, 0.4, 0.022)
+
+[sub_resource type="ArrayMesh" id="SideWindowMesh"]
+_surfaces = [{
+"aabb": AABB(-0.003, -0.19, -0.345, 0.006, 0.38, 0.66499996),
+"format": 34359738375,
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 36,
+"vertex_data": PackedByteArray("pptEu1yPQr7Xo7C+pptEu1yPQj6sHFq+pptEu1yPQj4K16M+pptEu1yPQr7Xo7C+pptEu1yPQj4K16M+pptEu1yPQr4K16M+pptEO1yPQr7Xo7C+pptEO1yPQj4K16M+pptEO1yPQj6sHFq+pptEO1yPQr7Xo7C+pptEO1yPQr4K16M+pptEO1yPQj4K16M+pptEu1yPQr7Xo7C+pptEO1yPQr7Xo7C+pptEO1yPQj6sHFq+pptEu1yPQr7Xo7C+pptEO1yPQj6sHFq+pptEu1yPQj6sHFq+pptEu1yPQr4K16M+pptEO1yPQj4K16M+pptEO1yPQr4K16M+pptEu1yPQr4K16M+pptEu1yPQj4K16M+pptEO1yPQj4K16M+pptEu1yPQj6sHFq+pptEO1yPQj6sHFq+pptEO1yPQj4K16M+pptEu1yPQj6sHFq+pptEO1yPQj4K16M+pptEu1yPQj4K16M+pptEu1yPQr7Xo7C+pptEO1yPQr4K16M+pptEO1yPQr7Xo7C+pptEu1yPQr7Xo7C+pptEu1yPQr4K16M+pptEO1yPQr4K16M+AAD/f/9//78AAP9//3//vwAA/3//f/+/AAD/f/9//78AAP9//3//vwAA/3//f/+/////f/9//7////9//3//v////3//f/+/////f/9//7////9//3//v////3//f/+//97//zBXQoX/3v//MFdChf/e//8wV0KF/97//zBXQoX/3v//MFdChf/e//8wV0KF/3//f/9/AID/f/9//38AgP9//3//fwCA/3//f/9/AID/f/9//38AgP9//3//fwCA/3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/7//f///AAD/v/9///8AAP+//38AAAAA/7//fwAAAAD/v/9/AAAAAP+//38AAAAA/7//fwAAAAD/v/9/AAAAAP+/")
+}]
+
+[sub_resource type="ArrayMesh" id="SideWindowFrameMesh"]
+_surfaces = [{
+"aabb": AABB(-0.006, -0.225, -0.39, 0.012, 0.45, 0.745),
+"format": 34359738375,
+"primitive": 3,
+"uv_scale": Vector4(0, 0, 0, 0),
+"vertex_count": 36,
+"vertex_data": PackedByteArray("ppvEu2ZmZr4Urse+ppvEu2ZmZj6ynW++ppvEu2ZmZj6PwrU+ppvEu2ZmZr4Urse+ppvEu2ZmZj6PwrU+ppvEu2ZmZr6PwrU+ppvEO2ZmZr4Urse+ppvEO2ZmZj6PwrU+ppvEO2ZmZj6ynW++ppvEO2ZmZr4Urse+ppvEO2ZmZr6PwrU+ppvEO2ZmZj6PwrU+ppvEu2ZmZr4Urse+ppvEO2ZmZr4Urse+ppvEO2ZmZj6ynW++ppvEu2ZmZr4Urse+ppvEO2ZmZj6ynW++ppvEu2ZmZj6ynW++ppvEu2ZmZr6PwrU+ppvEO2ZmZj6PwrU+ppvEO2ZmZr6PwrU+ppvEu2ZmZr6PwrU+ppvEu2ZmZj6PwrU+ppvEO2ZmZj6PwrU+ppvEu2ZmZj6ynW++ppvEO2ZmZj6ynW++ppvEO2ZmZj6PwrU+ppvEu2ZmZj6ynW++ppvEO2ZmZj6PwrU+ppvEu2ZmZj6PwrU+ppvEu2ZmZr4Urse+ppvEO2ZmZr6PwrU+ppvEO2ZmZr4Urse+ppvEu2ZmZr4Urse+ppvEu2ZmZr6PwrU+ppvEO2ZmZr6PwrU+AAD/f/9//78AAP9//3//vwAA/3//f/+/AAD/f/9//78AAP9//3//vwAA/3//f/+/////f/9//7////9//3//v////3//f/+/////f/9//7////9//3//v////3//f/+/C9///0JXPYUL3///Qlc9hQvf//9CVz2FC9///0JXPYUL3///Qlc9hQvf//9CVz2F/3//f/9/AID/f/9//38AgP9//3//fwCA/3//f/9/AID/f/9//38AgP9//3//fwCA/3///wAA/7//f///AAD/v/9///8AAP+//3///wAA/7//f///AAD/v/9///8AAP+//38AAAAA/7//fwAAAAD/v/9/AAAAAP+//38AAAAA/7//fwAAAAD/v/9/AAAAAP+/")
+}]
+
+[sub_resource type="BoxMesh" id="RearWindowMesh"]
+size = Vector3(0.66, 0.38, 0.025)
+
+[sub_resource type="BoxMesh" id="BumperMesh"]
+size = Vector3(2.1, 0.16, 0.12)
+
+[sub_resource type="BoxMesh" id="GrilleMesh"]
+size = Vector3(1.13, 0.24, 0.026)
+
+[sub_resource type="BoxMesh" id="GrilleBarMesh"]
+size = Vector3(1, 0.035, 0.015)
+
+[sub_resource type="StandardMaterial3D" id="HeadlightMaterial"]
+shading_mode = 0
+albedo_color = Color(1, 0.9, 0.65, 1)
+
+[sub_resource type="BoxMesh" id="HeadlightMesh"]
+size = Vector3(0.33, 0.2, 0.025)
+
+[sub_resource type="StandardMaterial3D" id="TaillightMaterial"]
+shading_mode = 0
+albedo_color = Color(0.85, 0.07, 0.035, 1)
+
+[sub_resource type="BoxMesh" id="TaillightMesh"]
+size = Vector3(0.15, 0.28, 0.03)
+
+[sub_resource type="BoxMesh" id="MirrorMesh"]
+size = Vector3(0.12, 0.23, 0.22)
+
+[sub_resource type="BoxMesh" id="HandleMesh"]
+size = Vector3(0.025, 0.045, 0.16)
+
+[sub_resource type="BoxMesh" id="RearDoorSeamMesh"]
+size = Vector3(0.018, 1.11, 0.025)
+
+[sub_resource type="BoxMesh" id="RackSideMesh"]
+size = Vector3(0.07, 0.12, 2.5)
+
+[sub_resource type="BoxMesh" id="RackEndMesh"]
+size = Vector3(1.65, 0.12, 0.07)
+
+[sub_resource type="BoxMesh" id="RackSupportMesh"]
+size = Vector3(1.7, 0.075, 0.12)
+
+[sub_resource type="BoxMesh" id="BoxMesh_2515i"]
+
+[sub_resource type="MultiMesh" id="MultiMesh_ryhmt"]
+transform_format = 1
+instance_count = 9
+mesh = SubResource("BoxMesh_2515i")
+buffer = PackedFloat32Array(0.1, 0, 0, -0.195, 0, 0.05, 0, 0.94, 0, 0, 0.045, 2.032, 0.1, 0, 0, 0.195, 0, 0.05, 0, 0.94, 0, 0, 0.045, 2.032, 0.065, 0, 0, -0.4, 0, 0.055, 0, 1.75, 0, 0, 2.05, 0.55, 0.065, 0, 0, 0.1, 0, 0.055, 0, 1.75, 0, 0, 2.05, 0.55, 0.51, 0, 0, -0.15, 0, 0.05, 0, 1.73, 0, 0, 0.07, -0.28, 0.51, 0, 0, -0.15, 0, 0.05, 0, 1.73, 0, 0, 0.07, 0.24, 0.51, 0, 0, -0.15, 0, 0.05, 0, 1.73, 0, 0, 0.07, 0.76, 0.51, 0, 0, -0.15, 0, 0.05, 0, 1.73, 0, 0, 0.07, 1.28, 0.035, 0, 0, 0, 0, 0.22, 0, 0.64, 0, 0, 0.03, -2.04)
+
+[sub_resource type="BoxMesh" id="BoxMesh_v4c5f"]
+
+[sub_resource type="MultiMesh" id="MultiMesh_rkxo4"]
+transform_format = 1
+instance_count = 46
+mesh = SubResource("BoxMesh_v4c5f")
+buffer = PackedFloat32Array(1.82, 0, 0, 0, 0, 0.45344335, -0.013120468, 1.265, 0, 0.15744561, 0.037786946, -1.394, 1.6, 0, 0, 0, 0, 0.12, 0, 0.25, 0, 0, 3.2, 0, 0.024, 0, 0, -1.009, 0, 1.12, 0, 0.93, 0, 0, 0.018, -0.58, 0.015, 0, 0, -1.024, 0, 0.018, 0, 0.92, 0, 0, 1.058, 1.27, 0.015, 0, 0, -1.024, 0, 0.518, 0, 1.17, 0, 0, 0.018, 0.75, 0.16, 0, 0, -1.08, 0, 0.035, 0, 1.13, 0, 0, 0.055, -1.22, 0.44, 0, 0, -0.77, 0, 0.32, 0, 0.65, 0, 0, 0.045, -2.023, 0.065, 0, 0, -0.8, 0, 0.17, 0, 1.57, 0, 0, 0.065, -0.5, 0.065, 0, 0, -0.8, 0, 0.17, 0, 1.57, 0, 0, 0.065, 1.5, 0.055, 0, 0, -1.014, 0, 0.020120965, 0.18735489, 0.2773272, 0, -0.028638206, 0.13163398, -1.9158857, 0.055, 0, 0, -1.014, 0, 0.029371731, 0.12452434, 0.42781854, 0, -0.019034216, 0.19215372, -1.7596481, 0.055, 0, 0, -1.014, 0, 0.034359086, 0.04361855, 0.5089527, 0, -0.0066673337, 0.22478151, -1.558464, 0.055, 0, 0, -1.014, 0, 0.034359086, -0.043618545, 0.5089527, 0, 0.0066673304, 0.22478163, -1.341536, 0.055, 0, 0, -1.014, 0, 0.029371731, -0.12452434, 0.42781854, 0, 0.019034216, 0.19215372, -1.1403518, 0.055, 0, 0, -1.014, 0, 0.020120958, -0.18735489, 0.2773272, 0, 0.02863821, 0.13163392, -0.9841143, 0.055, 0, 0, -1.014, 0, 0.020120958, 0.18735489, 0.2773272, 0, -0.02863821, 0.13163392, 0.9841143, 0.055, 0, 0, -1.014, 0, 0.029371731, 0.12452434, 0.42781854, 0, -0.019034216, 0.19215372, 1.1403518, 0.055, 0, 0, -1.014, 0, 0.034359086, 0.043618545, 0.5089527, 0, -0.0066673304, 0.22478163, 1.341536, 0.055, 0, 0, -1.014, 0, 0.034359086, -0.04361855, 0.5089527, 0, 0.0066673337, 0.22478151, 1.558464, 0.055, 0, 0, -1.014, 0, 0.029371731, -0.12452434, 0.42781854, 0, 0.019034216, 0.19215372, 1.7596481, 0.055, 0, 0, -1.014, 0, 0.020120965, -0.18735489, 0.2773272, 0, 0.028638206, 0.13163398, 1.9158857, 0.024, 0, 0, 1.009, 0, 1.12, 0, 0.93, 0, 0, 0.018, -0.58, 0.015, 0, 0, 1.024, 0, 0.018, 0, 0.92, 0, 0, 1.058, 1.27, 0.015, 0, 0, 1.024, 0, 0.518, 0, 1.17, 0, 0, 0.018, 0.75, 0.16, 0, 0, 1.08, 0, 0.035, 0, 1.13, 0, 0, 0.055, -1.22, 0.44, 0, 0, 0.77, 0, 0.32, 0, 0.65, 0, 0, 0.045, -2.023, 0.065, 0, 0, 0.8, 0, 0.17, 0, 1.57, 0, 0, 0.065, -0.5, 0.065, 0, 0, 0.8, 0, 0.17, 0, 1.57, 0, 0, 0.065, 1.5, 0.055, 0, 0, 1.014, 0, 0.020120965, 0.18735489, 0.2773272, 0, -0.028638206, 0.13163398, -1.9158857, 0.055, 0, 0, 1.014, 0, 0.029371731, 0.12452434, 0.42781854, 0, -0.019034216, 0.19215372, -1.7596481, 0.055, 0, 0, 1.014, 0, 0.034359086, 0.04361855, 0.5089527, 0, -0.0066673337, 0.22478151, -1.558464, 0.055, 0, 0, 1.014, 0, 0.034359086, -0.043618545, 0.5089527, 0, 0.0066673304, 0.22478163, -1.341536, 0.055, 0, 0, 1.014, 0, 0.029371731, -0.12452434, 0.42781854, 0, 0.019034216, 0.19215372, -1.1403518, 0.055, 0, 0, 1.014, 0, 0.020120958, -0.18735489, 0.2773272, 0, 0.02863821, 0.13163392, -0.9841143, 0.055, 0, 0, 1.014, 0, 0.020120958, 0.18735489, 0.2773272, 0, -0.02863821, 0.13163392, 0.9841143, 0.055, 0, 0, 1.014, 0, 0.029371731, 0.12452434, 0.42781854, 0, -0.019034216, 0.19215372, 1.1403518, 0.055, 0, 0, 1.014, 0, 0.034359086, 0.043618545, 0.5089527, 0, -0.0066673304, 0.22478163, 1.341536, 0.055, 0, 0, 1.014, 0, 0.034359086, -0.04361855, 0.5089527, 0, 0.0066673337, 0.22478151, 1.558464, 0.055, 0, 0, 1.014, 0, 0.029371731, -0.12452434, 0.42781854, 0, 0.019034216, 0.19215372, 1.7596481, 0.055, 0, 0, 1.014, 0, 0.020120965, -0.18735489, 0.2773272, 0, 0.028638206, 0.13163398, 1.9158857, 0.76, 0, 0, -0.39, 0, 0.46, 0, 1.19, 0, 0, 0.03, 1.994, 0.76, 0, 0, 0.39, 0, 0.46, 0, 1.19, 0, 0, 0.03, 1.994, 0.015, 0, 0, -1.024, 0, 0.018, 0, 1.42, 0, 0, 1.058, 1.27, 0.015, 0, 0, -1.024, 0, 0.518, 0, 1.17, 0, 0, 0.018, 1.79, 0.015, 0, 0, 1.024, 0, 0.018, 0, 1.42, 0, 0, 1.058, 1.27, 0.015, 0, 0, 1.024, 0, 0.518, 0, 1.17, 0, 0, 0.018, 1.79)
+
+[sub_resource type="BoxMesh" id="BoxMesh_wprj0"]
+
+[sub_resource type="MultiMesh" id="MultiMesh_olvb2"]
+transform_format = 1
+instance_count = 2
+mesh = SubResource("BoxMesh_wprj0")
+buffer = PackedFloat32Array(0.33, 0, 0, -0.77, 0, 0.035, 0, 0.536, 0, 0, 0.018, -2.057, 0.33, 0, 0, 0.77, 0, 0.035, 0, 0.536, 0, 0, 0.018, -2.057)
+
+[sub_resource type="BoxMesh" id="BoxMesh_rdjsa"]
+
+[sub_resource type="MultiMesh" id="MultiMesh_7n58w"]
+transform_format = 1
+instance_count = 3
+mesh = SubResource("BoxMesh_rdjsa")
+buffer = PackedFloat32Array(0.018, 0, 0, -1.014, 0, 0.48, 0, 1.17, 0, 0, 1.02, 1.27, 0.018, 0, 0, 1.014, 0, 0.48, 0, 1.17, 0, 0, 1.02, 1.27, 0.34, 0, 0, 0, 0, 0.12, 0, 0.64, 0, 0, 0.035, 2.034)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qcps0"]
+albedo_color = Color(0.36, 0.29, 0.2, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_llnx4"]
+
+[sub_resource type="MultiMesh" id="MultiMesh_s5syf"]
+transform_format = 1
+instance_count = 5
+mesh = SubResource("BoxMesh_llnx4")
+buffer = PackedFloat32Array(0.02, 0, 0, -1.016, 0, 0.055, 0, 0.36, 0, 0, 0.65, -0.12, 0.02, 0, 0, -1.017, 0, 0.032, 0, 0.405, 0, 0, 0.33, 0.09, 0.02, 0, 0, 1.016, 0, 0.045, 0, 0.37, 0, 0, 0.48, 0.26, 0.43, 0, 0, -0.7, 0, 0.03, 0, 0.48, 0, 0, 0.022, 2.077, 0.2, 0, 0, 0.82, 0, 0.025, 0, 0.46, 0, 0, 0.02, -2.079)
 
 [node name="VanPrototype" type="RigidBody3D" unique_id=1148736027]
 mass = 1000.0
@@ -158,15 +234,13 @@ center_of_mass = Vector3(0, 0.55, 0)
 can_sleep = false
 continuous_cd = true
 linear_damp_mode = 1
-linear_damp = 0.0
 angular_damp_mode = 1
 angular_damp = 0.2
-script = ExtResource("1_8js7r")
+script = ExtResource("1_erg2n")
 
 [node name="BodyMesh" type="MeshInstance3D" parent="." unique_id=10515015]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.555, 0)
-mesh = SubResource("BoxMesh_racsl")
 material_override = SubResource("PaintBlue")
+mesh = SubResource("ArrayMesh_ge56e")
 
 [node name="BodyCollision" type="CollisionShape3D" parent="." unique_id=1766523344]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, 0)
@@ -182,6 +256,14 @@ transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, -
 mesh = SubResource("CylinderMesh_racsl")
 surface_material_override/0 = SubResource("StandardMaterial3D_tbjop")
 
+[node name="Hub" type="MeshInstance3D" parent="WheelFrontLeft/WheelVisual" unique_id=1484788142]
+material_override = SubResource("MetalSilver")
+mesh = SubResource("WheelHubMesh")
+
+[node name="Tread" type="MultiMeshInstance3D" parent="WheelFrontLeft/WheelVisual" unique_id=934418281]
+material_override = SubResource("TrimDark")
+multimesh = SubResource("MultiMesh_lfqto")
+
 [node name="WheelFrontRight" type="RayCast3D" parent="." unique_id=1587999977]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.05, 0.85, -1.45)
 enabled = false
@@ -191,6 +273,14 @@ target_position = Vector3(0, -1.43, 0)
 transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, -0.98, 0)
 mesh = SubResource("CylinderMesh_racsl")
 surface_material_override/0 = SubResource("StandardMaterial3D_tbjop")
+
+[node name="Hub" type="MeshInstance3D" parent="WheelFrontRight/WheelVisual" unique_id=1603734326]
+material_override = SubResource("MetalSilver")
+mesh = SubResource("WheelHubMesh")
+
+[node name="Tread" type="MultiMeshInstance3D" parent="WheelFrontRight/WheelVisual" unique_id=16889566]
+material_override = SubResource("TrimDark")
+multimesh = SubResource("MultiMesh_lfqto")
 
 [node name="WheelRearLeft" type="RayCast3D" parent="." unique_id=1252843629]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.05, 0.85, 1.45)
@@ -202,6 +292,14 @@ transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, -
 mesh = SubResource("CylinderMesh_racsl")
 surface_material_override/0 = SubResource("StandardMaterial3D_tbjop")
 
+[node name="Hub" type="MeshInstance3D" parent="WheelRearLeft/WheelVisual" unique_id=533391738]
+material_override = SubResource("MetalSilver")
+mesh = SubResource("WheelHubMesh")
+
+[node name="Tread" type="MultiMeshInstance3D" parent="WheelRearLeft/WheelVisual" unique_id=874947946]
+material_override = SubResource("TrimDark")
+multimesh = SubResource("MultiMesh_lfqto")
+
 [node name="WheelRearRight" type="RayCast3D" parent="." unique_id=657717099]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.05, 0.85, 1.45)
 enabled = false
@@ -212,198 +310,263 @@ transform = Transform3D(-4.371139e-08, -1, 0, 1, -4.371139e-08, 0, 0, 0, 1, 0, -
 mesh = SubResource("CylinderMesh_racsl")
 surface_material_override/0 = SubResource("StandardMaterial3D_tbjop")
 
-[node name="SurfaceParticles" type="Node3D" parent="."]
-script = ExtResource("2_particles")
+[node name="Hub" type="MeshInstance3D" parent="WheelRearRight/WheelVisual" unique_id=1111273438]
+material_override = SubResource("MetalSilver")
+mesh = SubResource("WheelHubMesh")
 
-[node name="RearLeft" type="GPUParticles3D" parent="SurfaceParticles"]
-position = Vector3(-1.05, -0.3, 1.45)
+[node name="Tread" type="MultiMeshInstance3D" parent="WheelRearRight/WheelVisual" unique_id=1835214008]
+material_override = SubResource("TrimDark")
+multimesh = SubResource("MultiMesh_lfqto")
+
+[node name="SurfaceParticles" type="Node3D" parent="." unique_id=178723954]
+script = ExtResource("2_3ty1i")
+
+[node name="RearLeft" type="GPUParticles3D" parent="SurfaceParticles" unique_id=961046953]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.05, -0.3, 1.45)
 cast_shadow = 0
 emitting = false
 amount = 24
 lifetime = 0.65
 randomness = 0.25
 visibility_aabb = AABB(-32, -5, -32, 64, 14, 64)
-fixed_fps = 30
 draw_pass_1 = SubResource("ParticleMesh")
 
-[node name="RearRight" type="GPUParticles3D" parent="SurfaceParticles"]
-position = Vector3(1.05, -0.3, 1.45)
+[node name="RearRight" type="GPUParticles3D" parent="SurfaceParticles" unique_id=109866693]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.05, -0.3, 1.45)
 cast_shadow = 0
 emitting = false
 amount = 24
 lifetime = 0.65
 randomness = 0.25
 visibility_aabb = AABB(-32, -5, -32, 64, 14, 64)
-fixed_fps = 30
 draw_pass_1 = SubResource("ParticleMesh")
 
-[node name="VisualDetails" type="Node3D" parent="."]
+[node name="VisualDetails" type="Node3D" parent="." unique_id=355886708]
 
-[node name="CargoBody" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(0, 1.2, 0.55)
+[node name="CargoBody" type="MeshInstance3D" parent="VisualDetails" unique_id=1227048597]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.14, 0.71)
+material_override = SubResource("PaintCream")
 mesh = SubResource("CargoMesh")
-material_override = SubResource("PaintCream")
 
-[node name="Cabin" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(0, 1.195, -1.155)
-mesh = SubResource("CabinMesh")
+[node name="Cabin" type="MeshInstance3D" parent="VisualDetails" unique_id=381662951]
 material_override = SubResource("PaintCream")
+mesh = SubResource("ArrayMesh_bnak1")
 
-[node name="Hood" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(0, 0.955, -1.71)
+[node name="Hood" type="MeshInstance3D" parent="VisualDetails" unique_id=1146676777]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.915, -1.71)
+material_override = SubResource("PaintCream")
 mesh = SubResource("HoodMesh")
-material_override = SubResource("PaintCream")
 
-[node name="PaintStripe" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(0, 0.82, 0)
-mesh = SubResource("StripeMesh")
+[node name="PaintStripe" type="MeshInstance3D" parent="VisualDetails" unique_id=542771303]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.78, 0)
 material_override = SubResource("PaintStripe")
+mesh = SubResource("StripeMesh")
 
-[node name="Windshield" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(0, 1.23, -1.43)
+[node name="Windshield" type="MeshInstance3D" parent="VisualDetails" unique_id=1684570495]
+transform = Transform3D(1, 0, 0, 0, 0.94467366, -0.3280117, 0, 0.3280117, 0.94467366, 0, 1.27, -1.414)
+material_override = SubResource("GlassDark")
+cast_shadow = 0
 mesh = SubResource("WindshieldMesh")
+
+[node name="WindowLeft" type="MeshInstance3D" parent="VisualDetails" unique_id=1331487739]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.009, 1.255, -1.025)
 material_override = SubResource("GlassDark")
 cast_shadow = 0
-
-[node name="WindowLeft" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(-1.005, 1.23, -1.155)
 mesh = SubResource("SideWindowMesh")
+
+[node name="WindowRight" type="MeshInstance3D" parent="VisualDetails" unique_id=73529948]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.009, 1.255, -1.025)
 material_override = SubResource("GlassDark")
 cast_shadow = 0
-
-[node name="WindowRight" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(1.005, 1.23, -1.155)
 mesh = SubResource("SideWindowMesh")
+
+[node name="RearWindow" type="MeshInstance3D" parent="VisualDetails" unique_id=20750039]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.39, 1.19, 2.011)
 material_override = SubResource("GlassDark")
 cast_shadow = 0
-
-[node name="RearWindow" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(0, 1.22, 2)
 mesh = SubResource("RearWindowMesh")
+
+[node name="BumperFront" type="MeshInstance3D" parent="VisualDetails" unique_id=1325475691]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.3, -2.01)
+material_override = SubResource("MetalSilver")
+mesh = SubResource("BumperMesh")
+
+[node name="BumperRear" type="MeshInstance3D" parent="VisualDetails" unique_id=1305724757]
+transform = Transform3D(0.999928, -0.011999712, 0, 0.011999712, 0.999928, 0, 0, 0, 1, 0, 0.3, 2.01)
+material_override = SubResource("MetalSilver")
+mesh = SubResource("BumperMesh")
+
+[node name="Grille" type="MeshInstance3D" parent="VisualDetails" unique_id=1600366595]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.64, -2.015)
+material_override = SubResource("TrimDark")
+mesh = SubResource("GrilleMesh")
+
+[node name="GrilleBarUpper" type="MeshInstance3D" parent="VisualDetails" unique_id=1750830693]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, -2.032)
+material_override = SubResource("MetalSilver")
+cast_shadow = 0
+mesh = SubResource("GrilleBarMesh")
+
+[node name="GrilleBarLower" type="MeshInstance3D" parent="VisualDetails" unique_id=243368028]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.58, -2.032)
+material_override = SubResource("MetalSilver")
+cast_shadow = 0
+mesh = SubResource("GrilleBarMesh")
+
+[node name="HeadlightLeft" type="MeshInstance3D" parent="VisualDetails" unique_id=2061667180]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.77, 0.655, -2.054)
+material_override = SubResource("HeadlightMaterial")
+cast_shadow = 0
+mesh = SubResource("HeadlightMesh")
+
+[node name="HeadlightRight" type="MeshInstance3D" parent="VisualDetails" unique_id=1986943982]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.77, 0.655, -2.054)
+material_override = SubResource("HeadlightMaterial")
+cast_shadow = 0
+mesh = SubResource("HeadlightMesh")
+
+[node name="TaillightLeft" type="MeshInstance3D" parent="VisualDetails" unique_id=490223787]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.87, 0.65, 2.02)
+material_override = SubResource("TaillightMaterial")
+cast_shadow = 0
+mesh = SubResource("TaillightMesh")
+
+[node name="TaillightRight" type="MeshInstance3D" parent="VisualDetails" unique_id=252718069]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.87, 0.65, 2.02)
+material_override = SubResource("TaillightMaterial")
+cast_shadow = 0
+mesh = SubResource("TaillightMesh")
+
+[node name="MirrorLeft" type="MeshInstance3D" parent="VisualDetails" unique_id=1126236458]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.18, 1.16, -1.22)
+material_override = SubResource("MetalSilver")
+mesh = SubResource("MirrorMesh")
+
+[node name="MirrorRight" type="MeshInstance3D" parent="VisualDetails" unique_id=292993981]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.18, 1.16, -1.22)
+material_override = SubResource("MetalSilver")
+mesh = SubResource("MirrorMesh")
+
+[node name="HandleLeft" type="MeshInstance3D" parent="VisualDetails" unique_id=1815555292]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.018, 0.96, -0.68)
+material_override = SubResource("TrimDark")
+cast_shadow = 0
+mesh = SubResource("HandleMesh")
+
+[node name="HandleRight" type="MeshInstance3D" parent="VisualDetails" unique_id=853439095]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.018, 0.96, -0.68)
+material_override = SubResource("TrimDark")
+cast_shadow = 0
+mesh = SubResource("HandleMesh")
+
+[node name="RearDoorSeam" type="MeshInstance3D" parent="VisualDetails" unique_id=1300268096]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.93, 2.012)
+material_override = SubResource("TrimDark")
+cast_shadow = 0
+mesh = SubResource("RearDoorSeamMesh")
+
+[node name="RackLeft" type="MeshInstance3D" parent="VisualDetails" unique_id=1402225521]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, 1.66, 0.5)
+material_override = SubResource("TrimDark")
+mesh = SubResource("RackSideMesh")
+
+[node name="RackRight" type="MeshInstance3D" parent="VisualDetails" unique_id=1373063526]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.8, 1.66, 0.5)
+material_override = SubResource("TrimDark")
+mesh = SubResource("RackSideMesh")
+
+[node name="RackFront" type="MeshInstance3D" parent="VisualDetails" unique_id=1501557489]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.66, -0.75)
+material_override = SubResource("TrimDark")
+mesh = SubResource("RackEndMesh")
+
+[node name="RackRear" type="MeshInstance3D" parent="VisualDetails" unique_id=1586632915]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.66, 1.75)
+material_override = SubResource("TrimDark")
+mesh = SubResource("RackEndMesh")
+
+[node name="RackSupportFront" type="MeshInstance3D" parent="VisualDetails" unique_id=2132454557]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.52, -0.5)
+material_override = SubResource("TrimDark")
+mesh = SubResource("RackSupportMesh")
+
+[node name="RackSupportRear" type="MeshInstance3D" parent="VisualDetails" unique_id=967651216]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.52, 1.5)
+material_override = SubResource("TrimDark")
+mesh = SubResource("RackSupportMesh")
+
+[node name="ServiceMarkLeft" type="Label3D" parent="VisualDetails" unique_id=1314828065]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, -1.031, 1.17, 1.27)
+pixel_size = 0.006
+alpha_cut = 1
+modulate = Color(0.1, 0.12, 0.13, 1)
+text = "24/7
+REPAIRS"
+font_size = 32
+outline_size = 0
+
+[node name="ServiceMarkRight" type="Label3D" parent="VisualDetails" unique_id=697831336]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 1.031, 1.17, 1.27)
+pixel_size = 0.006
+alpha_cut = 1
+modulate = Color(0.1, 0.12, 0.13, 1)
+text = "24/7
+REPAIRS"
+font_size = 32
+outline_size = 0
+
+[node name="UnitMarkLeft" type="Label3D" parent="VisualDetails"]
+transform = Transform3D(0, 0, -1, 0, 1, 0, 1, 0, 0, -1.014, 0.93, -1.06)
+pixel_size = 0.004
+alpha_cut = 1
+modulate = Color(0.1, 0.12, 0.13, 1)
+text = "LG-01"
+font_size = 24
+outline_size = 0
+
+[node name="UnitMarkRight" type="Label3D" parent="VisualDetails"]
+transform = Transform3D(0, 0, 1, 0, 1, 0, -1, 0, 0, 1.014, 0.93, -1.06)
+pixel_size = 0.004
+alpha_cut = 1
+modulate = Color(0.1, 0.12, 0.13, 1)
+text = "LG-01"
+font_size = 24
+outline_size = 0
+
+[node name="RearWindowRight" type="MeshInstance3D" parent="VisualDetails" unique_id=774972671]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.39, 1.19, 2.011)
 material_override = SubResource("GlassDark")
 cast_shadow = 0
+mesh = SubResource("RearWindowMesh")
 
-[node name="BumperFront" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(0, 0.43, -2.01)
-mesh = SubResource("BumperMesh")
-material_override = SubResource("TrimDark")
-
-[node name="BumperRear" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(0, 0.43, 2.01)
-mesh = SubResource("BumperMesh")
-material_override = SubResource("TrimDark")
-
-[node name="Grille" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(0, 0.64, -2.015)
-mesh = SubResource("GrilleMesh")
-material_override = SubResource("TrimDark")
-
-[node name="GrilleBarUpper" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(0, 0.7, -2.032)
-mesh = SubResource("GrilleBarMesh")
+[node name="OldMetalDetails" type="MultiMeshInstance3D" parent="VisualDetails" unique_id=2004357332]
 material_override = SubResource("MetalSilver")
-cast_shadow = 0
+multimesh = SubResource("MultiMesh_ryhmt")
 
-[node name="GrilleBarLower" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(0, 0.58, -2.032)
-mesh = SubResource("GrilleBarMesh")
-material_override = SubResource("MetalSilver")
-cast_shadow = 0
+[node name="RubberFrames" type="MultiMeshInstance3D" parent="VisualDetails" unique_id=653327967]
+material_override = SubResource("TrimDark")
+multimesh = SubResource("MultiMesh_rkxo4")
 
-[node name="HeadlightLeft" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(-0.78, 0.65, -2.02)
-mesh = SubResource("HeadlightMesh")
-material_override = SubResource("HeadlightMaterial")
-cast_shadow = 0
+[node name="AmberMarkers" type="MultiMeshInstance3D" parent="VisualDetails" unique_id=374419424]
+material_override = SubResource("PaintStripe")
+multimesh = SubResource("MultiMesh_olvb2")
 
-[node name="HeadlightRight" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(0.78, 0.65, -2.02)
-mesh = SubResource("HeadlightMesh")
-material_override = SubResource("HeadlightMaterial")
-cast_shadow = 0
+[node name="ServicePanels" type="MultiMeshInstance3D" parent="VisualDetails" unique_id=1001618636]
+material_override = SubResource("PaintCream")
+multimesh = SubResource("MultiMesh_7n58w")
 
-[node name="TaillightLeft" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(-0.87, 0.65, 2.02)
-mesh = SubResource("TaillightMesh")
-material_override = SubResource("TaillightMaterial")
-cast_shadow = 0
+[node name="WornPaint" type="MultiMeshInstance3D" parent="VisualDetails" unique_id=146719347]
+material_override = SubResource("StandardMaterial3D_qcps0")
+multimesh = SubResource("MultiMesh_s5syf")
 
-[node name="TaillightRight" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(0.87, 0.65, 2.02)
-mesh = SubResource("TaillightMesh")
-material_override = SubResource("TaillightMaterial")
-cast_shadow = 0
-
-[node name="MirrorLeft" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(-1.09, 1.17, -1.3)
-mesh = SubResource("MirrorMesh")
-material_override = SubResource("MetalSilver")
-
-[node name="MirrorRight" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(1.09, 1.17, -1.3)
-mesh = SubResource("MirrorMesh")
-material_override = SubResource("MetalSilver")
-
-[node name="HandleLeft" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(-1.005, 0.94, -0.87)
-mesh = SubResource("HandleMesh")
+[node name="FrontWindowFrameLeft" type="MeshInstance3D" parent="VisualDetails"]
+position = Vector3(-1.003, 1.255, -1.025)
 material_override = SubResource("TrimDark")
 cast_shadow = 0
+mesh = SubResource("SideWindowFrameMesh")
 
-[node name="HandleRight" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(1.005, 0.94, -0.87)
-mesh = SubResource("HandleMesh")
+[node name="FrontWindowFrameRight" type="MeshInstance3D" parent="VisualDetails"]
+position = Vector3(1.003, 1.255, -1.025)
 material_override = SubResource("TrimDark")
 cast_shadow = 0
-
-[node name="RearDoorSeam" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(0, 1, 2.015)
-mesh = SubResource("RearDoorSeamMesh")
-material_override = SubResource("TrimDark")
-cast_shadow = 0
-
-[node name="RackLeft" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(-0.8, 1.75, 0.5)
-mesh = SubResource("RackSideMesh")
-material_override = SubResource("TrimDark")
-
-[node name="RackRight" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(0.8, 1.75, 0.5)
-mesh = SubResource("RackSideMesh")
-material_override = SubResource("TrimDark")
-
-[node name="RackFront" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(0, 1.75, -0.75)
-mesh = SubResource("RackEndMesh")
-material_override = SubResource("TrimDark")
-
-[node name="RackRear" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(0, 1.75, 1.75)
-mesh = SubResource("RackEndMesh")
-material_override = SubResource("TrimDark")
-
-[node name="RackSupportFront" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(0, 1.61, -0.5)
-mesh = SubResource("RackSupportMesh")
-material_override = SubResource("TrimDark")
-
-[node name="RackSupportRear" type="MeshInstance3D" parent="VisualDetails"]
-position = Vector3(0, 1.61, 1.5)
-mesh = SubResource("RackSupportMesh")
-material_override = SubResource("TrimDark")
-
-[node name="Hub" type="MeshInstance3D" parent="WheelFrontLeft/WheelVisual"]
-mesh = SubResource("WheelHubMesh")
-material_override = SubResource("MetalSilver")
-
-[node name="Hub" type="MeshInstance3D" parent="WheelFrontRight/WheelVisual"]
-mesh = SubResource("WheelHubMesh")
-material_override = SubResource("MetalSilver")
-
-[node name="Hub" type="MeshInstance3D" parent="WheelRearLeft/WheelVisual"]
-mesh = SubResource("WheelHubMesh")
-material_override = SubResource("MetalSilver")
-
-[node name="Hub" type="MeshInstance3D" parent="WheelRearRight/WheelVisual"]
-mesh = SubResource("WheelHubMesh")
-material_override = SubResource("MetalSilver")
+mesh = SubResource("SideWindowFrameMesh")
