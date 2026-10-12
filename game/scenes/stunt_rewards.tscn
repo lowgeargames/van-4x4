@@ -1,0 +1,90 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/stunt_monitor.gd" id="1_monitor"]
+[ext_resource type="Script" path="res://scripts/stunt_reward_ui.gd" id="2_ui"]
+
+[sub_resource type="StyleBoxFlat" id="RewardStyle"]
+bg_color = Color(0.05, 0.075, 0.09, 0.78)
+border_width_left = 3
+border_color = Color(1, 0.72, 0.2, 1)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_left = 10
+corner_radius_bottom_right = 10
+
+[node name="StuntRewards" type="CanvasLayer"]
+layer = 2
+script = ExtResource("2_ui")
+
+[node name="StuntMonitor" type="Node" parent="."]
+process_physics_priority = 100
+script = ExtResource("1_monitor")
+van_path = NodePath("../../VanPrototype")
+
+[node name="Reward" type="PanelContainer" parent="."]
+visible = false
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 24.0
+offset_top = -280.0
+offset_right = 444.0
+offset_bottom = -24.0
+grow_vertical = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("RewardStyle")
+
+[node name="Margin" type="MarginContainer" parent="Reward"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 10
+
+[node name="Content" type="VBoxContainer" parent="Reward/Margin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 0
+
+[node name="Title" type="Label" parent="Reward/Margin/Content"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.92, 0.72, 1)
+theme_override_font_sizes/font_size = 21
+autowrap_mode = 2
+text = "SALTO!"
+
+[node name="Stats" type="Label" parent="Reward/Margin/Content"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.84, 0.89, 0.9, 1)
+theme_override_font_sizes/font_size = 18
+text = "0,0 m | 0,0 s | 0 giros"
+
+[node name="Landing" type="Label" parent="Reward/Margin/Content"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.84, 0.42, 1)
+theme_override_font_sizes/font_size = 16
+text = "POUSO LIMPO"
+
+[node name="Distance" type="Label" parent="Reward/Margin/Content"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 42
+text = "0.0 m"
+
+[node name="Stars" type="Label" parent="Reward/Margin/Content"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.76, 0.15, 1)
+theme_override_font_sizes/font_size = 38
+text = "★ ★ ★"
+
+[node name="Total" type="Label" parent="Reward/Margin/Content"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.75, 0.8, 0.81, 1)
+theme_override_font_sizes/font_size = 14
+text = "SESSÃO: 0 PTS · 0 ★"

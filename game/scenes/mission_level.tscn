@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://scenes/physics_crate.tscn" id="4_crate"]
 [ext_resource type="PackedScene" path="res://scenes/physics_cone.tscn" id="5_cone"]
 [ext_resource type="PackedScene" path="res://scenes/physics_barrel.tscn" id="6_barrel"]
+[ext_resource type="PackedScene" path="res://scenes/stunt_rewards.tscn" id="7_stunts"]
 
 [node name="MissionLevel" unique_id=237866557 instance=ExtResource("1_terrain")]
 
@@ -51,3 +52,5 @@ transform = Transform3D(0.9800666, 0, -0.19866933, 0, 1, 0, 0.19866933, 0, 0.980
 
 [node name="ConeC" parent="PhysicsProps" index="7" unique_id=781060047 instance=ExtResource("5_cone")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -68, 3.07, 63)
+
+[node name="StuntRewards" parent="." index="12" unique_id=1798705041 instance=ExtResource("7_stunts")]
