@@ -7,8 +7,12 @@
 [ext_resource type="PackedScene" path="res://scenes/physics_cone.tscn" id="5_cone"]
 [ext_resource type="PackedScene" path="res://scenes/physics_barrel.tscn" id="6_barrel"]
 [ext_resource type="PackedScene" path="res://scenes/stunt_rewards.tscn" id="7_stunts"]
+[ext_resource type="PackedScene" path="res://scenes/driving_hud.tscn" id="8_hud"]
 
 [node name="MissionLevel" unique_id=237866557 instance=ExtResource("1_terrain")]
+
+[node name="VanPrototype" parent="." index="5" unique_id=1148736027]
+turbo_energy_enabled = true
 
 [node name="RepairAntenna" parent="." index="8" unique_id=1348423839 instance=ExtResource("2_antenna")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 24, 0)
@@ -54,3 +58,5 @@ transform = Transform3D(0.9800666, 0, -0.19866933, 0, 1, 0, 0.19866933, 0, 0.980
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -68, 3.07, 63)
 
 [node name="StuntRewards" parent="." index="12" unique_id=1798705041 instance=ExtResource("7_stunts")]
+
+[node name="DrivingHUD" parent="." index="13" unique_id=987035981 instance=ExtResource("8_hud")]

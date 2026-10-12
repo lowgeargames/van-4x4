@@ -14,6 +14,7 @@ const LANDING_LABELS: Array[String] = ["POUSO LIMPO", "POUSO BRUTAL", "CAPOTAMEN
 @export_range(1.0, 5.0, 0.1) var result_duration: float = 2.5
 @export var mission_panel_path: NodePath = NodePath("../RepairAntenna/MissionUI/Panel")
 @export var objective_marker_path: NodePath = NodePath("../ObjectiveUI/ObjectiveMarker")
+@export var driving_hud_panel_path: NodePath = NodePath("../DrivingHUD/Panel")
 
 var _tween: Tween
 var _last_messages: Dictionary = {}
@@ -31,7 +32,7 @@ var _protected_controls: Array[Control] = []
 
 func _ready() -> void:
 	_rng.randomize()
-	for path in [mission_panel_path, objective_marker_path]:
+	for path in [mission_panel_path, objective_marker_path, driving_hud_panel_path]:
 		var control: Control = get_node_or_null(path) as Control
 		if control != null:
 			_protected_controls.append(control)

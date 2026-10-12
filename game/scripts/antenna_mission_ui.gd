@@ -10,6 +10,7 @@ const RepairEquipment = preload("res://scripts/repair_antenna.gd")
 @onready var _status: Label = get_node_or_null("../RepairAntenna/MissionUI/Panel/Margin/Content/Status") as Label
 @onready var _progress: ProgressBar = get_node_or_null("../RepairAntenna/MissionUI/Panel/Margin/Content/Progress") as ProgressBar
 @onready var _marker: Label = get_node_or_null("../ObjectiveUI/ObjectiveMarker") as Label
+@onready var _driving_hud_panel: Control = get_node_or_null("../DrivingHUD/Panel") as Control
 
 
 func _ready() -> void:
@@ -60,6 +61,10 @@ func _update_marker(nearby: bool) -> void:
 		clampf(projected.x, 24.0, maxf(24.0, screen.x - _marker.size.x - 24.0)),
 		clampf(projected.y, 120.0, maxf(120.0, screen.y - _marker.size.y - 24.0))
 	)
+	if is_instance_valid(_driving_hud_panel) and _driving_hud_panel.is_visible_in_tree():
+		var reserved: Rect2 = _driving_hud_panel.get_global_rect().grow(18.0)
+		if _marker.get_global_rect().intersects(reserved):
+			_marker.position.y = maxf(120.0, reserved.position.y - _marker.size.y)
 
 
 func _on_repair_completed() -> void:

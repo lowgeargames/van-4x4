@@ -1,0 +1,104 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/driving_hud.gd" id="1_hud"]
+
+[sub_resource type="StyleBoxFlat" id="PanelStyle"]
+bg_color = Color(0.05, 0.075, 0.09, 0.8)
+border_width_left = 3
+border_color = Color(0.95, 0.73, 0.3, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_left = 8
+corner_radius_bottom_right = 8
+
+[sub_resource type="StyleBoxFlat" id="BarBackground"]
+bg_color = Color(0.15, 0.19, 0.21, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_left = 3
+corner_radius_bottom_right = 3
+
+[sub_resource type="StyleBoxFlat" id="BarFill"]
+bg_color = Color(0.95, 0.73, 0.3, 1)
+corner_radius_top_left = 3
+corner_radius_top_right = 3
+corner_radius_bottom_left = 3
+corner_radius_bottom_right = 3
+
+[node name="DrivingHUD" type="CanvasLayer"]
+layer = 1
+script = ExtResource("1_hud")
+
+[node name="Panel" type="PanelContainer" parent="."]
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -254.0
+offset_top = -174.0
+offset_right = -24.0
+offset_bottom = -24.0
+grow_horizontal = 0
+grow_vertical = 0
+mouse_filter = 2
+theme_override_styles/panel = SubResource("PanelStyle")
+
+[node name="Margin" type="MarginContainer" parent="Panel"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 10
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 10
+
+[node name="Content" type="VBoxContainer" parent="Panel/Margin"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+
+[node name="Caption" type="Label" parent="Panel/Margin/Content"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(0.75, 0.8, 0.81, 1)
+theme_override_font_sizes/font_size = 13
+text = "VELOCIDADE"
+
+[node name="Speed" type="Label" parent="Panel/Margin/Content"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_colors/font_color = Color(1, 0.95, 0.84, 1)
+theme_override_font_sizes/font_size = 30
+text = "0 km/h"
+
+[node name="TurboLine" type="HBoxContainer" parent="Panel/Margin/Content"]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="Caption" type="Label" parent="Panel/Margin/Content/TurboLine"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+theme_override_font_sizes/font_size = 14
+text = "TURBO"
+
+[node name="Energy" type="Label" parent="Panel/Margin/Content/TurboLine"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 14
+text = "100%"
+
+[node name="Reserve" type="ProgressBar" parent="Panel/Margin/Content"]
+custom_minimum_size = Vector2(0, 12)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/background = SubResource("BarBackground")
+theme_override_styles/fill = SubResource("BarFill")
+value = 100.0
+show_percentage = false
+
+[node name="Status" type="Label" parent="Panel/Margin/Content"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 12
+text = "PRONTO"

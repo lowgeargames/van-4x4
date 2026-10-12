@@ -75,7 +75,7 @@ func _process(delta: float) -> void:
 		# Cruzeiro discreto; aceleração e escorregamento têm mais personalidade.
 		rate = 0.08 + maxf(speed - min_speed, 0.0) * speed_multiplier * 0.5
 		rate += accelerating * 0.18 + slip * 0.45
-		if Input.is_action_pressed("turbo") and Input.get_axis("reverse", "accelerate") > 0.0:
+		if _van.turbo_active:
 			rate += 0.08
 	elif surface == 1:
 		rate *= 1.0 + 0.35 * absf(Input.get_axis("reverse", "accelerate")) + 0.65 * slip

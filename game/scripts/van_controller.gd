@@ -13,6 +13,22 @@ extends RigidBody3D
 ## Limite em m/s, aplicado somente ao acelerar para frente com Shift.
 @export_range(5.0, 60.0) var turbo_max_speed: float = 36.0
 
+@export_category("Turbo Energy")
+## Desativado por padrão para preservar o turbo ilimitado das cenas antigas.
+@export var turbo_energy_enabled: bool = false
+@export_range(1.0, 1000.0) var turbo_energy_max: float = 100.0
+@export_range(0.1, 1000.0) var turbo_consumption: float = 25.0
+@export_range(0.0, 10.0) var turbo_recharge_delay: float = 2.0
+@export_range(0.1, 1000.0) var turbo_recharge_rate: float = 10.0
+@export_range(0.0, 1000.0) var turbo_reactivation_energy: float = 20.0
+
+var turbo_energy: float = 100.0
+var turbo_active: bool = false
+var turbo_recharging: bool = false
+var turbo_blocked: bool = false
+var _turbo_idle_time: float = 0.0
+var _turbo_released_after_empty: bool = false
+
 @export_category("Handling")
 ## Velocidade máxima de giro em rad/s, reduzida conforme a velocidade.
 @export_range(0.2, 2.0) var steering_strength: float = 1.1
@@ -68,6 +84,7 @@ var _wheel_visuals: Array[Node3D] = []
 
 
 func _ready() -> void:
+	turbo_energy = turbo_energy_max
 	_spawn_transform = global_transform
 	# Contatos da carroceria distinguem um salto de uma van tombada no chão.
 	max_contacts_reported = 4
@@ -86,6 +103,8 @@ func _physics_process(_delta: float) -> void:
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 	if _reset_requested:
+		turbo_active = false
+		turbo_recharging = false
 		_apply_reset(state)
 		return
 
@@ -99,8 +118,17 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		* delta / WHEEL_RADIUS, -PI, PI
 	)
 
-	if _update_suspension(state):
+	var supported: bool = _update_suspension(state)
+	var forward: Vector3 = (-state.transform.basis.z).slide(_ground_normal).normalized()
+	var throttle: float = Input.get_axis("reverse", "accelerate")
+	var can_propulse: bool = (
+		supported and throttle > 0.0 and not Input.is_action_pressed("handbrake")
+		and state.linear_velocity.dot(forward) * throttle >= -0.15
+	)
+	_prepare_turbo(can_propulse)
+	if supported:
 		_apply_handling(state)
+	_update_turbo_energy(delta)
 	_apply_manual_roll(state)
 	if in_water:
 		# Resistência somente horizontal, sem frear a queda ou o salto.
@@ -108,6 +136,39 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 		state.apply_central_force(
 			-horizontal_velocity * mass * (1.0 - exp(-WATER_DRAG * delta)) / delta
 		)
+
+
+func _prepare_turbo(can_propulse: bool) -> void:
+	var pressed: bool = Input.is_action_pressed("turbo")
+	if turbo_energy_enabled and turbo_blocked:
+		if not pressed:
+			_turbo_released_after_empty = true
+		if _turbo_released_after_empty and turbo_energy >= minf(turbo_reactivation_energy, turbo_energy_max):
+			turbo_blocked = false
+	turbo_active = can_propulse and pressed and (
+		not turbo_energy_enabled or (not turbo_blocked and turbo_energy > 0.0)
+	)
+
+
+func _update_turbo_energy(delta: float) -> void:
+	turbo_recharging = false
+	if not turbo_energy_enabled:
+		return
+	if turbo_active:
+		turbo_energy = maxf(0.0, turbo_energy - turbo_consumption * delta)
+		_turbo_idle_time = 0.0
+		if turbo_energy <= 0.0:
+			turbo_active = false
+			turbo_blocked = true
+			_turbo_released_after_empty = false
+		return
+	# Só recarrega a fração do passo que ficou além da espera configurada.
+	var remaining_delay: float = maxf(0.0, turbo_recharge_delay - _turbo_idle_time)
+	_turbo_idle_time = minf(_turbo_idle_time + delta, turbo_recharge_delay)
+	var recharge_time: float = maxf(0.0, delta - remaining_delay)
+	if recharge_time > 0.0 and turbo_energy < turbo_energy_max:
+		turbo_recharging = true
+		turbo_energy = minf(turbo_energy_max, turbo_energy + turbo_recharge_rate * recharge_time)
 
 
 func _update_suspension(state: PhysicsDirectBodyState3D) -> bool:
@@ -181,13 +242,13 @@ func _apply_handling(state: PhysicsDirectBodyState3D) -> void:
 		else:
 			var target: float = max_speed if throttle > 0.0 else -reverse_speed
 			var drive_acceleration: float = acceleration * power
-			if throttle > 0.0 and Input.is_action_pressed("turbo"):
+			if turbo_active:
 				drive_acceleration *= turbo_multiplier
 				target = maxf(max_speed, turbo_max_speed)
 			if throttle < 0.0:
 				drive_acceleration *= 0.7
 			if in_water:
-				var water_limit: float = WATER_TURBO_MAX_SPEED if Input.is_action_pressed("turbo") else WATER_MAX_SPEED
+				var water_limit: float = WATER_TURBO_MAX_SPEED if turbo_active else WATER_MAX_SPEED
 				target = clampf(target, -reverse_speed * 0.5, water_limit)
 			next_speed = move_toward(speed, target, drive_acceleration * state.step)
 	else:
