@@ -231,8 +231,20 @@ func build() -> void:
 	await RenderingServer.frame_post_draw
 	for node in plants.get_children(): assert(node.multimesh.buffer.size()==node.multimesh.instance_count*12)
 	var packed=PackedScene.new()
-	assert(packed.pack(output)==OK)
-	assert(ResourceSaver.save(packed,"res://scenes/mission_nature_interactions.tscn")==OK)
+	var pack_error: Error = packed.pack(output)
+	if pack_error != OK:
+		push_error("Falha ao empacotar res://scenes/mission_nature_interactions.tscn (%s)" % error_string(pack_error))
+		output.free()
+		source.free()
+		quit(1)
+		return
+	var scene_save_error: Error = ResourceSaver.save(packed,"res://scenes/mission_nature_interactions.tscn")
+	if scene_save_error != OK:
+		push_error("Falha ao salvar res://scenes/mission_nature_interactions.tscn (%s)" % error_string(scene_save_error))
+		output.free()
+		source.free()
+		quit(1)
+		return
 	print("NATURE: ",tree_count," breakable trees; ",rock_count," static rocks; ",plant_count," new ground plants in ",plants.get_child_count()," MultiMeshes")
 	output.free()
 	source.free()

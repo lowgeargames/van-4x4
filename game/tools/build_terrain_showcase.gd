@@ -118,7 +118,8 @@ func ground_material(textured: bool = false) -> StandardMaterial3D:
 		mat.uv1_triplanar_sharpness = 4.0
 		mat.uv1_scale = Vector3.ONE * 0.22
 		mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS_ANISOTROPIC
-		save_resource(mat, DIR + "ground_surface.tres")
+		if not save_resource(mat, DIR + "ground_surface.tres"):
+			return null
 	return mat
 
 
@@ -168,7 +169,10 @@ func terrain_mesh() -> ArrayMesh:
 	arrays[Mesh.ARRAY_INDEX] = indices
 	var mesh = ArrayMesh.new()
 	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
-	mesh.surface_set_material(0, ground_material(true))
+	var material = ground_material(true)
+	if material == null:
+		return null
+	mesh.surface_set_material(0, material)
 	return mesh
 
 
@@ -382,9 +386,14 @@ func own_children(parent: Node, scene_root: Node) -> void:
 			own_children(child, scene_root)
 
 
-func save_resource(resource: Resource, path: String) -> void:
-	assert(ResourceSaver.save(resource, path, ResourceSaver.FLAG_COMPRESS) == OK)
+func save_resource(resource: Resource, path: String) -> bool:
+	var save_error: Error = ResourceSaver.save(resource, path, ResourceSaver.FLAG_COMPRESS)
+	if save_error != OK:
+		push_error("Falha ao salvar recurso: %s (%s)" % [path, error_string(save_error)])
+		quit(1)
+		return false
 	resource.take_over_path(path)
+	return true
 
 
 func build() -> void:
@@ -396,6 +405,8 @@ func build() -> void:
 		samples.append(route.sample_baked(minf(float(i) * 2.0, road_length), true))
 	print("Building 220x220 terrain; route: ", road_length, " m")
 	var mesh = terrain_mesh()
+	if mesh == null:
+		return
 	if ResourceLoader.exists(DIR + "terrain_mesh.res"):
 		var previous_mesh: ArrayMesh = load(DIR + "terrain_mesh.res")
 		assert(mesh.get_faces() == previous_mesh.get_faces(), "Polimento não pode alterar a geometria aprovada")
@@ -405,20 +416,27 @@ func build() -> void:
 		assert(mesh.get_faces() == collision.get_faces(), "Colisão aprovada diverge do visual")
 	else:
 		collision = mesh.create_trimesh_shape()
-		save_resource(collision, DIR + "terrain_collision.res")
+		if not save_resource(collision, DIR + "terrain_collision.res"):
+			return
 	var mountains: ArrayMesh
 	if ResourceLoader.exists(DIR + "background_mesh.res"):
 		mountains = load(DIR + "background_mesh.res")
 	else:
 		mountains = mountain_mesh()
-		save_resource(mountains, DIR + "background_mesh.res")
-	save_resource(mesh, DIR + "terrain_mesh.res")
+		if not save_resource(mountains, DIR + "background_mesh.res"):
+			return
+	if not save_resource(mesh, DIR + "terrain_mesh.res"):
+		return
 	if ResourceLoader.exists(DIR + "route_curve.tres"):
 		var previous_route: Curve3D = load(DIR + "route_curve.tres")
 		assert(route.get_baked_points() == previous_route.get_baked_points(), "Traçado aprovado não pode mudar")
 		route = previous_route
 	else:
-		assert(ResourceSaver.save(route, DIR + "route_curve.tres") == OK)
+		var route_save_error: Error = ResourceSaver.save(route, DIR + "route_curve.tres")
+		if route_save_error != OK:
+			push_error("Falha ao salvar recurso: %s (%s)" % [DIR + "route_curve.tres", error_string(route_save_error)])
+			quit(1)
+			return
 		route.take_over_path(DIR + "route_curve.tres")
 	var scene = Node3D.new()
 	scene.name = "TerrainShowcase"
@@ -501,8 +519,18 @@ func build() -> void:
 	own_children(scene, scene)
 	await RenderingServer.frame_post_draw
 	var packed = PackedScene.new()
-	assert(packed.pack(scene) == OK)
-	assert(ResourceSaver.save(packed, "res://scenes/terrain_showcase.tscn") == OK)
+	var pack_error: Error = packed.pack(scene)
+	if pack_error != OK:
+		push_error("Falha ao empacotar res://scenes/terrain_showcase.tscn (%s)" % error_string(pack_error))
+		scene.free()
+		quit(1)
+		return
+	var scene_save_error: Error = ResourceSaver.save(packed, "res://scenes/terrain_showcase.tscn")
+	if scene_save_error != OK:
+		push_error("Falha ao salvar res://scenes/terrain_showcase.tscn (%s)" % error_string(scene_save_error))
+		scene.free()
+		quit(1)
+		return
 	# A instância da van deve herdar os parâmetros físicos, sem cópias locais.
 	var scene_text = FileAccess.get_file_as_string("res://scenes/terrain_showcase.tscn")
 	var block = RegEx.new()

@@ -307,9 +307,14 @@ func own_children(parent: Node,scene: Node) -> void:
 		own_children(child,scene)
 
 
-func save(resource: Resource,name_text: String) -> void:
-	assert(ResourceSaver.save(resource,OUT+name_text,ResourceSaver.FLAG_COMPRESS)==OK)
+func save(resource: Resource,name_text: String) -> bool:
+	var save_error: Error = ResourceSaver.save(resource,OUT+name_text,ResourceSaver.FLAG_COMPRESS)
+	if save_error != OK:
+		push_error("Falha ao salvar recurso: %s (%s)" % [OUT+name_text,error_string(save_error)])
+		quit(1)
+		return false
 	resource.take_over_path(OUT+name_text)
+	return true
 
 
 func build() -> void:
@@ -323,16 +328,19 @@ func build() -> void:
 	if ResourceLoader.exists(OUT+"terrain_mesh.res"):
 		var approved: ArrayMesh=load(OUT+"terrain_mesh.res")
 		assert(mesh.get_faces()==approved.get_faces(),"Polimento não pode mudar os triângulos físicos")
-	save(mesh,"terrain_mesh.res")
+	if not save(mesh,"terrain_mesh.res"):
+		return
 	var collision: ConcavePolygonShape3D
 	if ResourceLoader.exists(OUT+"terrain_collision.res"):
 		collision=load(OUT+"terrain_collision.res")
 		assert(mesh.get_faces()==collision.get_faces(),"Polimento não pode mudar a colisão aprovada")
 	else:
 		collision=mesh.create_trimesh_shape()
-		save(collision,"terrain_collision.res")
+		if not save(collision,"terrain_collision.res"):
+			return
 	if not ResourceLoader.exists(OUT+"background_open_west.res"):
-		save(opened_background(),"background_open_west.res")
+		if not save(opened_background(),"background_open_west.res"):
+			return
 	var scene=Node3D.new()
 	scene.name="ExtremeExtension"
 	var ground=StaticBody3D.new()
@@ -344,10 +352,14 @@ func build() -> void:
 	shape.shape=collision
 	ground.add_child(shape)
 	var access=access_mesh()
-	save(access,"access_trail.res")
+	if not save(access,"access_trail.res"):
+		scene.free()
+		return
 	add_visual(scene,"AccessTrailVisual",access).cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	var water=water_mesh()
-	save(water,"water_mesh.res")
+	if not save(water,"water_mesh.res"):
+		scene.free()
+		return
 	add_visual(scene,"LakeSurface",water).cast_shadow=GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	var zone=Area3D.new()
 	zone.name="WaterZone"
@@ -409,8 +421,18 @@ func build() -> void:
 	for node in nature.get_children():
 		assert(node.multimesh.buffer.size()==node.multimesh.instance_count*12,"Buffer de vegetação não foi preparado")
 	var packed=PackedScene.new()
-	assert(packed.pack(scene)==OK)
-	assert(ResourceSaver.save(packed,"res://scenes/extreme_extension.tscn")==OK)
+	var pack_error: Error = packed.pack(scene)
+	if pack_error != OK:
+		push_error("Falha ao empacotar res://scenes/extreme_extension.tscn (%s)" % error_string(pack_error))
+		scene.free()
+		quit(1)
+		return
+	var scene_save_error: Error = ResourceSaver.save(packed,"res://scenes/extreme_extension.tscn")
+	if scene_save_error != OK:
+		push_error("Falha ao salvar res://scenes/extreme_extension.tscn (%s)" % error_string(scene_save_error))
+		scene.free()
+		quit(1)
+		return
 	print("EXTENSION: 140x160 m; ",mesh.get_faces().size()/3," triangles; exact west edge; lake depth ~1.05 m")
 	scene.free()
 	quit()
