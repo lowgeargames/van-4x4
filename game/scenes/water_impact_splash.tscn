@@ -1,0 +1,64 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/water_impact_splash.gd" id="1_splash"]
+
+[sub_resource type="Gradient" id="Fade"]
+offsets = PackedFloat32Array(0, 0.1, 0.65, 1)
+colors = PackedColorArray(1, 1, 1, 0, 1, 1, 1, 0.9, 1, 1, 1, 0.7, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="FadeTexture"]
+gradient = SubResource("Fade")
+width = 64
+
+[sub_resource type="Gradient" id="DropGradient"]
+offsets = PackedFloat32Array(0, 0.65, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 0.8, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture2D" id="DropTexture"]
+gradient = SubResource("DropGradient")
+width = 32
+height = 32
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0)
+
+[sub_resource type="StandardMaterial3D" id="DropMaterial"]
+transparency = 1
+shading_mode = 0
+vertex_color_use_as_albedo = true
+albedo_texture = SubResource("DropTexture")
+billboard_mode = 3
+billboard_keep_scale = true
+
+[sub_resource type="QuadMesh" id="DropMesh"]
+material = SubResource("DropMaterial")
+size = Vector2(0.2, 0.65)
+
+[sub_resource type="ParticleProcessMaterial" id="SprayProcess"]
+particle_flag_align_y = true
+emission_shape = 3
+emission_box_extents = Vector3(1.25, 0.04, 1.6)
+direction = Vector3(0, 1, 0)
+spread = 60.0
+initial_velocity_min = 3.0
+initial_velocity_max = 8.0
+gravity = Vector3(0, -12, 0)
+color = Color(0.55, 0.82, 0.75, 0.9)
+color_ramp = SubResource("FadeTexture")
+scale_min = 0.6
+scale_max = 1.5
+
+[node name="ImpactSplash" type="Node3D"]
+process_physics_priority = 100
+script = ExtResource("1_splash")
+
+[node name="Spray" type="GPUParticles3D" parent="."]
+top_level = true
+emitting = false
+amount = 64
+lifetime = 1.1
+one_shot = true
+explosiveness = 1.0
+visibility_aabb = AABB(-12, -3, -12, 24, 16, 24)
+process_material = SubResource("SprayProcess")
+draw_pass_1 = SubResource("DropMesh")

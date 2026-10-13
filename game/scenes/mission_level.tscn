@@ -8,8 +8,14 @@
 [ext_resource type="PackedScene" path="res://scenes/physics_barrel.tscn" id="6_barrel"]
 [ext_resource type="PackedScene" path="res://scenes/stunt_rewards.tscn" id="7_stunts"]
 [ext_resource type="PackedScene" path="res://scenes/driving_hud.tscn" id="8_hud"]
+[ext_resource type="PackedScene" path="res://scenes/extreme_extension.tscn" id="9_extension"]
+[ext_resource type="ArrayMesh" path="res://assets/environment/extreme_extension/background_open_west.res" id="10_background"]
+[ext_resource type="PackedScene" path="res://scenes/mission_nature_interactions.tscn" id="11_nature"]
 
 [node name="MissionLevel" unique_id=237866557 instance=ExtResource("1_terrain")]
+
+[node name="DistantRidges" parent="." index="1" unique_id=692713511]
+mesh = ExtResource("10_background")
 
 [node name="VanPrototype" parent="." index="5" unique_id=1148736027]
 turbo_energy_enabled = true
@@ -60,3 +66,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -68, 3.07, 63)
 [node name="StuntRewards" parent="." index="12" unique_id=1798705041 instance=ExtResource("7_stunts")]
 
 [node name="DrivingHUD" parent="." index="13" unique_id=987035981 instance=ExtResource("8_hud")]
+
+[node name="ExtremeExtension" parent="." index="14" unique_id=862972411 instance=ExtResource("9_extension")]
+
+[node name="NatureInteractions" parent="." index="15" unique_id=224194472 instance=ExtResource("11_nature")]

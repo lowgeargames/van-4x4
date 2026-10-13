@@ -1,0 +1,94 @@
+[gd_scene format=3]
+
+[sub_resource type="Gradient" id="Colors"]
+colors = PackedColorArray(0.38, 0.22, 0.09, 1, 0.68, 0.46, 0.23, 1)
+
+[sub_resource type="GradientTexture1D" id="ColorTexture"]
+gradient = SubResource("Colors")
+width = 32
+
+[sub_resource type="Gradient" id="Fade"]
+offsets = PackedFloat32Array(0, 0.45, 1)
+colors = PackedColorArray(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="FadeTexture"]
+gradient = SubResource("Fade")
+width = 32
+
+[sub_resource type="StandardMaterial3D" id="Material"]
+transparency = 1
+vertex_color_use_as_albedo = true
+roughness = 1.0
+
+[sub_resource type="BoxMesh" id="Fragment"]
+material = SubResource("Material")
+size = Vector3(0.28, 0.035, 0.025)
+
+[sub_resource type="ParticleProcessMaterial" id="Process"]
+emission_shape = 1
+emission_sphere_radius = 0.25
+direction = Vector3(0, 1, 0)
+spread = 110.0
+initial_velocity_min = 1.8
+initial_velocity_max = 3.2
+gravity = Vector3(0, -10, 0)
+angle_min = -180.0
+angle_max = 180.0
+angular_velocity_min = -300.0
+angular_velocity_max = 300.0
+color_initial_ramp = SubResource("ColorTexture")
+color_ramp = SubResource("FadeTexture")
+scale_min = 0.75
+scale_max = 1.15
+
+[sub_resource type="Gradient" id="LeafColors"]
+colors = PackedColorArray(0.26, 0.43, 0.12, 1, 0.59, 0.68, 0.25, 1)
+
+[sub_resource type="GradientTexture1D" id="LeafColorTexture"]
+gradient = SubResource("LeafColors")
+width = 32
+
+[sub_resource type="PrismMesh" id="Leaf"]
+material = SubResource("Material")
+size = Vector3(0.28, 0.025, 0.18)
+left_to_right = 0.35
+
+[sub_resource type="ParticleProcessMaterial" id="LeafProcess"]
+emission_shape = 1
+emission_sphere_radius = 0.3
+direction = Vector3(0, 1, 0)
+spread = 110.0
+initial_velocity_min = 2.0
+initial_velocity_max = 3.5
+gravity = Vector3(0, -7, 0)
+angle_min = -180.0
+angle_max = 180.0
+angular_velocity_min = -360.0
+angular_velocity_max = 360.0
+color_initial_ramp = SubResource("LeafColorTexture")
+color_ramp = SubResource("FadeTexture")
+scale_min = 0.7
+scale_max = 1.15
+
+[node name="BreakFragments" type="GPUParticles3D"]
+top_level = true
+emitting = false
+amount = 8
+lifetime = 0.65
+one_shot = true
+explosiveness = 1.0
+cast_shadow = 0
+visibility_aabb = AABB(-3, -4, -3, 6, 7, 6)
+process_material = SubResource("Process")
+draw_pass_1 = SubResource("Fragment")
+
+[node name="Leaves" type="GPUParticles3D" parent="."]
+emitting = false
+amount = 10
+lifetime = 0.75
+one_shot = true
+explosiveness = 1.0
+cast_shadow = 0
+visibility_aabb = AABB(-3, -4, -3, 6, 7, 6)
+process_material = SubResource("LeafProcess")
+draw_pass_1 = SubResource("Leaf")
