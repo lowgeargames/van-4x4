@@ -63,6 +63,105 @@ transform = Transform3D(0.9800666, 0, -0.19866933, 0, 1, 0, 0.19866933, 0, 0.980
 [node name="ConeC" parent="PhysicsProps" index="7" unique_id=781060047 instance=ExtResource("5_cone")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -68, 3.07, 63)
 
+[node name="RoadBlock" type="Node3D" parent="PhysicsProps" index="8" unique_id=1181623005]
+
+[node name="Crate1_1" parent="PhysicsProps/RoadBlock" index="0" unique_id=354070521 instance=ExtResource("4_crate")]
+transform = Transform3D(0.21325092, -0.009911534, 0.9769472, -0.03906637, 0.9990623, 0.018663425, -0.9762161, -0.042145774, 0.21266377, 54.914654, 6.928572, 6.4095244)
+
+[node name="Crate1_2" parent="PhysicsProps/RoadBlock" index="1" unique_id=553159331 instance=ExtResource("4_crate")]
+transform = Transform3D(0.21325092, -0.009911534, 0.9769472, -0.03906637, 0.9990623, 0.018663425, -0.9762161, -0.042145774, 0.21266377, 54.903652, 8.037531, 6.3627424)
+
+[node name="Crate1_3" parent="PhysicsProps/RoadBlock" index="2" unique_id=792839530 instance=ExtResource("4_crate")]
+transform = Transform3D(0.21325092, -0.009911534, 0.9769472, -0.03906637, 0.9990623, 0.018663425, -0.9762161, -0.042145774, 0.21266377, 54.89265, 9.14649, 6.315961)
+
+[node name="Crate2_1" parent="PhysicsProps/RoadBlock" index="3" unique_id=449835670 instance=ExtResource("4_crate")]
+transform = Transform3D(0.21341112, -0.010251102, 0.9769087, -0.0050650374, 0.99991995, 0.011599053, -0.9769494, -0.007423446, 0.2133421, 55.16648, 6.900363, 5.2567096)
+
+[node name="Crate2_2" parent="PhysicsProps/RoadBlock" index="4" unique_id=1269789011 instance=ExtResource("4_crate")]
+transform = Transform3D(0.21341112, -0.010251102, 0.9769087, -0.0050650374, 0.99991995, 0.011599053, -0.9769494, -0.007423446, 0.2133421, 55.1551, 8.010274, 5.2484694)
+
+[node name="Crate2_3" parent="PhysicsProps/RoadBlock" index="5" unique_id=1607070294 instance=ExtResource("4_crate")]
+transform = Transform3D(0.21341112, -0.010251102, 0.9769087, -0.0050650374, 0.99991995, 0.011599053, -0.9769494, -0.007423446, 0.2133421, 55.143723, 9.120186, 5.2402296)
+
+[node name="Crate3_1" parent="PhysicsProps/RoadBlock" index="6" unique_id=1207915804 instance=ExtResource("4_crate")]
+transform = Transform3D(0.21341121, -0.014133601, 0.9768602, 0.0049714437, 0.99989814, 0.013380829, -0.9769498, 0.0020007868, 0.21345975, 55.418312, 6.9022765, 4.1038947)
+
+[node name="Crate3_2" parent="PhysicsProps/RoadBlock" index="7" unique_id=1148005350 instance=ExtResource("4_crate")]
+transform = Transform3D(0.21341121, -0.014133601, 0.9768602, 0.0049714437, 0.99989814, 0.013380829, -0.9769498, 0.0020007868, 0.21345975, 55.402622, 8.012163, 4.106116)
+
+[node name="Crate3_3" parent="PhysicsProps/RoadBlock" index="8" unique_id=479117120 instance=ExtResource("4_crate")]
+transform = Transform3D(0.21341121, -0.014133601, 0.9768602, 0.0049714437, 0.99989814, 0.013380829, -0.9769498, 0.0020007868, 0.21345975, 55.386936, 9.12205, 4.1083364)
+
+[node name="Crate4_1" parent="PhysicsProps/RoadBlock" index="9" unique_id=322474016 instance=ExtResource("4_crate")]
+transform = Transform3D(0.21334636, -0.016258588, 0.97684133, 0.025146704, 0.9996216, 0.0111455945, -0.976653, 0.02218647, 0.21367449, 55.67014, 6.921034, 2.9510798)
+
+[node name="Crate4_2" parent="PhysicsProps/RoadBlock" index="10" unique_id=1953593396 instance=ExtResource("4_crate")]
+transform = Transform3D(0.21334636, -0.016258588, 0.97684133, 0.025146704, 0.9996216, 0.0111455945, -0.976653, 0.02218647, 0.21367449, 55.652092, 8.030614, 2.9757068)
+
+[node name="Crate4_3" parent="PhysicsProps/RoadBlock" index="11" unique_id=452260539 instance=ExtResource("4_crate")]
+transform = Transform3D(0.21334636, -0.016258588, 0.97684133, 0.025146704, 0.9996216, 0.0111455945, -0.976653, 0.02218647, 0.21367449, 55.634045, 9.140194, 3.0003338)
+
+[node name="Barrel1" parent="PhysicsProps/RoadBlock" index="12" unique_id=307039851 instance=ExtResource("6_barrel")]
+transform = Transform3D(0.21311973, -0.0022968752, 0.9770234, -0.052484762, 0.9985266, 0.013796013, -0.97561544, -0.054219045, 0.21268512, 55.444397, 7.035474, 7.733071)
+
+[node name="Barrel2" parent="PhysicsProps/RoadBlock" index="13" unique_id=1371457587 instance=ExtResource("6_barrel")]
+transform = Transform3D(0.21306786, -0.026140856, 0.97668767, 0.05691962, 0.9982764, 0.0143014565, -0.97537804, 0.05254551, 0.21418853, 56.703537, 7.0277762, 1.9689958)
+
+[node name="Barrel3" parent="PhysicsProps/RoadBlock" index="14" unique_id=1976733733 instance=ExtResource("6_barrel")]
+transform = Transform3D(0.21341349, -0.019157408, 0.97677416, -0.0018878812, 0.9997979, 0.020021448, -0.9769602, -0.0061168806, 0.21333416, 57.168304, 6.9771566, 4.5271177)
+
+[node name="Cone1_1" parent="PhysicsProps/RoadBlock" index="15" unique_id=1823797951 instance=ExtResource("5_cone")]
+transform = Transform3D(0.21332659, -0.0119093135, 0.9769084, -0.028592687, 0.9994213, 0.018427525, -0.97656244, -0.031863518, 0.21286263, 57.75045, 6.8604136, 6.5479116)
+
+[node name="Cone1_2" parent="PhysicsProps/RoadBlock" index="16" unique_id=778704423 instance=ExtResource("5_cone")]
+transform = Transform3D(0.2133704, -0.02423985, 0.9766706, 0.02017938, 0.99958825, 0.020400107, -0.97676295, 0.015355828, 0.21377169, 58.30533, 6.854704, 4.0078106)
+
+[node name="Cone2_1" parent="PhysicsProps/RoadBlock" index="17" unique_id=962386325 instance=ExtResource("5_cone")]
+transform = Transform3D(0.21304733, -0.00053179543, 0.9770418, -0.058582664, 0.9981938, 0.01331746, -0.97528404, -0.06007496, 0.21263136, 59.634663, 6.9709063, 8.699598)
+
+[node name="Cone2_2" parent="PhysicsProps/RoadBlock" index="18" unique_id=635257397 instance=ExtResource("5_cone")]
+transform = Transform3D(0.21318531, -0.036702536, 0.9763222, 0.046267934, 0.99855226, 0.027435366, -0.9759157, 0.03932359, 0.21457481, 60.915142, 6.970203, 2.8378274)
+
+[node name="Cone3_1" parent="PhysicsProps/RoadBlock" index="19" unique_id=1765552049 instance=ExtResource("5_cone")]
+transform = Transform3D(0.21322705, -0.0044274703, 0.97699267, -0.04183235, 0.99903136, 0.013657185, -0.9761067, -0.04378198, 0.21283528, 61.881676, 7.0072274, 9.19045)
+
+[node name="Cone3_2" parent="PhysicsProps/RoadBlock" index="20" unique_id=1326035670 instance=ExtResource("5_cone")]
+transform = Transform3D(0.2129266, -0.030294994, 0.97659844, 0.067537755, 0.99758494, 0.016220836, -0.97473127, 0.06250341, 0.21445839, 63.162155, 7.02552, 3.3286788)
+
+[node name="HilltopProps" type="Node3D" parent="PhysicsProps" index="9" unique_id=228017883]
+
+[node name="CrateA" parent="PhysicsProps/HilltopProps" index="0" unique_id=1438627579 instance=ExtResource("4_crate")]
+transform = Transform3D(3.7252899e-09, 0.17703655, 0.9842043, 0.21235907, 0.9617562, -0.17299867, -0.9771917, 0.20900472, -0.03759532, -140, 38.258602, -27.5)
+
+[node name="CrateB" parent="PhysicsProps/HilltopProps" index="1" unique_id=835389791 instance=ExtResource("4_crate")]
+transform = Transform3D(0, 0.17237484, 0.9850314, 0.23144408, 0.9582861, -0.16769455, -0.97284824, 0.22797969, -0.039895136, -140, 37.92858, -26)
+
+[node name="CrateC" parent="PhysicsProps/HilltopProps" index="2" unique_id=2140374764 instance=ExtResource("4_crate")]
+transform = Transform3D(3.7252907e-09, 0.16671589, 0.986005, 0.25026563, 0.95462763, -0.16141051, -0.96817726, 0.24676317, -0.041723244, -140, 37.551968, -24.5)
+
+[node name="BarrelA" parent="PhysicsProps/HilltopProps" index="3" unique_id=1468589748 instance=ExtResource("6_barrel")]
+transform = Transform3D(0, 0.17973182, 0.98371565, 0.22039963, 0.95952576, -0.17531215, -0.9754097, 0.21681057, -0.039612822, -141.6, 38.611256, -27.5)
+
+[node name="BarrelB" parent="PhysicsProps/HilltopProps" index="4" unique_id=1224795395 instance=ExtResource("6_barrel")]
+transform = Transform3D(0, 0.16612253, 0.98610514, 0.2559575, 0.9532561, -0.16058865, -0.96668804, 0.25240102, -0.04252031, -141.6, 37.879944, -24.5)
+
+[node name="Cone" parent="PhysicsProps/HilltopProps" index="5" unique_id=1814269571 instance=ExtResource("5_cone")]
+transform = Transform3D(-3.7252903e-09, 0.12321509, 0.99238, 0.2538082, 0.9598841, -0.11918036, -0.9672546, 0.25187418, -0.031273004, -138, 36.98493, -24)
+
+[node name="LakesideProps" type="Node3D" parent="PhysicsProps" index="10" unique_id=708787730]
+
+[node name="CrateA" parent="PhysicsProps/LakesideProps" index="0" unique_id=1382428539 instance=ExtResource("4_crate")]
+transform = Transform3D(-0.99999356, -0.003582029, -0.00028713752, -0.0035935189, 0.99679613, 0.07990375, 2.910383e-11, 0.079904266, -0.99680257, -207.8, 25.878042, -53)
+
+[node name="CrateB" parent="PhysicsProps/LakesideProps" index="1" unique_id=76070451 instance=ExtResource("4_crate")]
+transform = Transform3D(-0.9999289, -0.011897385, -0.0008321417, -0.011926452, 0.99749196, 0.06976782, -5.8207654e-11, 0.06977278, -0.9975629, -206.2, 25.89122, -53)
+
+[node name="ConeA" parent="PhysicsProps/LakesideProps" index="2" unique_id=1313572401 instance=ExtResource("5_cone")]
+transform = Transform3D(-0.9999959, 0.0028882313, -7.644727e-05, 0.0028892427, 0.9996458, -0.026459169, 0, -0.026459282, -0.99964994, -209, 25.837303, -54.7)
+
+[node name="ConeB" parent="PhysicsProps/LakesideProps" index="3" unique_id=1102618960 instance=ExtResource("5_cone")]
+transform = Transform3D(-0.99997944, -0.006416923, 0.00025289558, -0.0064219045, 0.99920374, -0.039379347, 2.910383e-11, -0.039380163, -0.9992243, -205, 25.841295, -54.7)
+
 [node name="StuntRewards" parent="." index="12" unique_id=1798705041 instance=ExtResource("7_stunts")]
 
 [node name="DrivingHUD" parent="." index="13" unique_id=987035981 instance=ExtResource("8_hud")]
