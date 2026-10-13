@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://cahmamfafo7xf"]
+
+[ext_resource type="PackedScene" uid="uid://xhuatwvnqsyp" path="res://scenes/terrain_showcase.tscn" id="1_location"]
+[ext_resource type="Script" uid="uid://cdtmto24k028a" path="res://scripts/van_cinematic.gd" id="2_camera"]
+[ext_resource type="ArrayMesh" path="res://assets/environment/extreme_extension/background_open_west.res" id="3_backdrop"]
+
+[node name="VanCinematic" unique_id=2083431542 instance=ExtResource("1_location")]
+script = ExtResource("2_camera")
+
+[node name="DistantRidges" parent="." index="1" unique_id=692713511]
+mesh = ExtResource("3_backdrop")
+
+[node name="VanPrototype" parent="." index="5" unique_id=1148736027]
+process_mode = 4
+transform = Transform3D(0.99999446, 0.0033425377, -6.683757e-05, -0.003343206, 0.9997946, -0.019991947, 7.275958e-12, 0.019992061, 0.99980015, -75, 3.1385763, 58)
+freeze = true
+
+[node name="CameraRig" parent="." index="6" unique_id=1914883008]
+process_mode = 4
+script = null
