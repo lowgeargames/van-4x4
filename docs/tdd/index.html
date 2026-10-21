@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="TDD do Van 4x4: ambiente técnico, organização do projeto e arquitetura existente. Versão 0.1. Documento em elaboração.">
+    <title>Van 4x4 — Technical Design Document</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <a class="skip-link" href="#main">Ir para o conteúdo</a>
+    <header class="hero">
+        <p class="team-name">Low Gear Games</p>
+        <h1>Van 4x4</h1>
+        <p class="subtitle">Technical Design Document</p>
+        <p class="hero-description">Estrutura técnica de um jogo 3D arcade off-road, baseado em cenas e nós da Godot.</p>
+        <p class="edition">Versão 0.1 · Documento em elaboração</p>
+        <a class="document-link" href="../gdd/index.html">Consultar o Game Design Document →</a>
+    </header>
+
+    <nav class="navigation" aria-label="Seções do TDD">
+        <a href="#environment">01 · Ambiente técnico</a>
+        <a href="#organization">02 · Organização</a>
+        <a href="#architecture">03 · Arquitetura</a>
+        <a href="#vehicle">04 · Veículo e física <small>Em elaboração</small></a>
+        <a href="#camera">05 · Controles e câmera <small>Em elaboração</small></a>
+        <a href="#terrain">06 · Terreno e geração <small>Em elaboração</small></a>
+        <a href="#nature">07 · Ambiente e obstáculos <small>Em elaboração</small></a>
+        <a href="#interactions">08 · Água, lama e interações <small>Em elaboração</small></a>
+        <a href="#hud">09 · HUD e gameplay <small>Em elaboração</small></a>
+        <a href="#stunts">10 · Façanhas e recompensas <small>Em elaboração</small></a>
+        <a href="#progression">11 · Missões e progressão <small>Em elaboração</small></a>
+        <a href="#validation">12 · Dependências e testes <small>Em elaboração</small></a>
+    </nav>
+
+    <main id="main">
+        <section id="environment" data-status="documentado">
+            <p class="section-kicker">Fundamentos técnicos</p>
+            <h2>01. Introdução e ambiente técnico</h2>
+            <p>Este TDD registra a estrutura e as relações técnicas verificadas no repositório. Complementa o GDD, sem repetir suas decisões de game design. Nesta versão, somente as seções 1, 2 e 3 possuem conteúdo desenvolvido; algoritmos, calibração e arquitetura futura serão tratados nas seções seguintes.</p>
+            <p>O protótipo é um jogo 3D de direção com uma van controlada por física arcade, terrenos estáticos, objetos físicos, interações e interfaces. A composição de cenas reutilizáveis permite manter o playground, a experiência de terreno e a fase mais avançada sem criar outro controlador de veículo.</p>
+            <div class="status-legend" aria-label="Como interpretar os estados">
+                <p><span class="status-tag implemented">Implementado</span> Sistema presente no projeto inspecionado.</p>
+                <p><span class="status-tag planned">Planejado</span> Escopo previsto no GDD, ainda sem implementação correspondente.</p>
+                <p><span class="status-tag draft">Em elaboração</span> Seção do TDD ainda não desenvolvida; não significa ausência do sistema no jogo.</p>
+            </div>
+
+            <h3>Ambiente registrado e editor utilizado</h3>
+            <div class="table-wrap">
+                <table>
+                    <caption>Configuração atual e origem da informação</caption>
+                    <thead><tr><th scope="col">Elemento</th><th scope="col">Estado verificado</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">Editor Godot 4.7.2</th><td>Versão de desenvolvimento informada e também citada nas notas do terreno. O arquivo de projeto registra a família <code>4.7</code>, não fixa o patch <code>4.7.2</code>.</td></tr>
+                        <tr><th scope="row">GDScript</th><td>Linguagem dos scripts de gameplay e ferramentas em <code>game/scripts/</code> e <code>game/tools/</code>.</td></tr>
+                        <tr><th scope="row">Jolt Physics</th><td><code>3d/physics_engine="Jolt Physics"</code> em <a href="../../game/project.godot"><code>game/project.godot</code></a>.</td></tr>
+                        <tr><th scope="row">Compatibility</th><td><code>renderer/rendering_method="gl_compatibility"</code>; o mesmo método está registrado para mobile. A chave de driver Windows <code>d3d12</code> também existe no arquivo, mas não substitui o renderer Compatibility selecionado.</td></tr>
+                        <tr><th scope="row">Interface</th><td>Viewport de referência de <code>1920 × 1080</code>, com <code>window/stretch/mode="canvas_items"</code>.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="note">As configurações registradas não comprovam suporte validado em diferentes plataformas, dispositivos móveis ou gamepads, nem garantem determinada taxa de quadros. Esta versão é baseada em inspeção dos arquivos; não inclui execução do Godot ou novos testes de gameplay.</p>
+
+            <h3>Recursos externos relevantes</h3>
+            <p>A seleção de 12 modelos do Quaternius Stylized Nature MegaKit [Standard] fornece árvores, pinheiros, rochas, arbustos, grama e samambaias. Fontes glTF, texturas, materiais e malhas nativas derivadas ficam em <code>game/assets/environment/quaternius_nature/</code>. A licença é CC0 1.0, conforme o <a href="../../game/assets/environment/quaternius_nature/License_Standard.txt">arquivo de licença</a>; o <a href="../../game/assets/environment/quaternius_nature/ASSET_MANIFEST.md">manifesto</a> identifica os arquivos importados. O terreno e os efeitos também utilizam recursos nativos da Godot.</p>
+
+            <h3>Estrutura geral de execução</h3>
+            <ol class="steps">
+                <li>Abrir <code>game/project.godot</code> no editor.</li>
+                <li><strong>F5:</strong> executar a cena inicial configurada, <code>res://scenes/driving_test.tscn</code>.</li>
+                <li><strong>F6:</strong> com <code>mission_level.tscn</code> aberta, executar a fase jogável mais avançada. O caminho <code>res://</code> corresponde à pasta <code>game/</code> do repositório.</li>
+            </ol>
+            <p>As cenas carregam malhas, colisões e materiais já preparados. As ferramentas de autoria em <code>game/tools/</code> são executadas separadamente; não são geradores contínuos anexados à fase.</p>
+        </section>
+
+        <section id="organization" data-status="documentado">
+            <p class="section-kicker">Estrutura do projeto</p>
+            <h2>02. Organização do projeto</h2>
+            <p>Os caminhos abaixo são relativos à raiz do repositório. O projeto executável fica em <code>game/</code>; a documentação fica em <code>docs/</code>.</p>
+            <div class="table-wrap">
+                <table>
+                    <caption>Pastas principais</caption>
+                    <thead><tr><th scope="col">Pasta</th><th scope="col">Responsabilidade</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row"><code>game/</code></th><td>Raiz da Godot, com configuração, cenas e recursos. <code>.godot/</code> é o diretório local de dados gerados pelo editor.</td></tr>
+                        <tr><th scope="row"><code>game/scenes/</code></th><td>Cenas <code>.tscn</code> de fase, veículo, equipamentos, interfaces, efeitos e objetos reutilizáveis.</td></tr>
+                        <tr><th scope="row"><code>game/scripts/</code></th><td>Comportamentos GDScript de direção, câmera, apresentação, interações e monitoramento.</td></tr>
+                        <tr><th scope="row"><code>game/assets/</code></th><td>Recursos visuais e físicos. O conteúdo atual concentra-se em <code>environment/</code>: Quaternius, terreno e extensão extrema.</td></tr>
+                        <tr><th scope="row"><code>game/tools/</code></th><td>Ferramentas de autoria <code>build_terrain_showcase.gd</code>, <code>build_extreme_extension.gd</code> e <code>build_mission_nature.gd</code>. Produzem recursos/cenas previamente, fora do gameplay.</td></tr>
+                        <tr><th scope="row"><code>docs/</code></th><td>Conceito inicial, GDD e este TDD. Documentação não participa da execução do jogo.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Cenas de execução e composição</h3>
+            <div class="table-wrap">
+                <table>
+                    <caption>Cenas principais em <code>game/scenes/</code></caption>
+                    <thead><tr><th scope="col">Cena</th><th scope="col">Papel atual</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row"><a href="../../game/scenes/mission_level.tscn"><code>mission_level.tscn</code></a></th><td>Fase mais avançada. Herda <code>terrain_showcase.tscn</code> e acrescenta antena, UI de missão, props, HUD, façanhas, extensão e natureza interativa.</td></tr>
+                        <tr><th scope="row"><a href="../../game/scenes/driving_test.tscn"><code>driving_test.tscn</code></a></th><td>Playground original e cena inicial de F5. Mantém lama, água, obstáculos e a sequência de reparos antena → bomba.</td></tr>
+                        <tr><th scope="row"><a href="../../game/scenes/terrain_showcase.tscn"><code>terrain_showcase.tscn</code></a></th><td>Experiência de relevo com estrada, ambiente, van e câmera; base herdada pela fase. Não inclui a missão ou os HUDs adicionados em <code>mission_level.tscn</code>.</td></tr>
+                        <tr><th scope="row"><a href="../../game/scenes/van_prototype.tscn"><code>van_prototype.tscn</code></a></th><td>Van reutilizável: <code>RigidBody3D</code>, colisão, quatro raycasts de suspensão, rodas visuais e emissores de partículas.</td></tr>
+                        <tr><th scope="row"><a href="../../game/scenes/extreme_extension.tscn"><code>extreme_extension.tscn</code></a></th><td>Complemento de terreno com elevações, lago, zonas de água/lama, natureza e respingos de impacto.</td></tr>
+                        <tr><th scope="row"><a href="../../game/scenes/mission_nature_interactions.tscn"><code>mission_nature_interactions.tscn</code></a></th><td>Natureza interativa: grupos visuais, colisões de troncos e rochas, detecção de impacto e efeitos de quebra de árvores.</td></tr>
+                        <tr><th scope="row"><a href="../../game/scenes/repair_antenna.tscn"><code>repair_antenna.tscn</code></a> / <a href="../../game/scenes/repair_water_pump.tscn"><code>repair_water_pump.tscn</code></a></th><td>Equipamentos que compartilham a lógica de reparo. A antena inclui o painel reutilizado para apresentar a missão.</td></tr>
+                        <tr><th scope="row"><a href="../../game/scenes/driving_hud.tscn"><code>driving_hud.tscn</code></a> / <a href="../../game/scenes/stunt_rewards.tscn"><code>stunt_rewards.tscn</code></a></th><td>HUD de direção e recompensas. A segunda cena contém também o nó <code>StuntMonitor</code>.</td></tr>
+                        <tr><th scope="row"><a href="../../game/scenes/physics_crate.tscn"><code>physics_crate.tscn</code></a>, <a href="../../game/scenes/physics_cone.tscn"><code>physics_cone.tscn</code></a>, <a href="../../game/scenes/physics_barrel.tscn"><code>physics_barrel.tscn</code></a></th><td>Props com corpos rígidos e colisões simples, instanciados pela fase.</td></tr>
+                        <tr><th scope="row"><a href="../../game/scenes/van_cinematic.tscn"><code>van_cinematic.tscn</code></a></th><td>Cena separada de filmagem, com a van congelada e movimentos próprios de câmera. Não é o fluxo normal de gameplay.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>As cenas <code>valley_scenery.tscn</code> e <code>mission_route_nature.tscn</code> compõem a ambientação anterior do playground. <code>water_impact_splash.tscn</code> e <code>tree_break_fragments.tscn</code> concentram efeitos reutilizáveis.</p>
+        </section>
+
+        <section id="architecture" data-status="documentado">
+            <p class="section-kicker">Arquitetura do sistema</p>
+            <h2>03. Arquitetura geral</h2>
+            <p><span class="status-tag implemented">Implementado</span> A organização é baseada em cenas e nós, com herança de cena para o terreno e instanciação de componentes reutilizáveis. Na fase atual, as conexões usam referências de nós, propriedades exportadas e sinais locais; não há um sistema genérico de campanha implementando o ciclo futuro do GDD.</p>
+            <div class="composition" aria-label="Composição resumida da fase atual">
+                <p><strong>mission_level.tscn</strong> <span>herda terrain_showcase.tscn</span></p>
+                <ul>
+                    <li><strong>Base herdada:</strong> terreno e colisão, ambiente, <code>VanPrototype</code> e <code>CameraRig/FollowCamera</code>.</li>
+                    <li><strong>Componentes adicionados:</strong> <code>RepairAntenna</code>, <code>AntennaMissionUI</code>, <code>ObjectiveUI</code>, <code>PhysicsProps</code>, <code>StuntRewards</code>, <code>DrivingHUD</code>, <code>ExtremeExtension</code> e <code>NatureInteractions</code>.</li>
+                    <li><strong>Ajustes locais:</strong> energia do turbo habilitada na van e recurso de montanhas de fundo substituído pela fase.</li>
+                </ul>
+            </div>
+
+            <h3>Veículo, câmera e terreno</h3>
+            <p><a href="../../game/scripts/van_controller.gd"><code>game/scripts/van_controller.gd</code></a> estende <code>RigidBody3D</code> e concentra suspensão, propulsão, frenagem, direção, turbo, drift, controle de rolamento, recuperação e estados de lama/água. A integração das forças ocorre em <code>_integrate_forces()</code>; o detalhamento dos cálculos fica para a seção 4.</p>
+            <p><a href="../../game/scripts/camera_follow.gd"><code>game/scripts/camera_follow.gd</code></a>, no <code>CameraRig</code>, localiza <code>../VanPrototype</code>. Suaviza posição e orientação horizontal, sem acompanhar a inclinação lateral ou longitudinal da van. A <code>Camera3D</code> é filha do rig. Essa hierarquia e os nomes são dependências reais da integração.</p>
+            <p>O terreno usa malhas e colisões estáticas preparadas em <code>game/assets/environment/terrain_showcase/</code> e <code>game/assets/environment/extreme_extension/</code>. Cada trecho possui <code>StaticBody3D</code> e <code>CollisionShape3D</code>; os geradores derivam a colisão triangular da malha do terreno. A estrada integra o relevo, enquanto a curva de autoria não conduz a van. A geração e a gravação dos recursos ficam fora da execução normal da fase.</p>
+
+            <h3>Interações e efeitos</h3>
+            <div class="table-wrap">
+                <table>
+                    <caption>Responsabilidades e ligações existentes — caminhos relativos a <code>game/scripts/</code></caption>
+                    <thead><tr><th scope="col">Script</th><th scope="col">Relação com os demais sistemas</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row"><a href="../../game/scripts/mud_zone.gd"><code>mud_zone.gd</code></a> / <a href="../../game/scripts/water_zone.gd"><code>water_zone.gd</code></a></th><td>Scripts de <code>Area3D</code>. Os sinais <code>body_entered</code>/<code>body_exited</code> chamam <code>enter_mud()</code>/<code>exit_mud()</code> ou <code>enter_water()</code>/<code>exit_water()</code> nos corpos compatíveis. O controlador aplica a resposta de condução.</td></tr>
+                        <tr><th scope="row"><a href="../../game/scripts/van_surface_particles.gd"><code>van_surface_particles.gd</code></a> / <a href="../../game/scripts/water_impact_splash.gd"><code>water_impact_splash.gd</code></a></th><td>Leem movimento, estados de superfície e contatos para apresentar poeira, lama, água e impacto no lago. Não são controladores de propulsão.</td></tr>
+                        <tr><th scope="row"><a href="../../game/scripts/nature_interactions.gd"><code>nature_interactions.gd</code></a></th><td>Referencia a van por <code>van_path</code>, recebe <code>body_shape_entered</code> da área de troncos e associa o contato à instância visual. Gerencia a quebra, desativa as colisões da árvore atingida e apresenta queda/fragmentos.</td></tr>
+                        <tr><th scope="row"><a href="../../game/scripts/repair_antenna.gd"><code>repair_antenna.gd</code></a></th><td>Componente compartilhado pelos equipamentos: referencia a van por <code>van_path</code>, consulta <code>InteractionArea</code>, estado de parada e input. Mantém progresso e indicador e emite <code>repair_completed</code>.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>Apresentação, HUD e monitoramento</h3>
+            <p><a href="../../game/scripts/driving_hud.gd"><code>game/scripts/driving_hud.gd</code></a> referencia a van por <code>van_path</code> e lê velocidade e propriedades de energia do turbo para atualizar seu <code>CanvasLayer</code>. A apresentação não calcula as forças do veículo.</p>
+            <p><a href="../../game/scripts/stunt_monitor.gd"><code>game/scripts/stunt_monitor.gd</code></a> é um observador em frequência de física. Lê transformações, velocidades, estado físico e resultados dos raycasts já atualizados pela suspensão. Não aplica forças nem cria outra suspensão; mantém as estatísticas e recompensas de sessão.</p>
+            <p><a href="../../game/scripts/stunt_reward_ui.gd"><code>game/scripts/stunt_reward_ui.gd</code></a> apresenta o monitor por meio dos sinais <code>flight_updated</code>, <code>flight_cancelled</code> e <code>stunt_landed</code>. Referências aos painéis da missão, marcador e HUD ajudam a posicionar a recompensa sem sobreposição. O monitor é filho de <code>StuntRewards</code>, com <code>van_path="../../VanPrototype"</code>.</p>
+
+            <h3>Papel das cenas de missão</h3>
+            <p>Em <code>mission_level.tscn</code>, <a href="../../game/scripts/antenna_mission_ui.gd"><code>game/scripts/antenna_mission_ui.gd</code></a> lê a proximidade e o progresso da antena, utiliza o painel contido no equipamento e posiciona o marcador <code>ObjectiveUI/ObjectiveMarker</code> com a câmera ativa. Conecta <code>repair_completed</code> para exibir a conclusão. Não realiza o reparo no lugar do componente.</p>
+            <p>No playground, <a href="../../game/scripts/service_sequence.gd"><code>game/scripts/service_sequence.gd</code></a> conecta o mesmo sinal nos dois equipamentos, ativa a bomba após a antena e reutiliza o painel de missão. Esse controlador de dois serviços não está integrado à fase atual como um sistema de campanha.</p>
+            <p class="note"><span class="status-tag planned">Planejado</span> Quatro serviços integrados, garagem, economia, peças com vantagens e desvantagens, estatísticas consolidadas de direção/destruição, relatório, retorno dirigido ou rápido e salvamento pertencem ao escopo do GDD. Sua arquitetura ainda não está definida neste TDD. Os pontos e estrelas existentes são de sessão, não progressão persistente ou dinheiro.</p>
+        </section>
+
+        <section id="vehicle" class="pending" data-status="em-elaboracao">
+            <h2>04. Veículo e sistema de física</h2><p class="status-tag draft">Em elaboração</p>
+        </section>
+        <section id="camera" class="pending" data-status="em-elaboracao">
+            <h2>05. Controles e câmera</h2><p class="status-tag draft">Em elaboração</p>
+        </section>
+        <section id="terrain" class="pending" data-status="em-elaboracao">
+            <h2>06. Terreno e geração de recursos</h2><p class="status-tag draft">Em elaboração</p>
+        </section>
+        <section id="nature" class="pending" data-status="em-elaboracao">
+            <h2>07. Ambiente, vegetação e obstáculos</h2><p class="status-tag draft">Em elaboração</p>
+        </section>
+        <section id="interactions" class="pending" data-status="em-elaboracao">
+            <h2>08. Água, lama e interações</h2><p class="status-tag draft">Em elaboração</p>
+        </section>
+        <section id="hud" class="pending" data-status="em-elaboracao">
+            <h2>09. HUD e sistemas de gameplay</h2><p class="status-tag draft">Em elaboração</p>
+        </section>
+        <section id="stunts" class="pending" data-status="em-elaboracao">
+            <h2>10. Façanhas e recompensas</h2><p class="status-tag draft">Em elaboração</p>
+        </section>
+        <section id="progression" class="pending" data-status="em-elaboracao">
+            <h2>11. Missões, garagem e progressão</h2><p class="status-tag draft">Em elaboração</p>
+        </section>
+        <section id="validation" class="pending" data-status="em-elaboracao">
+            <h2>12. Dependências, limitações e testes</h2><p class="status-tag draft">Em elaboração</p>
+        </section>
+    </main>
+
+    <footer>
+        <p>Low Gear Games — Van 4x4</p>
+        <p>Jogos Digitais — Universidade Federal de Pelotas</p>
+        <p>TDD em desenvolvimento progressivo · Versão 0.1</p>
+    </footer>
+</body>
+</html>
