@@ -82,6 +82,12 @@ a code { color: var(--accent); }
 .status-tag.implemented { color: var(--text); border-color: var(--muted); }
 .status-tag.draft { color: var(--muted); border-color: var(--border); border-style: dashed; }
 .table-wrap { margin: 1.3rem 0; }
+.input-map-scroll { overflow-x: auto; }
+.input-map-scroll:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.input-map-table { min-width: 680px; }
+.input-map-table th:first-child { width: 20%; }
+.input-map-table th:nth-child(2) { width: 10%; }
+.input-map-table th:nth-child(3) { width: 23%; }
 table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 0.94rem; }
 caption { color: var(--muted); font-size: 0.85rem; text-align: left; padding-bottom: 0.65rem; }
 th, td { text-align: left; vertical-align: top; padding: 1rem; border: 1px solid var(--border); overflow-wrap: anywhere; }

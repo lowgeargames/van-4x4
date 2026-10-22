@@ -23,8 +23,8 @@
         <a href="#organization">02 · Organização</a>
         <a href="#architecture">03 · Arquitetura</a>
         <a href="#vehicle">04 · Veículo e física</a>
-        <a href="#camera">05 · Controles e câmera <small>Em elaboração</small></a>
-        <a href="#terrain">06 · Terreno e geração <small>Em elaboração</small></a>
+        <a href="#camera">05 · Controles e câmera</a>
+        <a href="#terrain">06 · Terreno e geração</a>
         <a href="#nature">07 · Ambiente e obstáculos <small>Em elaboração</small></a>
         <a href="#interactions">08 · Água, lama e interações <small>Em elaboração</small></a>
         <a href="#hud">09 · HUD e gameplay <small>Em elaboração</small></a>
@@ -37,7 +37,7 @@
         <section id="environment" data-status="documentado">
             <p class="section-kicker">Fundamentos técnicos</p>
             <h2>01. Introdução e ambiente técnico</h2>
-            <p>Este TDD registra a estrutura e as relações técnicas verificadas no repositório. Complementa o GDD, sem repetir suas decisões de game design. Nesta versão, as seções 1 a 4 possuem conteúdo desenvolvido; as seções 5 a 12 permanecem em elaboração.</p>
+            <p>Este TDD registra a estrutura e as relações técnicas verificadas no repositório. Complementa o GDD, sem repetir suas decisões de game design. Nesta versão, as seções 1 a 6 possuem conteúdo desenvolvido; as seções 7 a 12 permanecem em elaboração.</p>
             <p>O protótipo é um jogo 3D de direção com uma van controlada por física arcade, terrenos estáticos, objetos físicos, interações e interfaces. A composição de cenas reutilizáveis permite manter o playground, a experiência de terreno e a fase mais avançada sem criar outro controlador de veículo.</p>
             <div class="status-legend" aria-label="Como interpretar os estados">
                 <p><span class="status-tag implemented">Implementado</span> Sistema presente no projeto inspecionado.</p>
@@ -262,11 +262,171 @@
             <p>Na água, há ainda força central <code>−v_horizontal × mass × (1 − exp(−0.8 × state.step)) / state.step</code>. Ela atua enquanto <code>in_water</code>, inclusive sem apoio, sem frear diretamente a componente vertical. Não existe força de flutuação nesse controlador. Se os dois estados de superfície estiverem ativos, os ajustes de lama e água podem se combinar.</p>
             <p class="note"><span class="status-tag planned">Planejado</span> Parâmetros exportados de aceleração, aderência, suspensão e turbo são possíveis pontos de configuração futura. O sistema de melhorias ainda não existe e não altera esses parâmetros em tempo de execução no fluxo atual.</p>
         </section>
-        <section id="camera" class="pending" data-status="em-elaboracao">
-            <h2>05. Controles e câmera</h2><p class="status-tag draft">Em elaboração</p>
+        <section id="camera" data-status="documentado">
+            <p class="section-kicker">Entradas e acompanhamento do veículo</p>
+            <h2>05. Controles e câmera</h2>
+            <p><span class="status-tag implemented">Implementado</span> O controlador consulta ações do Input Map; a câmera de gameplay acompanha a van por um nó independente. As informações abaixo vêm de <a href="../../game/project.godot"><code>project.godot</code></a>, <a href="../../game/scripts/van_controller.gd"><code>van_controller.gd</code></a> e <a href="../../game/scripts/camera_follow.gd"><code>camera_follow.gd</code></a>.</p>
+
+            <h3>5.1 — Mapeamento de entradas</h3>
+            <p>As oito ações cadastradas usam <code>InputEventKey</code>, com <code>physical_keycode</code> e <code>deadzone = 0.2</code>. A tabela indica as posições de teclado W/S/A/D e as demais teclas configuradas. A direção utiliza <code>Input.get_axis("steer_right", "steer_left")</code>; aceleração e ré utilizam <code>Input.get_axis("reverse", "accelerate")</code>.</p>
+            <div class="table-wrap input-map-scroll" tabindex="0" role="region" aria-label="Mapeamento de entradas; tabela com rolagem horizontal em telas pequenas">
+                <table class="input-map-table">
+                    <caption>Comandos de gameplay — em telas pequenas, deslize a tabela horizontalmente</caption>
+                    <thead><tr><th scope="col">Ação do jogador</th><th scope="col">Tecla</th><th scope="col">Ação no Input Map</th><th scope="col">Comportamento</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">Acelerar</th><td>W</td><td><code>accelerate</code></td><td>Solicita avanço com apoio válido. Se a van se move em ré, primeiro freia o movimento contrário.</td></tr>
+                        <tr><th scope="row">Frear / dar ré</th><td>S</td><td><code>reverse</code></td><td>Freia o avanço antes de solicitar marcha à ré. A transição não inverte instantaneamente a velocidade.</td></tr>
+                        <tr><th scope="row">Dirigir</th><td>A / D</td><td><code>steer_left</code> / <code>steer_right</code></td><td>Esterçamento suavizado e giro sobre a normal de apoio; o sentido do giro considera avanço ou ré.</td></tr>
+                        <tr><th scope="row">Drift / freio de mão</th><td>Espaço</td><td><code>handbrake</code></td><td>Reduz a aderência lateral, freia longitudinalmente e altera o limite de giro. Impede a ativação do turbo.</td></tr>
+                        <tr><th scope="row">Turbo</th><td>Shift</td><td><code>turbo</code></td><td>Com avanço solicitado, apoio e condições de condução válidas, aumenta aceleração e velocidade-alvo. Na fase de missão, depende também da reserva e do desbloqueio descritos em 4.5.</td></tr>
+                        <tr><th scope="row">Reposicionar a van</th><td>R</td><td><code>reset_vehicle</code></td><td><code>is_action_just_pressed()</code> solicita a recuperação; a próxima integração física reposiciona o corpo conforme 4.7.</td></tr>
+                        <tr><th scope="row">Tentar desvirar</th><td>A / D</td><td><code>steer_left</code> / <code>steer_right</code></td><td>Aplica torque de recuperação quando a van está inclinada, lenta e apoiada nas condições verificadas por <code>_apply_manual_roll()</code>. Não é uma ação separada.</td></tr>
+                        <tr><th scope="row">Reparar</th><td>Segurar E</td><td><code>interact</code></td><td><a href="../../game/scripts/repair_antenna.gd"><code>repair_antenna.gd</code></a> exige equipamento ativo, sobreposição da área e velocidade de até <code>0.5 m/s</code>. O padrão é <code>2 s</code> contínuos; perder uma condição reinicia o progresso.</td></tr>
+                        <tr><th scope="row">Rolamento no ar</th><td>A / D</td><td><code>steer_left</code> / <code>steer_right</code></td><td>Com menos de dois contatos de roda e sem contato da carroceria, comanda torque no eixo longitudinal local. W/S não controla pitch; não há comando independente de cambalhota para frente/trás.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="note">O gameplay usa ações, não verificações diretas de W/S/A/D. As teclas diretas 1, 2 e R pertencem à ferramenta cinematográfica descrita em 5.4. Não há eventos de joystick nessas ações nem evidência de suporte funcional a gamepad; não existe interface de remapeamento de controles implementada.</p>
+
+            <h3>5.2 — Câmera de gameplay</h3>
+            <p>A hierarquia da fase contém <code>VanPrototype</code> e <code>CameraRig</code> como irmãos. O rig é um <code>Node3D</code> com <code>camera_follow.gd</code>; seu filho <code>FollowCamera</code> é uma <code>Camera3D</code> ativa. A referência <code>$"../VanPrototype"</code> depende desses nomes e dessa relação. A câmera não faz parte da cena reutilizável <a href="../../game/scenes/van_prototype.tscn"><code>van_prototype.tscn</code></a>.</p>
+            <div class="table-wrap">
+                <table>
+                    <caption>Configuração herdada de terrain_showcase.tscn pela mission_level.tscn</caption>
+                    <thead><tr><th scope="col">Parâmetro / etapa</th><th scope="col">Implementação</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">Transformação local da câmera</th><td>Posição <code>(0, 4, 8)</code> em relação ao rig, com aproximadamente <code>−15°</code> de pitch. O eixo frontal da van é <code>−Z</code>, portanto <code>+Z</code> posiciona a câmera atrás. O deslocamento gira com o rumo do rig.</td></tr>
+                        <tr><th scope="row">Inicialização</th><td><code>_ready()</code> coloca o rig na posição global da van e copia seu yaw inicial.</td></tr>
+                        <tr><th scope="row">Posição</th><td><code>follow_speed = 6.0</code>; peso <code>1 − exp(−6 × delta)</code>. Interpola a posição global completa do rig até a posição global do alvo.</td></tr>
+                        <tr><th scope="row">Rotação</th><td><code>rotation_speed = 5.0</code>; peso <code>1 − exp(−5 × delta)</code>. <code>lerp_angle()</code> aproxima somente o yaw; pitch e roll do rig são zerados.</td></tr>
+                        <tr><th scope="row">Atualização / alcance</th><td><code>_process(delta)</code>, a cada quadro de processamento. A cena de terreno define <code>far = 450.0</code>; a fase herda esse valor. O script não modifica o FOV.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Não há <code>SpringArm3D</code>, teste de obstrução, colisão da câmera ou correção automática da distância. A suavização usa o tempo do quadro, sem atualizar por <code>_physics_process()</code>. O pitch local fixo produz o enquadramento; o acompanhamento normal não usa <code>look_at()</code>.</p>
+
+            <h3>5.3 — Comportamento durante a direção</h3>
+            <p>No deslocamento normal, o rig aproxima-se continuamente do veículo, incluindo sua altura. Nas curvas, a interpolação do yaw faz a câmera contornar a van com atraso suave. O enquadramento acompanha o rumo da carroceria, não a direção da velocidade: em ré ou drift, não muda automaticamente para uma visão frontal.</p>
+            <p>Nos saltos, a câmera acompanha a variação vertical pela mesma interpolação de posição. Nas inclinações, rolamentos e capotamentos, não copia pitch ou roll da van; mantém o rig sem inclinação nesses eixos. Continua acompanhando o yaw extraído da orientação do alvo, inclusive durante acrobacias. Isso não constitui um algoritmo específico de estabilização de acrobacias: não há estado de voo, compensação de giro, tremor de impacto ou zoom de turbo no script da câmera.</p>
+
+            <h3>5.4 — Câmeras auxiliares e cenas de teste</h3>
+            <p><a href="../../game/scenes/driving_test.tscn"><code>driving_test.tscn</code></a> fornece a câmera do playground. <a href="../../game/scenes/terrain_showcase.tscn"><code>terrain_showcase.tscn</code></a> reutiliza o mesmo script, posição relativa e inclinação; <a href="../../game/scenes/mission_level.tscn"><code>mission_level.tscn</code></a> herda essa composição. São variações de cenário com a câmera normal de gameplay, não modos alternativos de câmera selecionáveis pelo jogador.</p>
+            <p><a href="../../game/scenes/van_cinematic.tscn"><code>van_cinematic.tscn</code></a> também herda o terreno, mas congela a van, desabilita seu processamento e remove o script de acompanhamento do rig. <a href="../../game/scripts/van_cinematic.gd"><code>van_cinematic.gd</code></a> movimenta a mesma <code>FollowCamera</code> para capturas do teaser, usando posições relativas ao rumo da van e <code>look_at()</code>.</p>
+            <div class="table-wrap">
+                <table>
+                    <caption>Comandos exclusivos da cena cinematográfica</caption>
+                    <thead><tr><th scope="col">Tecla direta</th><th scope="col">Tomada</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">1</th><td>Tomada A: recuo e elevação diante da van, com duração padrão de <code>6 s</code>.</td></tr>
+                        <tr><th scope="row">2</th><td>Tomada B: passagem lateral seguida de curva para trás e acima, com duração padrão de <code>7 s</code>.</td></tr>
+                        <tr><th scope="row">R</th><td>Repete a última tomada. Nesse contexto, não é o reposicionamento físico do veículo.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>O script lê <code>InputEventKey</code> em <code>_unhandled_key_input()</code>, ignora repetições automáticas e usa <code>physical_keycode</code> com fallback para <code>keycode</code>. Um <code>Tween</code> com transição seno e suavização de entrada/saída percorre a tomada. A cena inicia no enquadramento A, sem reprodução automática. É uma cena de captura independente; não há integração como cutscene da campanha.</p>
+
+            <h3>5.5 — Limitações atuais</h3>
+            <ul class="steps">
+                <li>A ausência de detecção de obstáculos permite que terreno, vegetação ou objetos ocultem a van ou sejam atravessados pela câmera.</li>
+                <li>O caminho fixo do alvo depende da hierarquia da cena e não possui busca alternativa ou validação explícita de referência nula.</li>
+                <li>O yaw deriva da orientação da van mesmo quando ela está tombada; não existe tratamento específico para enquadrar rotações extremas.</li>
+                <li>Não há câmera livre, controle por mouse ou comando para alternar vistas durante o gameplay. As tomadas cinematográficas não acrescentam esses controles à fase.</li>
+            </ul>
         </section>
-        <section id="terrain" class="pending" data-status="em-elaboracao">
-            <h2>06. Terreno e geração de recursos</h2><p class="status-tag draft">Em elaboração</p>
+        <section id="terrain" data-status="documentado">
+            <p class="section-kicker">Geometria estática e ferramentas de autoria</p>
+            <h2>06. Terreno e geração de recursos</h2>
+            <p><span class="status-tag implemented">Implementado</span> O ambiente é finito e composto por recursos preparados antecipadamente. <code>mission_level.tscn</code> herda o terreno experimental e instancia a extensão, mantendo referências compartilhadas às malhas, colisões e materiais. Não há mundo infinito, streaming ou geração contínua de relevo durante a partida.</p>
+
+            <h3>6.1 — Organização dos terrenos</h3>
+            <div class="table-wrap">
+                <table>
+                    <caption>Áreas e responsabilidades das cenas</caption>
+                    <thead><tr><th scope="col">Cena / elemento</th><th scope="col">Composição existente</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row"><code>terrain_showcase.tscn</code></th><td>Base de testes de <code>220 × 220 m</code>, entre <code>−110</code> e <code>110</code> nos eixos X/Z. Inclui relevo, estrada sinuosa, clareira inicial, mirante, vegetação, montanhas decorativas, van, câmera e iluminação.</td></tr>
+                        <tr><th scope="row"><a href="../../game/scenes/extreme_extension.tscn"><code>extreme_extension.tscn</code></a></th><td>Seção a oeste de <code>140 × 160 m</code>: X de <code>−250</code> a <code>−110</code>, Z de <code>−90</code> a <code>70</code>. Inclui crista elevada, descida, bacia do lago, vegetação, marcação de acesso e áreas de água/lama.</td></tr>
+                        <tr><th scope="row"><code>mission_level.tscn</code></th><td>Herda a base e adiciona a extensão, interações de natureza, objetos físicos, interfaces, façanhas e antena. Substitui a malha de <code>DistantRidges</code> por <code>background_open_west.res</code>, que contorna a união das duas regiões.</td></tr>
+                        <tr><th scope="row">Estradas e caminhos</th><td>A estrada principal é modelada no próprio relevo. <code>RouteGuide</code> e <code>AccessGuide</code> são <code>Path3D</code> com <code>Curve3D</code> de referência; não conduzem a van nem impõem um corredor físico.</td></tr>
+                        <tr><th scope="row">Montanhas de fundo</th><td><code>DistantRidges</code> é um <code>MeshInstance3D</code> decorativo, sem colisão e sem projeção de sombras. Não amplia a superfície física percorrível.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>O playground <code>driving_test.tscn</code> continua separado. A fase avançada reutiliza a base por herança de cena, sem duplicar seus arquivos pesados. A extensão é outra cena instanciada, com seu próprio corpo estático.</p>
+
+            <h3>6.2 — Malhas e geometria</h3>
+            <p>Os dois terrenos usam <code>ArrayMesh</code> indexada, formada por triângulos com posições, normais e cores de vértice. Cada grade de solo possui uma superfície de malha; sua visualização fica em <code>Terrain/TerrainMesh</code>, um <code>MeshInstance3D</code>. As ferramentas não preenchem UVs para o solo: o material utiliza projeção triplanar.</p>
+            <div class="table-wrap">
+                <table>
+                    <caption>Dimensões derivadas das constantes e laços dos geradores</caption>
+                    <thead><tr><th scope="col">Grade</th><th scope="col">Resolução preparada</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">Principal</th><td>Passo de <code>2 m</code>, <code>111 × 111</code> vértices (<code>12.321</code>) e <code>110 × 110 × 2 = 24.200</code> triângulos.</td></tr>
+                        <tr><th scope="row">Extensão</th><td>Passo de <code>2 m</code>, <code>71 × 81</code> vértices (<code>5.751</code>) e <code>70 × 80 × 2 = 11.200</code> triângulos.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Na autoria do terreno principal, funções suaves de altura são combinadas com amostras de uma <code>Curve3D</code> para formar o percurso e as clareiras. A distância até o caminho também orienta as cores de terra e suas bordas. A estrada principal não é uma faixa plana independente: compartilha os mesmos vértices e triângulos do solo.</p>
+            <p>A extensão calcula crista e bacia por funções de altura. Na junção em <code>X = −110</code>, copia alturas, normais e cores da borda principal; uma faixa de transição usa também sua inclinação. As grades encostam nessa borda, sem sobreposição de áreas físicas. O fundo montanhoso é outra malha, com anéis e variações de altura; sua borda fica ligeiramente abaixo do solo para fechar frestas visuais.</p>
+            <p><code>AccessTrailVisual</code> é uma exceção à estrada integrada: marca visualmente o acesso usando triângulos correspondentes ao solo, deslocados <code>0.025 m</code> para cima, sem colisão própria. O lago usa <code>water_mesh.res</code>, uma superfície visual em <code>Y = 24</code>, ajustada à interseção da bacia com essa altura. Não substitui o fundo físico.</p>
+
+            <h3>6.3 — Colisões</h3>
+            <p>Cada terreno contém um <code>StaticBody3D</code> chamado <code>Terrain</code> e um <code>CollisionShape3D</code> chamado <code>TerrainCollision</code>. O recurso é uma <code>ConcavePolygonShape3D</code> triangular, criado inicialmente por <code>mesh.create_trimesh_shape()</code>. Assim, a superfície física corresponde às faces da malha visual, sem colisões extras por trecho de estrada.</p>
+            <p>Os geradores reutilizam colisões aprovadas quando já existem e comparam suas faces às da malha. A suspensão da van consulta o terreno por seus raios existentes; a carroceria continua sendo um corpo rígido sujeito a contatos. Não há ajustes de veículo específicos para acomodar o relevo. A água e a lama usam volumes <code>Area3D</code>, que ativam comportamentos; não são pisos sólidos sobre o terreno.</p>
+            <p class="note">A grade de <code>2 m</code> limita o detalhe geométrico; a textura não cria sulcos ou irregularidades físicas. As montanhas de fundo não têm colisão e o terreno não é um volume fechado. As bordas finitas não possuem barreiras gerais de contenção: sair da área de solo pode levar à queda. A continuidade prevista pela geração não equivale a uma validação de todas as trajetórias, velocidades ou contatos possíveis.</p>
+
+            <h3>6.4 — Processo de geração</h3>
+            <p>Existem três ferramentas GDScript em <code>game/tools/</code>. Elas estendem <code>SceneTree</code>, iniciam uma rotina de construção e salvam recursos com <code>ResourceSaver</code> e cenas com <code>PackedScene</code>. São ferramentas de preparação executadas separadamente, sem script gerador anexado ao terreno durante a partida.</p>
+            <div class="table-wrap">
+                <table>
+                    <caption>Ferramentas, dependências e arquivos preparados</caption>
+                    <thead><tr><th scope="col">Ferramenta</th><th scope="col">Entradas e saídas</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row"><a href="../../game/tools/build_terrain_showcase.gd"><code>build_terrain_showcase.gd</code></a></th><td>Calcula relevo, caminho, cores e distribuição de natureza. Usa os meshes do Quaternius, a textura já existente <code>ground_detail.png</code> e o enquadramento de <code>driving_test.tscn</code>. Prepara <code>terrain_mesh.res</code>, <code>terrain_collision.res</code>, <code>background_mesh.res</code>, <code>route_curve.tres</code> e <code>ground_surface.tres</code> em <code>game/assets/environment/terrain_showcase/</code>, além de <code>game/scenes/terrain_showcase.tscn</code>. Colisão, fundo e curva existentes são reutilizados; verificações protegem a geometria e o traçado aprovados.</td></tr>
+                        <tr><th scope="row"><a href="../../game/tools/build_extreme_extension.gd"><code>build_extreme_extension.gd</code></a></th><td>Lê a malha e o material principais para preparar a extensão e a junção. Salva <code>terrain_mesh.res</code>, <code>terrain_collision.res</code>, <code>access_trail.res</code>, <code>water_mesh.res</code> e <code>background_open_west.res</code> em <code>game/assets/environment/extreme_extension/</code>, e <code>game/scenes/extreme_extension.tscn</code>. Reutiliza colisão e fundo existentes. Se a cena já existe, preserva sua composição editada e atualiza as referências visuais; não refaz indiscriminadamente toda a distribuição.</td></tr>
+                        <tr><th scope="row"><a href="../../game/tools/build_mission_nature.gd"><code>build_mission_nature.gd</code></a></th><td>Lê <code>mission_level.tscn</code>, as duas malhas e as instâncias de natureza. Prepara vínculos de árvores, colisões simples de troncos/rochas e vegetação rasteira agrupada; instancia a cena de fragmentos já existente. Salva <code>game/scenes/mission_nature_interactions.tscn</code>; não gera outra malha ou colisão do terreno. A fase já referencia essa cena.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="composition" aria-label="Fluxo de preparação e utilização do terreno">
+                <p><strong>Ferramentas de autoria</strong><span>Scripts em game/tools/, executados separadamente com renderer ativo.</span></p>
+                <p aria-hidden="true">↓</p>
+                <p><strong>Recursos preparados</strong><span>ArrayMesh, colisões triangulares, Curve3D, materiais e dados de MultiMesh salvos em disco.</span></p>
+                <p aria-hidden="true">↓</p>
+                <p><strong>Cenas Godot</strong><span>terrain_showcase.tscn + extreme_extension.tscn, compostas em mission_level.tscn.</span></p>
+                <p aria-hidden="true">↓</p>
+                <p><strong>Terreno visual e físico</strong><span>MeshInstance3D e StaticBody3D/CollisionShape3D carregam os recursos existentes.</span></p>
+                <p aria-hidden="true">↓</p>
+                <p><strong>Interação com a van</strong><span>Raios da suspensão e contatos do RigidBody3D utilizam o terreno estático.</span></p>
+            </div>
+            <p>A dependência de preparação é: terreno principal, extensão e, por último, interações da natureza da fase composta. Ruídos de cor, amostragem das alturas, encaixe de rochas e distribuição com sementes fixas são calculados na autoria. A textura de detalhe já está no repositório: essas ferramentas a carregam, não geram seu PNG. A importação da textura pela Godot também é uma etapa de preparação.</p>
+            <p class="note">As ferramentas aguardam <code>RenderingServer.frame_post_draw</code> para preparar a serialização de MultiMeshes com renderer ativo. Extensão e interações rejeitam explicitamente <code>DisplayServer</code> headless; as notas do terreno principal também orientam não usar <code>--headless</code>. Reconstruir é uma operação manual que escreve recursos e cenas, não uma etapa necessária para jogar. As verificações de faces/curva não tornam todas as gravações uma transação atômica. Nenhum gerador foi executado nesta revisão documental.</p>
+
+            <h3>6.5 — Materiais e integração visual</h3>
+            <p><a href="../../game/assets/environment/terrain_showcase/ground_surface.tres"><code>ground_surface.tres</code></a> é um <code>StandardMaterial3D</code> compartilhado pelo solo principal, solo da extensão e marcação de acesso. Combina <code>vertex_color_use_as_albedo = true</code> com <code>ground_detail.png</code>: cores de vértice distinguem grama, terra e margens, enquanto uma textura neutra repetível fornece detalhe de superfície.</p>
+            <div class="table-wrap">
+                <table>
+                    <caption>Recursos visuais e custo associado</caption>
+                    <thead><tr><th scope="col">Recurso / configuração</th><th scope="col">Uso real</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">Projeção do solo</th><td><code>uv1_triplanar = true</code>, <code>uv1_world_triplanar = true</code>, nitidez <code>4.0</code> e escala <code>(0.22, 0.22, 0.22)</code>. A repetição equivale a aproximadamente <code>4.55 m</code>; a projeção em três planos reduz o esticamento nas encostas e mantém a escala entre as regiões.</td></tr>
+                        <tr><th scope="row">Textura e importação</th><td><code>ground_detail.png.import</code> limita a dimensão a <code>512</code> pixels, gera mipmaps e usa compressão de textura. O material seleciona filtragem linear com mipmaps e anisotropia. Não há normal map, parallax ou deslocamento de vértices.</td></tr>
+                        <tr><th scope="row">Junção das regiões</th><td>A extensão interpola suas cores a partir da borda principal numa faixa de <code>24 m</code>. A borda copia normais e cores, e o material mundial é compartilhado. A marcação de acesso continua sobre os primeiros metros dos dois lados da junção.</td></tr>
+                        <tr><th scope="row">Montanhas e lago</th><td>Usam materiais nativos com cores de vértice. O lago é opaco, com rugosidade <code>0.82</code> e especular metálico <code>0.0</code>; a malha inclui faixas rasas e pequenas marcas claras, sem camadas transparentes. Não há simulação de ondas nessa superfície.</td></tr>
+                        <tr><th scope="row">Ambiente</th><td><code>WorldEnvironment</code> com <code>ProceduralSkyMaterial</code>, luz ambiente e névoa convencional (<code>fog_density = 0.0009</code>). Uma luz direcional projeta sombras até <code>85 m</code>, em dois splits. Não há névoa volumétrica.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>As malhas e materiais de natureza vêm de <code>game/assets/environment/quaternius_nature/</code>. Os grupos reutilizam modelos por <code>MultiMesh</code>; seu detalhamento funcional permanece reservado à seção 7.</p>
+
+            <h3>6.6 — Considerações de desempenho</h3>
+            <ul class="steps">
+                <li><strong>Presentes:</strong> solo estático com uma superfície e um colisor triangular por região; materiais e recursos compartilhados; geometria e distribuição preparadas antes da partida, sem reconstrução por quadro.</li>
+                <li><strong>Presentes:</strong> vegetação agrupada em <code>MultiMeshInstance3D</code>, sombras desativadas em plantas menores e fundo, alcance limitado por grupo. Os geradores definem até <code>185 m</code> para árvores do terreno principal, <code>180 m</code> na extensão, <code>95 m</code> para grupos menores e <code>110 m</code> para a cobertura adicional da missão.</li>
+                <li><strong>Custos existentes:</strong> duas colisões triangulares de solo, amostragens triplanares por pixel, folhas recortadas, sombras de árvores e processamento das interações de natureza. MultiMesh reduz a quantidade de nós de desenho, mas não elimina o custo das instâncias nem dos colisores de troncos/rochas adicionados à fase.</li>
+                <li><strong>Limitações:</strong> não há LOD geométrico do terreno ou streaming; os grupos podem aparecer/desaparecer ao atingir sua distância de exibição. A textura pode revelar repetição em áreas extensas e perde detalhe à distância por mipmaps.</li>
+                <li><strong>Objetivo ainda não medido:</strong> bom desempenho em computadores modestos. Não há benchmark de hardware ou FPS apresentado nesta seção. As notas do showcase registram testes anteriores de travessia; eles não foram repetidos nesta tarefa e não certificam toda a fase expandida.</li>
+            </ul>
         </section>
         <section id="nature" class="pending" data-status="em-elaboracao">
             <h2>07. Ambiente, vegetação e obstáculos</h2><p class="status-tag draft">Em elaboração</p>
