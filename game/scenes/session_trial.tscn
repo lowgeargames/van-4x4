@@ -1,0 +1,56 @@
+[gd_scene format=3 uid="uid://dh61hvdtd6bub"]
+
+[ext_resource type="PackedScene" uid="uid://cfo5kkdpdjlrd" path="res://scenes/mission_level.tscn" id="1_level"]
+[ext_resource type="Script" uid="uid://x6urtn1hncpa" path="res://scripts/session_controller.gd" id="2_session"]
+
+[sub_resource type="StyleBoxFlat" id="CountdownStyle"]
+bg_color = Color(0.05, 0.075, 0.09, 0.9)
+border_width_left = 4
+border_color = Color(1, 0.55, 0.16, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="SessionTrial" unique_id=1982733125 instance=ExtResource("1_level")]
+
+[node name="StuntRewards" parent="." index="12" unique_id=1798705041]
+show_session_total = false
+
+[node name="SessionUI" type="CanvasLayer" parent="." index="16" unique_id=340149664]
+layer = 3
+
+[node name="Center" type="CenterContainer" parent="SessionUI" index="0" unique_id=1197912671]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Panel" type="PanelContainer" parent="SessionUI/Center" index="0" unique_id=293284420]
+custom_minimum_size = Vector2(440, 180)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CountdownStyle")
+
+[node name="Margin" type="MarginContainer" parent="SessionUI/Center/Panel" index="0" unique_id=976233684]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 16
+
+[node name="Message" type="Label" parent="SessionUI/Center/Panel/Margin" index="0" unique_id=327381211]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.96, 0.9, 1)
+theme_override_colors/font_outline_color = Color(0.03, 0.04, 0.05, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 48
+text = "PREPARE-SE!"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SessionController" type="Node" parent="." index="17" unique_id=1002740926]
+script = ExtResource("2_session")

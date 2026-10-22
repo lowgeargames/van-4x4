@@ -69,6 +69,7 @@ const WATER_STEERING_MULTIPLIER: float = 0.75
 var in_mud: bool = false
 var in_water: bool = false
 var ground_contacts: int = 0
+var player_input_enabled: bool = true
 var _ground_normal: Vector3 = Vector3.UP
 var _steering: float = 0.0
 var _mud_weight: float = 0.0
@@ -97,8 +98,18 @@ func _ready() -> void:
 
 
 func _physics_process(_delta: float) -> void:
-	if Input.is_action_just_pressed("reset_vehicle"):
+	if player_input_enabled and Input.is_action_just_pressed("reset_vehicle"):
 		reset_vehicle()
+
+
+func set_player_input_enabled(enabled: bool) -> void:
+	player_input_enabled = enabled
+	if not enabled:
+		# Neutraliza comandos armazenados, sem mudar velocidades ou apoio físico.
+		_steering = 0.0
+		_recovering = false
+		_reset_requested = false
+		turbo_active = false
 
 
 func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
@@ -110,7 +121,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 
 	var delta: float = state.step
 	_steering = move_toward(
-		_steering, Input.get_axis("steer_right", "steer_left"), steering_response * delta
+		_steering, Input.get_axis("steer_right", "steer_left") if player_input_enabled else 0.0, steering_response * delta
 	)
 	_mud_weight = move_toward(_mud_weight, 1.0 if in_mud else 0.0, 3.0 * delta)
 	_wheel_spin = wrapf(
@@ -120,9 +131,9 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 
 	var supported: bool = _update_suspension(state)
 	var forward: Vector3 = (-state.transform.basis.z).slide(_ground_normal).normalized()
-	var throttle: float = Input.get_axis("reverse", "accelerate")
+	var throttle: float = Input.get_axis("reverse", "accelerate") if player_input_enabled else 0.0
 	var can_propulse: bool = (
-		supported and throttle > 0.0 and not Input.is_action_pressed("handbrake")
+		supported and throttle > 0.0 and not (player_input_enabled and Input.is_action_pressed("handbrake"))
 		and state.linear_velocity.dot(forward) * throttle >= -0.15
 	)
 	_prepare_turbo(can_propulse)
@@ -139,7 +150,7 @@ func _integrate_forces(state: PhysicsDirectBodyState3D) -> void:
 
 
 func _prepare_turbo(can_propulse: bool) -> void:
-	var pressed: bool = Input.is_action_pressed("turbo")
+	var pressed: bool = player_input_enabled and Input.is_action_pressed("turbo")
 	if turbo_energy_enabled and turbo_blocked:
 		if not pressed:
 			_turbo_released_after_empty = true
@@ -225,8 +236,8 @@ func _apply_handling(state: PhysicsDirectBodyState3D) -> void:
 	var right: Vector3 = forward.cross(_ground_normal).normalized()
 	var speed: float = state.linear_velocity.dot(forward)
 	var side_speed: float = state.linear_velocity.dot(right)
-	var throttle: float = Input.get_axis("reverse", "accelerate")
-	var handbrake: bool = Input.is_action_pressed("handbrake")
+	var throttle: float = Input.get_axis("reverse", "accelerate") if player_input_enabled else 0.0
+	var handbrake: bool = player_input_enabled and Input.is_action_pressed("handbrake")
 	var power: float = lerpf(1.0, 0.78, _mud_weight)
 	if in_water:
 		power *= WATER_ACCELERATION_MULTIPLIER
@@ -295,7 +306,7 @@ func _apply_handling(state: PhysicsDirectBodyState3D) -> void:
 func _apply_manual_roll(state: PhysicsDirectBodyState3D) -> void:
 	if ground_contacts >= 3:
 		_recovering = false
-	var roll_input: float = Input.get_axis("steer_right", "steer_left")
+	var roll_input: float = Input.get_axis("steer_right", "steer_left") if player_input_enabled else 0.0
 	if is_zero_approx(roll_input):
 		return
 	var body_contact: bool = state.get_contact_count() > 0

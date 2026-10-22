@@ -3,15 +3,41 @@ extends CanvasLayer
 const StuntMonitor = preload("res://scripts/stunt_monitor.gd")
 
 const MESSAGES: Dictionary = {
-	"jump": ["A VAN TEM ASAS?!", "DESTINO: ÓRBITA!", "DECOLAGEM NÃO AUTORIZADA!", "ENTREGA EXPRESSA!", "VOOU LONGE!"],
-	"spin": ["NEWTON NÃO APROVOU!", "360° DE PURA COMPETÊNCIA!", "ISSO NÃO TAVA NO MANUAL!", "TÁ TUDO SOB CONTROLE...", "PIRUETA DE DUAS TONELADAS!"],
-	"clean": ["COMO SE NADA TIVESSE ACONTECIDO!", "POUSO DE PROFISSIONAL!", "NEM ARRANHOU A PINTURA!", "ATERRISSAGEM CINEMATOGRÁFICA!", "TUDO CALCULADO!"],
-	"brutal": ["POUSO TECNICAMENTE REALIZADO!", "A SUSPENSÃO AGRADECE!", "FOI QUASE BONITO!", "O CHÃO VEIO MUITO RÁPIDO!", "AINDA TÁ INTEIRA!"],
-	"rollover": ["O SEGURO NÃO COBRE!", "O MECÂNICO VAI CHORAR!", "A OFICINA VAI TER TRABALHO!", "ERA PRA SER ASSIM?", "CADÊ O LADO DE CIMA?!"],
+	# Intensidade definida apenas pelas estrelas já calculadas pelo monitor.
+	1: [
+		"ISSO ERA PRA SER UM SALTO?", "ATÉ QUE SAIU DO CHÃO!",
+		"O CHÃO JÁ SENTIU SAUDADE!", "TÁ PEGANDO O JEITO!",
+		"QUASE UM VOO!", "FOI UM BOM COMEÇO!",
+		"A VAN DEU UM PULINHO!", "TENTATIVA HONESTA!",
+		"FOI QUASE BONITO!", "AINDA TÁ INTEIRA!",
+		"ERA PRA SER ASSIM?", "POUSO TECNICAMENTE REALIZADO!",
+	],
+	2: [
+		"AGORA SIM, UM SALTO!", "ENTREGA EXPRESSA!",
+		"A SUSPENSÃO VAI RECLAMAR!", "NADA MAL PRA UMA VAN!",
+		"O CAMINHO FICOU PRA TRÁS!", "ESSE POUSO VAI PRA CONTA!",
+		"ISSO MERECE UM REPLAY!", "QUEM PRECISA DE ESTRADA?",
+		"VOOU LONGE!", "ISSO NÃO TAVA NO MANUAL!",
+		"TÁ TUDO SOB CONTROLE...", "COMO SE NADA TIVESSE ACONTECIDO!",
+		"POUSO DE PROFISSIONAL!", "NEM ARRANHOU A PINTURA!",
+		"TUDO CALCULADO!", "A SUSPENSÃO AGRADECE!",
+		"O CHÃO VEIO MUITO RÁPIDO!", "O SEGURO NÃO COBRE!",
+		"O MECÂNICO VAI CHORAR!", "A OFICINA VAI TER TRABALHO!",
+	],
+	3: [
+		"NEWTON NÃO APROVOU!", "A VAN TEM ASAS?!",
+		"A FÍSICA PEDIU DEMISSÃO!", "ESQUECERAM DE AVISAR A GRAVIDADE!",
+		"ISSO NÃO É UMA PISTA DE POUSO!", "ESSA VAN NÃO CONHECE LIMITES!",
+		"ALGUÉM AVISA O CONTROLE AÉREO!", "O CLIENTE VAI RECEBER VIA AÉREA!",
+		"DESTINO: ÓRBITA!", "DECOLAGEM NÃO AUTORIZADA!",
+		"360° DE PURA COMPETÊNCIA!", "PIRUETA DE DUAS TONELADAS!",
+		"ATERRISSAGEM CINEMATOGRÁFICA!", "CADÊ O LADO DE CIMA?!",
+	],
 }
 const LANDING_LABELS: Array[String] = ["POUSO LIMPO", "POUSO BRUTAL", "CAPOTAMENTO"]
 
 @export_range(1.0, 5.0, 0.1) var result_duration: float = 2.5
+@export var show_session_total: bool = true
 @export var mission_panel_path: NodePath = NodePath("../RepairAntenna/MissionUI/Panel")
 @export var objective_marker_path: NodePath = NodePath("../ObjectiveUI/ObjectiveMarker")
 @export var driving_hud_panel_path: NodePath = NodePath("../DrivingHUD/Panel")
@@ -70,6 +96,8 @@ func _place_reward() -> void:
 
 func _update_pivot() -> void:
 	_panel.pivot_offset = _panel.size * 0.5
+	if _panel.visible:
+		_place_reward()
 
 
 func _stop_animation() -> void:
@@ -80,7 +108,8 @@ func _stop_animation() -> void:
 
 
 func _show_flight(distance: float, air_time: float, pitch_rotations: int, roll_rotations: int) -> void:
-	if not _panel.visible or _stars.visible:
+	var entering_flight: bool = not _panel.visible or _stars.visible
+	if entering_flight:
 		_stop_animation()
 		_panel.offset_top = -145.0
 		_panel.offset_bottom = -24.0
@@ -91,20 +120,42 @@ func _show_flight(distance: float, air_time: float, pitch_rotations: int, roll_r
 		_total.hide()
 		_landing.hide()
 		_distance.add_theme_font_size_override("font_size", 30)
-	var rotations: int = pitch_rotations + roll_rotations
-	_stats.visible = rotations > 0
-	_stats.text = "%d giros · %d frontal / %d lateral" % [rotations, pitch_rotations, roll_rotations]
+		# No voo, distância/tempo vêm antes das linhas menores de giros.
+		_distance.get_parent().move_child(_distance, 1)
+	var rotation_lines := PackedStringArray()
+	if roll_rotations > 0:
+		rotation_lines.append("1 giro lateral" if roll_rotations == 1 else "%d giros laterais" % roll_rotations)
+	if pitch_rotations > 0:
+		rotation_lines.append("1 giro frontal" if pitch_rotations == 1 else "%d giros frontais" % pitch_rotations)
+	var rotation_text: String = "\n".join(rotation_lines)
+	var refit: bool = entering_flight or _stats.text != rotation_text
+	_stats.text = rotation_text
+	_stats.visible = not rotation_lines.is_empty()
 	_distance.text = ("%.1f m | %.1f s" % [distance, air_time]).replace(".", ",")
+	if refit:
+		_fit_flight_panel.call_deferred()
+
+
+func _fit_flight_panel() -> void:
+	if not _panel.visible or _stars.visible:
+		return
+	# Aguarda o layout: encolhe o popup anterior ou acomoda duas linhas de giros.
+	_panel.size = Vector2(_panel.size.x, _panel.get_combined_minimum_size().y)
+	_place_reward()
 
 
 func _show_result(result: Dictionary) -> void:
 	_stop_animation()
+	# Preserva a ordem original dos elementos no popup de resultado.
+	_distance.get_parent().move_child(_distance, 3)
 	_panel.offset_top = -280.0
 	_panel.offset_bottom = -24.0
 	_panel.show()
 	set_process(true)
-	_title.text = _choose_message(_message_category(result))
-	_stats.text = ("%.1f m | %.1f s | %d giros" % [result.distance, result.air_time, result.rotations]).replace(".", ",")
+	_title.text = _choose_message(result.stars)
+	_stats.text = ("%.1f m | %.1f s" % [result.distance, result.air_time]).replace(".", ",")
+	if result.rotations > 0:
+		_stats.text += " | 1 giro" if result.rotations == 1 else " | %d giros" % result.rotations
 	_stats.show()
 	_landing.text = LANDING_LABELS[result.landing]
 	_landing.show()
@@ -113,7 +164,7 @@ func _show_result(result: Dictionary) -> void:
 	_stars.text = "★ ".repeat(result.stars).strip_edges()
 	_stars.show()
 	_total.text = "SESSÃO: %s PTS · %d ★" % [_format_points(result.session_points), result.session_stars]
-	_total.show()
+	_total.visible = show_session_total
 	_panel.scale = Vector2.ONE * 0.85
 	_tween = create_tween()
 	_tween.tween_property(_panel, "scale", Vector2.ONE * 1.08, 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
@@ -123,23 +174,13 @@ func _show_result(result: Dictionary) -> void:
 	_tween.tween_callback(_hide_panel)
 
 
-func _message_category(result: Dictionary) -> String:
-	if result.landing == StuntMonitor.Landing.ROLLOVER:
-		return "rollover"
-	if result.rotations > 0:
-		return "spin"
-	if result.stars >= 2 or result.air_time >= 1.4:
-		return "jump"
-	return "clean" if result.landing == StuntMonitor.Landing.CLEAN else "brutal"
-
-
-func _choose_message(category: String) -> String:
-	var options: Array = MESSAGES[category]
-	var previous: int = _last_messages.get(category, -1)
+func _choose_message(stars: int) -> String:
+	var options: Array = MESSAGES[stars]
+	var previous: int = _last_messages.get(stars, -1)
 	var index: int = _rng.randi_range(0, options.size() - 1)
 	if previous >= 0:
 		index = (previous + 1 + _rng.randi_range(0, options.size() - 2)) % options.size()
-	_last_messages[category] = index
+	_last_messages[stars] = index
 	return options[index]
 
 
