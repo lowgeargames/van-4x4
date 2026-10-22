@@ -22,7 +22,7 @@
         <a href="#environment">01 · Ambiente técnico</a>
         <a href="#organization">02 · Organização</a>
         <a href="#architecture">03 · Arquitetura</a>
-        <a href="#vehicle">04 · Veículo e física <small>Em elaboração</small></a>
+        <a href="#vehicle">04 · Veículo e física</a>
         <a href="#camera">05 · Controles e câmera <small>Em elaboração</small></a>
         <a href="#terrain">06 · Terreno e geração <small>Em elaboração</small></a>
         <a href="#nature">07 · Ambiente e obstáculos <small>Em elaboração</small></a>
@@ -37,7 +37,7 @@
         <section id="environment" data-status="documentado">
             <p class="section-kicker">Fundamentos técnicos</p>
             <h2>01. Introdução e ambiente técnico</h2>
-            <p>Este TDD registra a estrutura e as relações técnicas verificadas no repositório. Complementa o GDD, sem repetir suas decisões de game design. Nesta versão, somente as seções 1, 2 e 3 possuem conteúdo desenvolvido; algoritmos, calibração e arquitetura futura serão tratados nas seções seguintes.</p>
+            <p>Este TDD registra a estrutura e as relações técnicas verificadas no repositório. Complementa o GDD, sem repetir suas decisões de game design. Nesta versão, as seções 1 a 4 possuem conteúdo desenvolvido; as seções 5 a 12 permanecem em elaboração.</p>
             <p>O protótipo é um jogo 3D de direção com uma van controlada por física arcade, terrenos estáticos, objetos físicos, interações e interfaces. A composição de cenas reutilizáveis permite manter o playground, a experiência de terreno e a fase mais avançada sem criar outro controlador de veículo.</p>
             <div class="status-legend" aria-label="Como interpretar os estados">
                 <p><span class="status-tag implemented">Implementado</span> Sistema presente no projeto inspecionado.</p>
@@ -157,8 +157,110 @@
             <p class="note"><span class="status-tag planned">Planejado</span> Quatro serviços integrados, garagem, economia, peças com vantagens e desvantagens, estatísticas consolidadas de direção/destruição, relatório, retorno dirigido ou rápido e salvamento pertencem ao escopo do GDD. Sua arquitetura ainda não está definida neste TDD. Os pontos e estrelas existentes são de sessão, não progressão persistente ou dinheiro.</p>
         </section>
 
-        <section id="vehicle" class="pending" data-status="em-elaboracao">
-            <h2>04. Veículo e sistema de física</h2><p class="status-tag draft">Em elaboração</p>
+        <section id="vehicle" data-status="documentado">
+            <p class="section-kicker">Dinâmica e controle do veículo</p>
+            <h2>04. Veículo e sistema de física</h2>
+            <p><span class="status-tag implemented">Implementado</span> Esta seção descreve <a href="../../game/scripts/van_controller.gd"><code>game/scripts/van_controller.gd</code></a> e <a href="../../game/scenes/van_prototype.tscn"><code>game/scenes/van_prototype.tscn</code></a>. Os valores são os padrões atuais do script ou propriedades explícitas da cena, não resultados de testes nem especificações de peças futuras.</p>
+
+            <h3>4.1 — Estrutura física do veículo</h3>
+            <p>A raiz <code>VanPrototype</code> é um <code>RigidBody3D</code>, com o controlador anexado. <code>BodyCollision</code> utiliza uma <code>ConvexPolygonShape3D</code> e fica em <code>(0, 0.85, 0)</code> em relação à raiz. A carroceria visual, seus detalhes e os pneus são malhas; as quatro rodas não são corpos físicos independentes ou componentes de <code>VehicleBody3D</code>.</p>
+            <p>Os nós <code>WheelFrontLeft</code>, <code>WheelFrontRight</code>, <code>WheelRearLeft</code> e <code>WheelRearRight</code> são <code>RayCast3D</code>. Suas origens locais usam <code>x = ±1.05</code>, <code>y = 0.85</code> e <code>z = −1.45</code> na frente ou <code>z = 1.45</code> atrás. Cada um contém <code>WheelVisual</code>, com cubo e banda de rodagem. A frente da van corresponde ao eixo local <code>−Z</code>; <code>SurfaceParticles</code> lê o veículo para os efeitos visuais.</p>
+            <div class="table-wrap">
+                <table>
+                    <caption>Propriedades físicas registradas em van_prototype.tscn</caption>
+                    <thead><tr><th scope="col">Propriedade</th><th scope="col">Valor e função</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row"><code>mass</code></th><td><code>1000.0</code>. A massa também participa dos cálculos de força do controlador.</td></tr>
+                        <tr><th scope="row"><code>center_of_mass_mode</code> / <code>center_of_mass</code></th><td>Modo personalizado (<code>1</code>), com centro em <code>(0, 0.55, 0)</code>.</td></tr>
+                        <tr><th scope="row"><code>can_sleep</code> / <code>continuous_cd</code></th><td><code>false</code> / <code>true</code>. O corpo não entra em sleep e utiliza detecção contínua de colisões.</td></tr>
+                        <tr><th scope="row"><code>linear_damp_mode</code> / <code>angular_damp_mode</code></th><td>Ambos em modo de substituição (<code>1</code>). O valor angular explícito é <code>angular_damp = 0.2</code>; a cena não serializa um valor de <code>linear_damp</code>.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Em <code>_ready()</code>, o script guarda a transformação inicial, inicia a reserva do turbo e define <code>max_contacts_reported = 4</code> para consultar contatos da carroceria. <code>_physics_process()</code> solicita o reposicionamento por R; a integração de suspensão, condução e torques ocorre em <code>_integrate_forces(state)</code>, usando <code>state.step</code>.</p>
+            <div class="composition" aria-label="Fluxo físico implementado">
+                <p><strong>Input Map → van_controller.gd → forças e torques → RigidBody3D / Jolt → movimento e colisões</strong></p>
+                <p>O controlador é o script do próprio corpo. A cada integração, lê o estado físico e atualiza os raycasts de suspensão antes de decidir se pode aplicar condução apoiada.</p>
+            </div>
+
+            <h3>4.2 — Suspensão</h3>
+            <p><code>_update_suspension()</code> atualiza explicitamente os quatro raios com <code>force_raycast_update()</code>. Eles permanecem com <code>enabled = false</code> e ignoram o próprio corpo por <code>add_exception(self)</code>. O alcance para baixo é <code>SUSPENSION_LENGTH + WHEEL_RADIUS + RAY_ORIGIN_OFFSET = 0.38 + 0.45 + 0.6 = 1.43 m</code>. O offset estende a consulta acima da roda, sem aumentar o curso da suspensão.</p>
+            <p>Um acerto só é aceito quando a normal satisfaz <code>normal.dot(Vector3.UP) &gt; 0.35</code> e <code>normal.dot(body_up) &gt; 0.25</code>. Isso rejeita superfícies sem orientação adequada de piso. O comprimento é a distância do raio ao acerto menos raio da roda e offset, limitada ao intervalo <code>[0, 0.38]</code>.</p>
+            <div class="composition" aria-label="Cálculos de mola e amortecimento da suspensão">
+                <p><code>m_w = mass / 4</code><br><code>k = m_w × suspension_strength</code><br><code>c = 2 × sqrt(k × m_w) × 0.85</code></p>
+                <p><code>v_p = linear_velocity + angular_velocity × (offset − center_of_mass)</code><br><code>F = k × (SUSPENSION_LENGTH − length) − c × dot(v_p, normal)</code><br><code>F_max = m_w × length(total_gravity) × 5</code></p>
+                <p><code>apply_force(normal × clamp(F, 0, F_max), offset)</code></p>
+            </div>
+            <p>Nessas expressões, <code>m_w</code> é a massa distribuída por roda, <code>k</code> a rigidez, <code>c</code> o amortecimento e <code>offset = hit − state.transform.origin</code>. A compressão produz força de mola; a velocidade do ponto na direção da normal produz amortecimento. A força não se torna negativa e é limitada antes da aplicação no ponto de contato, podendo inclinar a carroceria.</p>
+            <p><code>suspension_strength = 120.0</code> resulta em <code>m_w = 250</code> e <code>k = 30000</code> para a massa atual. Cada roda responde ao seu próprio acerto. Com pelo menos dois raios válidos, inclusive do mesmo lado, a normal média é suavizada por <code>1 − exp(−12 × state.step)</code>. O método só retorna apoio para condução se <code>body_up.dot(support_normal) &gt; 0.5</code>.</p>
+            <p class="note"><code>ground_contacts</code> conta raios com acertos aceitos, mesmo se a força calculada for zero; não equivale a quatro rodas necessariamente carregadas. <code>WheelVisual</code> acompanha o comprimento calculado, gira conforme a velocidade longitudinal e recebe esterçamento visual nas rodas dianteiras. As malhas de pneu não substituem o raio físico <code>WHEEL_RADIUS = 0.45</code> usado no cálculo.</p>
+
+            <h3>4.3 — Aceleração, frenagem e direção</h3>
+            <p>O acelerador usa <code>Input.get_axis("reverse", "accelerate")</code> (S/W), e a direção usa <code>Input.get_axis("steer_right", "steer_left")</code> (D/A). <code>_steering</code> aproxima-se do comando com <code>move_toward()</code>, com variação máxima por passo de <code>steering_response × state.step</code>. O freio de mão é a ação <code>handbrake</code> (Espaço). O controlador não simula motor por RPM, câmbio ou transmissão por roda.</p>
+            <p><code>_apply_handling()</code> atua somente quando a suspensão retorna apoio. Projeta a frente no plano de <code>_ground_normal</code>, obtém a lateral pelo produto vetorial e separa velocidade longitudinal e lateral por produtos escalares. Calcula uma próxima velocidade longitudinal e aplica <code>mass × forward × (next_speed − speed) / state.step</code> como força central, em vez de impor diretamente toda a velocidade do corpo.</p>
+            <div class="table-wrap">
+                <table>
+                    <caption>Parâmetros padrão de condução em van_controller.gd</caption>
+                    <thead><tr><th scope="col">Parâmetro</th><th scope="col">Valor e aplicação</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row"><code>acceleration</code> / <code>braking</code></th><td><code>9.0</code> / <code>12.0 m/s²</code>. Taxas usadas na aproximação à velocidade-alvo ou a zero.</td></tr>
+                        <tr><th scope="row"><code>max_speed</code> / <code>reverse_speed</code></th><td><code>24.0</code> / <code>8.0 m/s</code>, alvos nominais de avanço e ré antes dos ajustes de superfície e resistência.</td></tr>
+                        <tr><th scope="row"><code>steering_strength</code> / <code>steering_response</code></th><td><code>1.1</code> / <code>6.0</code>. Base do limite de giro e resposta do esterçamento/controle angular.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Sem freio de mão, um comando contrário ao movimento primeiro freia até zero quando <code>speed × throttle &lt; −0.15</code>. Caso contrário, a velocidade aproxima-se do alvo; a aceleração em ré recebe fator <code>0.7</code>. Sem comando, aplica-se <code>speed × exp(−drag × state.step)</code>. Essa resistência também reduz a velocidade calculada durante a propulsão no mesmo sentido. O freio de mão aproxima a velocidade de zero com <code>braking × 0.3</code>.</p>
+            <p>A direção regula a velocidade angular ao redor da normal de apoio: <code>turn_limit = steering_strength / (1 + abs(speed) × 0.035)</code> e <code>target_yaw = _steering × min(abs(speed) × 0.2, turn_limit) × sign(speed)</code>. Assim, o comando depende da velocidade, inverte em ré e tem seu limite reduzido em alta velocidade. A correção do erro de yaw é limitada a <code>±4 rad/s²</code>.</p>
+            <p class="note">Os limites são alvos da propulsão, não um corte global da velocidade. Gravidade, descidas, impactos e impulsos do motor físico continuam atuando. A condução é arcade: forças longitudinais, aderência lateral e torques assistidos representam o controle, sem uma simulação completa de pneus e transmissão.</p>
+
+            <h3>4.4 — Drift e estabilidade</h3>
+            <p>Espaço troca <code>grip = 7.0</code> por <code>drift_grip = 1.4</code>, reduzindo a correção lateral e facilitando a derrapagem. A aceleração lateral é <code>−side_speed × (1 − exp(−lateral_grip × state.step)) / state.step</code>. A força correspondente é aplicada em <code>state.center_of_mass − _ground_normal × roll_leverage</code>, com <code>roll_leverage = 0.7</code>, produzindo rolagem da carroceria nas curvas. Propulsão e turbo continuam centrais.</p>
+            <p>O freio de mão também multiplica o limite de giro entre <code>1.25</code> e <code>1.55</code>, conforme o peso da lama. A assistência de estabilidade combina <code>body_up.cross(_ground_normal) × stability</code> com amortecimento da velocidade angular fora da normal, usando <code>2 × sqrt(stability)</code>. O padrão é <code>stability = 6.0</code>.</p>
+            <p>A intensidade da assistência usa <code>smoothstep(cos(35°), cos(17.5°), dot(body_up, _ground_normal))</code>: plena até metade de <code>stability_max_angle = 35°</code> e nula a partir desse limite, em relação ao apoio. Não é um mecanismo que desvira automaticamente qualquer capotamento. O vetor de aceleração angular de condução, incluindo yaw e estabilidade, é limitado a módulo <code>12 rad/s²</code> e convertido em torque pela inversa de <code>state.inverse_inertia_tensor</code>, isto é, pelo tensor de inércia.</p>
+
+            <h3>4.5 — Turbo</h3>
+            <p><code>_prepare_turbo()</code> exige Shift, apoio válido, aceleração para frente, freio de mão solto e movimento sem ré significativa (<code>dot(velocity, forward) × throttle ≥ −0.15</code>). O turbo multiplica a aceleração por <code>turbo_multiplier = 2.0</code> e usa <code>max(max_speed, turbo_max_speed)</code> como alvo de avanço, com <code>turbo_max_speed = 36.0 m/s</code>. Não aplica impulso aéreo ou aceleração extra em ré.</p>
+            <div class="table-wrap">
+                <table>
+                    <caption>Reserva de turbo: parâmetros padrão do script</caption>
+                    <thead><tr><th scope="col">Parâmetro</th><th scope="col">Valor e função</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row"><code>turbo_energy_max</code></th><td><code>100.0</code> unidades; a reserva começa cheia em <code>_ready()</code>.</td></tr>
+                        <tr><th scope="row"><code>turbo_consumption</code></th><td><code>25.0</code> unidades por segundo enquanto <code>turbo_active</code> é verdadeiro.</td></tr>
+                        <tr><th scope="row"><code>turbo_recharge_delay</code> / <code>turbo_recharge_rate</code></th><td>Espera de <code>2.0 s</code> sem ativação; depois, recarga de <code>10.0</code> unidades por segundo, limitada à capacidade.</td></tr>
+                        <tr><th scope="row"><code>turbo_reactivation_energy</code></th><td><code>20.0</code> unidades. A reativação após esgotamento exige ao menos <code>min(turbo_reactivation_energy, turbo_energy_max)</code>.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p><code>_update_turbo_energy()</code> subtrai consumo com limite inferior zero. Ao esgotar, desativa o turbo, define <code>turbo_blocked</code> e exige que Shift tenha sido solto após o bloqueio, além de recuperar a reserva mínima. Manter Shift pressionado continuamente desde o esgotamento não libera a reativação. A recarga considera somente a fração do passo que excedeu a espera e pode ocorrer sem apoio no solo, pois depende da inatividade do turbo.</p>
+            <p><code>turbo_energy_enabled</code> é <code>false</code> por padrão e permanece assim no playground e na experiência de terreno. <a href="../../game/scenes/mission_level.tscn"><code>mission_level.tscn</code></a> sobrescreve a propriedade para <code>true</code>. Com energia desabilitada, o controlador ignora consumo e bloqueio por reserva, preservando o turbo ilimitado das cenas antigas; as condições de condução continuam necessárias.</p>
+
+            <h3>4.6 — Comportamento aéreo</h3>
+            <p><code>_apply_manual_roll()</code> considera voo para controle quando <code>ground_contacts &lt; 2</code> e não existe contato da carroceria reportado por <code>state.get_contact_count()</code>. Essa condição é própria do controlador e não substitui os critérios de validação de saltos do monitor de façanhas. Sem apoio válido, <code>_apply_handling()</code> não atua; a física do corpo e a gravidade continuam.</p>
+            <p>A/D comanda apenas o rolamento ao redor de <code>state.transform.basis.z</code>, com <code>air_max_angular_speed = 4.5 rad/s</code>. O código mede a velocidade angular nesse eixo e limita a aceleração de correção por <code>air_roll_strength = 8.0 rad/s²</code>. Aplica <code>I × axis × roll_acceleration</code> como torque, com <code>I = state.inverse_inertia_tensor.inverse()</code>. Não há comando explícito de pitch por W/S nem direção horizontal assistida no ar. Sem A/D, esse método não aplica torque de rolamento.</p>
+
+            <h3>4.7 — Recuperação e capotamentos</h3>
+            <p><strong>Recuperação por A/D:</strong> o mesmo método permite iniciar a tentativa quando há menos de três contatos de roda, contato da carroceria, <code>body_up.dot(Vector3.UP) &lt; 0.5</code> e velocidade total abaixo de <code>2.0 m/s</code>. O estado <code>_recovering</code> permite pausar e retomar; a tentativa permanece válida com contato da carroceria ou de alguma roda e velocidade abaixo do limite. Três ou mais contatos de roda limpam esse estado. O torque segue o comando A/D, usa <code>recovery_strength = 24.0 rad/s²</code> e mantém o alvo de <code>4.5 rad/s</code>; não ocorre sem input.</p>
+            <p><strong>Reposicionamento por R:</strong> <code>reset_vehicle()</code> marca <code>_reset_requested</code>. A mudança ocorre na próxima integração, em <code>_apply_reset()</code>, antes das forças normais daquele passo. Uma consulta vertical vai da posição atual mais <code>3 m</code> até a posição menos <code>10 m</code>, usa <code>collision_mask</code>, exclui o próprio corpo e ignora áreas.</p>
+            <p>Se o acerto satisfaz <code>hit.normal.dot(Vector3.UP) &gt; 0.35</code>, posiciona a raiz <code>1.25 m</code> acima dele e reconstrói a orientação vertical usando o rumo horizontal atual. Se a projeção da frente é insuficiente, usa o rumo inicial. Sem acerto adequado, restaura <code>_spawn_transform</code> e limpa <code>in_mud</code>/<code>in_water</code>.</p>
+            <p>Em ambos os casos, zera velocidades linear e angular, esterçamento, giro visual e contagem de contatos; reinicia a normal de apoio, limpa os estados de recuperação/pedido de reset, mantém o corpo acordado e chama <code>reset_physics_interpolation()</code>. O caminho de reset desativa os indicadores de turbo ativo/recarga naquele passo, mas não preenche a reserva nem limpa seu bloqueio por esgotamento.</p>
+            <p class="note">O reposicionamento usa um acerto de raio, não uma verificação do volume livre de toda a van. Corpos compatíveis com a máscara podem ser encontrados, inclusive obstáculos. Esse é o alcance da proteção existente; não há garantia de ausência de sobreposição após qualquer reposicionamento.</p>
+
+            <h3>4.8 — Interação com diferentes superfícies</h3>
+            <p><a href="../../game/scripts/mud_zone.gd"><code>mud_zone.gd</code></a> e <a href="../../game/scripts/water_zone.gd"><code>water_zone.gd</code></a> recebem entrada/saída de corpos em <code>Area3D</code> e chamam os métodos de superfície da van. A resposta de movimentação fica no controlador; as zonas não substituem sua suspensão. O detalhamento das áreas e efeitos fica para a seção 8.</p>
+            <div class="table-wrap">
+                <table>
+                    <caption>Influência atual das superfícies na condução</caption>
+                    <thead><tr><th scope="col">Condição</th><th scope="col">Efeito no controlador</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">Solo sem lama/água</th><td>Potência-base <code>1.0</code>, resistência longitudinal <code>drag = 0.12</code> e aderência lateral normal ou de drift. As normais dos contatos orientam a condução sobre o relevo; não existe classificação de material de solo por textura.</td></tr>
+                        <tr><th scope="row">Lama</th><td><code>_mud_weight</code> aproxima-se de <code>in_mud</code> a <code>3.0</code> por segundo. No peso máximo, potência cai a <code>0.78</code>, resistência sobe a <code>0.42</code> e aderência lateral recebe fator <code>0.35</code>, ou <code>0.5</code> em drift.</td></tr>
+                        <tr><th scope="row">Água</th><td>Potência recebe fator <code>0.6</code>; alvos de avanço ficam em <code>8 m/s</code>, ou <code>10 m/s</code> com turbo, e o alvo de ré em <code>−4 m/s</code>. O limite de giro recebe fator <code>0.75</code>; a aderência lateral é elevada a pelo menos <code>grip</code>.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Na água, há ainda força central <code>−v_horizontal × mass × (1 − exp(−0.8 × state.step)) / state.step</code>. Ela atua enquanto <code>in_water</code>, inclusive sem apoio, sem frear diretamente a componente vertical. Não existe força de flutuação nesse controlador. Se os dois estados de superfície estiverem ativos, os ajustes de lama e água podem se combinar.</p>
+            <p class="note"><span class="status-tag planned">Planejado</span> Parâmetros exportados de aceleração, aderência, suspensão e turbo são possíveis pontos de configuração futura. O sistema de melhorias ainda não existe e não altera esses parâmetros em tempo de execução no fluxo atual.</p>
         </section>
         <section id="camera" class="pending" data-status="em-elaboracao">
             <h2>05. Controles e câmera</h2><p class="status-tag draft">Em elaboração</p>
