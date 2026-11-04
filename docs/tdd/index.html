@@ -25,10 +25,10 @@
         <a href="#vehicle">04 · Veículo e física</a>
         <a href="#camera">05 · Controles e câmera</a>
         <a href="#terrain">06 · Terreno e geração</a>
-        <a href="#nature">07 · Ambiente e obstáculos <small>Em elaboração</small></a>
-        <a href="#interactions">08 · Água, lama e interações <small>Em elaboração</small></a>
-        <a href="#hud">09 · HUD e gameplay <small>Em elaboração</small></a>
-        <a href="#stunts">10 · Façanhas e recompensas <small>Em elaboração</small></a>
+        <a href="#nature">07 · Ambiente e obstáculos</a>
+        <a href="#interactions">08 · Água, lama e interações</a>
+        <a href="#hud">09 · HUD e gameplay</a>
+        <a href="#stunts">10 · Façanhas e recompensas</a>
         <a href="#progression">11 · Missões e progressão <small>Em elaboração</small></a>
         <a href="#validation">12 · Dependências e testes <small>Em elaboração</small></a>
     </nav>
@@ -37,7 +37,7 @@
         <section id="environment" data-status="documentado">
             <p class="section-kicker">Fundamentos técnicos</p>
             <h2>01. Introdução e ambiente técnico</h2>
-            <p>Este TDD registra a estrutura e as relações técnicas verificadas no repositório. Complementa o GDD, sem repetir suas decisões de game design. Nesta versão, as seções 1 a 6 possuem conteúdo desenvolvido; as seções 7 a 12 permanecem em elaboração.</p>
+            <p>Este TDD registra a estrutura e as relações técnicas verificadas no repositório. Complementa o GDD, sem repetir suas decisões de game design. Nesta versão, as seções 1 a 10 possuem conteúdo desenvolvido; as seções 11 e 12 permanecem em elaboração.</p>
             <p>O protótipo é um jogo 3D de direção com uma van controlada por física arcade, terrenos estáticos, objetos físicos, interações e interfaces. A composição de cenas reutilizáveis permite manter o playground, a experiência de terreno e a fase mais avançada sem criar outro controlador de veículo.</p>
             <div class="status-legend" aria-label="Como interpretar os estados">
                 <p><span class="status-tag implemented">Implementado</span> Sistema presente no projeto inspecionado.</p>
@@ -59,7 +59,7 @@
                     </tbody>
                 </table>
             </div>
-            <p class="note">As configurações registradas não comprovam suporte validado em diferentes plataformas, dispositivos móveis ou gamepads, nem garantem determinada taxa de quadros. Esta versão é baseada em inspeção dos arquivos; não inclui execução do Godot ou novos testes de gameplay.</p>
+            <p class="note">As configurações foram verificadas nos arquivos do projeto. Isso não comprova suporte a diferentes plataformas, dispositivos móveis ou gamepads, nem garante determinada taxa de quadros; são necessários testes de compatibilidade e de gameplay.</p>
 
             <h3>Recursos externos relevantes</h3>
             <p>A seleção de 12 modelos do Quaternius Stylized Nature MegaKit [Standard] fornece árvores, pinheiros, rochas, arbustos, grama e samambaias. Fontes glTF, texturas, materiais e malhas nativas derivadas ficam em <code>game/assets/environment/quaternius_nature/</code>. A licença é CC0 1.0, conforme o <a href="../../game/assets/environment/quaternius_nature/License_Standard.txt">arquivo de licença</a>; o <a href="../../game/assets/environment/quaternius_nature/ASSET_MANIFEST.md">manifesto</a> identifica os arquivos importados. O terreno e os efeitos também utilizam recursos nativos da Godot.</p>
@@ -122,13 +122,13 @@
                 <p><strong>mission_level.tscn</strong> <span>herda terrain_showcase.tscn</span></p>
                 <ul>
                     <li><strong>Base herdada:</strong> terreno e colisão, ambiente, <code>VanPrototype</code> e <code>CameraRig/FollowCamera</code>.</li>
-                    <li><strong>Componentes adicionados:</strong> <code>RepairAntenna</code>, <code>AntennaMissionUI</code>, <code>ObjectiveUI</code>, <code>PhysicsProps</code>, <code>StuntRewards</code>, <code>DrivingHUD</code>, <code>ExtremeExtension</code> e <code>NatureInteractions</code>.</li>
+                    <li><strong>Componentes adicionados:</strong> <code>RepairAntenna</code>, <code>AntennaMissionUI</code>, <code>ObjectiveUI</code>, <code>PhysicsProps</code>, <code>StuntRewards</code>, <code>DrivingHUD</code>, <code>ExtremeExtension</code>, <code>NatureInteractions</code> e <code>VisualWarmup</code>.</li>
                     <li><strong>Ajustes locais:</strong> energia do turbo habilitada na van e recurso de montanhas de fundo substituído pela fase.</li>
                 </ul>
             </div>
 
             <h3>Veículo, câmera e terreno</h3>
-            <p><a href="../../game/scripts/van_controller.gd"><code>game/scripts/van_controller.gd</code></a> estende <code>RigidBody3D</code> e concentra suspensão, propulsão, frenagem, direção, turbo, drift, controle de rolamento, recuperação e estados de lama/água. A integração das forças ocorre em <code>_integrate_forces()</code>; o detalhamento dos cálculos fica para a seção 4.</p>
+            <p><a href="../../game/scripts/van_controller.gd"><code>game/scripts/van_controller.gd</code></a> estende <code>RigidBody3D</code> e concentra suspensão, propulsão, frenagem, direção, turbo, drift, controle de rolamento, recuperação e estados de lama/água. A integração das forças ocorre em <code>_integrate_forces()</code>; os cálculos estão detalhados na seção 4.</p>
             <p><a href="../../game/scripts/camera_follow.gd"><code>game/scripts/camera_follow.gd</code></a>, no <code>CameraRig</code>, localiza <code>../VanPrototype</code>. Suaviza posição e orientação horizontal, sem acompanhar a inclinação lateral ou longitudinal da van. A <code>Camera3D</code> é filha do rig. Essa hierarquia e os nomes são dependências reais da integração.</p>
             <p>O terreno usa malhas e colisões estáticas preparadas em <code>game/assets/environment/terrain_showcase/</code> e <code>game/assets/environment/extreme_extension/</code>. Cada trecho possui <code>StaticBody3D</code> e <code>CollisionShape3D</code>; os geradores derivam a colisão triangular da malha do terreno. A estrada integra o relevo, enquanto a curva de autoria não conduz a van. A geração e a gravação dos recursos ficam fora da execução normal da fase.</p>
 
@@ -148,13 +148,16 @@
 
             <h3>Apresentação, HUD e monitoramento</h3>
             <p><a href="../../game/scripts/driving_hud.gd"><code>game/scripts/driving_hud.gd</code></a> referencia a van por <code>van_path</code> e lê velocidade e propriedades de energia do turbo para atualizar seu <code>CanvasLayer</code>. A apresentação não calcula as forças do veículo.</p>
-            <p><a href="../../game/scripts/stunt_monitor.gd"><code>game/scripts/stunt_monitor.gd</code></a> é um observador em frequência de física. Lê transformações, velocidades, estado físico e resultados dos raycasts já atualizados pela suspensão. Não aplica forças nem cria outra suspensão; mantém as estatísticas e recompensas de sessão.</p>
+            <p><a href="../../game/scripts/stunt_monitor.gd"><code>game/scripts/stunt_monitor.gd</code></a> é um observador em frequência de física. Lê transformações, velocidades, estado físico e resultados dos raycasts já atualizados pela suspensão. Não aplica forças nem cria outra suspensão; mantém os resultados e acumuladores de façanhas.</p>
             <p><a href="../../game/scripts/stunt_reward_ui.gd"><code>game/scripts/stunt_reward_ui.gd</code></a> apresenta o monitor por meio dos sinais <code>flight_updated</code>, <code>flight_cancelled</code> e <code>stunt_landed</code>. Referências aos painéis da missão, marcador e HUD ajudam a posicionar a recompensa sem sobreposição. O monitor é filho de <code>StuntRewards</code>, com <code>van_path="../../VanPrototype"</code>.</p>
+
+            <p><a href="../../game/scenes/session_trial.tscn"><code>session_trial.tscn</code></a> herda a missão e acrescenta <code>SessionController</code> e <code>SessionUI</code>. <a href="../../game/scripts/session_controller.gd"><code>session_controller.gd</code></a> controla preparação, contagem, início e encerramento; <a href="../../game/scripts/session_stats.gd"><code>session_stats.gd</code></a> coleta deslocamento e eventos de façanhas e árvores até o reparo. Os resultados são mantidos em memória, sem salvamento.</p>
+            <p><a href="../../game/scripts/visual_warmup.gd"><code>visual_warmup.gd</code></a> prepara os emissores reais antes da direção na missão e antes da contagem no ensaio. Não altera árvores ou concede recompensas durante o preparo. O ciclo da sessão, a coleta e o aquecimento estão detalhados na <a href="#hud">seção 9</a>.</p>
 
             <h3>Papel das cenas de missão</h3>
             <p>Em <code>mission_level.tscn</code>, <a href="../../game/scripts/antenna_mission_ui.gd"><code>game/scripts/antenna_mission_ui.gd</code></a> lê a proximidade e o progresso da antena, utiliza o painel contido no equipamento e posiciona o marcador <code>ObjectiveUI/ObjectiveMarker</code> com a câmera ativa. Conecta <code>repair_completed</code> para exibir a conclusão. Não realiza o reparo no lugar do componente.</p>
             <p>No playground, <a href="../../game/scripts/service_sequence.gd"><code>game/scripts/service_sequence.gd</code></a> conecta o mesmo sinal nos dois equipamentos, ativa a bomba após a antena e reutiliza o painel de missão. Esse controlador de dois serviços não está integrado à fase atual como um sistema de campanha.</p>
-            <p class="note"><span class="status-tag planned">Planejado</span> Quatro serviços integrados, garagem, economia, peças com vantagens e desvantagens, estatísticas consolidadas de direção/destruição, relatório, retorno dirigido ou rápido e salvamento pertencem ao escopo do GDD. Sua arquitetura ainda não está definida neste TDD. Os pontos e estrelas existentes são de sessão, não progressão persistente ou dinheiro.</p>
+            <p class="note"><span class="status-tag planned">Planejado</span> Quatro serviços integrados, garagem, economia, peças com vantagens e desvantagens, relatório visual, retorno dirigido ou rápido e salvamento pertencem ao escopo do GDD. Sua arquitetura ainda não está definida neste TDD. Os pontos e estrelas existentes são de sessão, não progressão persistente ou dinheiro.</p>
         </section>
 
         <section id="vehicle" data-status="documentado">
@@ -400,7 +403,7 @@
                 <p><strong>Interação com a van</strong><span>Raios da suspensão e contatos do RigidBody3D utilizam o terreno estático.</span></p>
             </div>
             <p>A dependência de preparação é: terreno principal, extensão e, por último, interações da natureza da fase composta. Ruídos de cor, amostragem das alturas, encaixe de rochas e distribuição com sementes fixas são calculados na autoria. A textura de detalhe já está no repositório: essas ferramentas a carregam, não geram seu PNG. A importação da textura pela Godot também é uma etapa de preparação.</p>
-            <p class="note">As ferramentas aguardam <code>RenderingServer.frame_post_draw</code> para preparar a serialização de MultiMeshes com renderer ativo. Extensão e interações rejeitam explicitamente <code>DisplayServer</code> headless; as notas do terreno principal também orientam não usar <code>--headless</code>. Reconstruir é uma operação manual que escreve recursos e cenas, não uma etapa necessária para jogar. As verificações de faces/curva não tornam todas as gravações uma transação atômica. Nenhum gerador foi executado nesta revisão documental.</p>
+            <p class="note">As ferramentas aguardam <code>RenderingServer.frame_post_draw</code> para preparar a serialização de MultiMeshes com renderer ativo. Extensão e interações rejeitam explicitamente <code>DisplayServer</code> headless; as notas do terreno principal também orientam não usar <code>--headless</code>. Reconstruir é uma operação manual que escreve recursos e cenas, não uma etapa necessária para jogar. As verificações de faces/curva não tornam todas as gravações uma transação atômica.</p>
 
             <h3>6.5 — Materiais e integração visual</h3>
             <p><a href="../../game/assets/environment/terrain_showcase/ground_surface.tres"><code>ground_surface.tres</code></a> é um <code>StandardMaterial3D</code> compartilhado pelo solo principal, solo da extensão e marcação de acesso. Combina <code>vertex_color_use_as_albedo = true</code> com <code>ground_detail.png</code>: cores de vértice distinguem grama, terra e margens, enquanto uma textura neutra repetível fornece detalhe de superfície.</p>
@@ -417,28 +420,288 @@
                     </tbody>
                 </table>
             </div>
-            <p>As malhas e materiais de natureza vêm de <code>game/assets/environment/quaternius_nature/</code>. Os grupos reutilizam modelos por <code>MultiMesh</code>; seu detalhamento funcional permanece reservado à seção 7.</p>
+            <p>As malhas e materiais de natureza vêm de <code>game/assets/environment/quaternius_nature/</code>. Os grupos reutilizam modelos por <code>MultiMesh</code>; seu funcionamento está descrito na seção 7.</p>
 
             <h3>6.6 — Considerações de desempenho</h3>
             <ul class="steps">
                 <li><strong>Presentes:</strong> solo estático com uma superfície e um colisor triangular por região; materiais e recursos compartilhados; geometria e distribuição preparadas antes da partida, sem reconstrução por quadro.</li>
-                <li><strong>Presentes:</strong> vegetação agrupada em <code>MultiMeshInstance3D</code>, sombras desativadas em plantas menores e fundo, alcance limitado por grupo. Os geradores definem até <code>185 m</code> para árvores do terreno principal, <code>180 m</code> na extensão, <code>95 m</code> para grupos menores e <code>110 m</code> para a cobertura adicional da missão.</li>
+                <li><strong>Presentes:</strong> vegetação agrupada em <code>MultiMeshInstance3D</code>, sombras desativadas em plantas menores e fundo, alcance limitado por grupo. Na missão, <code>nature_interactions.gd</code> desativa o limite de distância dos grupos vinculados a árvores e rochas sólidas, para manter visuais e obstáculos coerentes. Na autoria, os geradores definem até <code>185 m</code> para árvores do terreno principal, <code>180 m</code> na extensão, <code>95 m</code> para grupos menores e <code>110 m</code> para a cobertura adicional da missão.</li>
                 <li><strong>Custos existentes:</strong> duas colisões triangulares de solo, amostragens triplanares por pixel, folhas recortadas, sombras de árvores e processamento das interações de natureza. MultiMesh reduz a quantidade de nós de desenho, mas não elimina o custo das instâncias nem dos colisores de troncos/rochas adicionados à fase.</li>
                 <li><strong>Limitações:</strong> não há LOD geométrico do terreno ou streaming; os grupos podem aparecer/desaparecer ao atingir sua distância de exibição. A textura pode revelar repetição em áreas extensas e perde detalhe à distância por mipmaps.</li>
-                <li><strong>Objetivo ainda não medido:</strong> bom desempenho em computadores modestos. Não há benchmark de hardware ou FPS apresentado nesta seção. As notas do showcase registram testes anteriores de travessia; eles não foram repetidos nesta tarefa e não certificam toda a fase expandida.</li>
+                <li><strong>Objetivo ainda não medido:</strong> bom desempenho em computadores modestos. Não há benchmark de hardware ou FPS apresentado nesta seção. Os testes de travessia registrados nas notas do showcase cobrem a faixa principal daquele terreno; não constituem uma avaliação completa de desempenho da fase expandida.</li>
             </ul>
         </section>
-        <section id="nature" class="pending" data-status="em-elaboracao">
-            <h2>07. Ambiente, vegetação e obstáculos</h2><p class="status-tag draft">Em elaboração</p>
+        <section id="nature" data-status="documentado">
+            <p class="section-kicker">Composição e interação ambiental</p>
+            <h2>07. Ambiente, vegetação e obstáculos</h2>
+            <p><span class="status-tag implemented">Implementado</span> A fase combina vegetação estática em grupos, troncos e rochas sólidos e props com física. A natureza utiliza a seleção Quaternius descrita na seção 1; caixas, cones, barris e fragmentos usam geometria simples do projeto.</p>
+
+            <h3>7.1 — Organização dos elementos ambientais</h3>
+            <div class="table-wrap">
+                <table>
+                    <caption>Composição ambiental de mission_level.tscn</caption>
+                    <thead><tr><th scope="col">Grupo ou cena</th><th scope="col">Responsabilidade</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row"><code>NatureClusters</code></th><td>Árvores, pinheiros, rochas e plantas do terreno principal, herdados de <code>terrain_showcase.tscn</code>, agrupados por região e modelo.</td></tr>
+                        <tr><th scope="row"><code>ExtremeExtension/ShoreVegetation</code></th><td>Grupos de natureza da extensão e das margens do lago, em <code>extreme_extension.tscn</code>.</td></tr>
+                        <tr><th scope="row"><a href="../../game/scenes/mission_nature_interactions.tscn"><code>mission_nature_interactions.tscn</code></a></th><td>Instanciada como <code>NatureInteractions</code>. Relaciona os visuais existentes com <code>StandingTrunks</code>, <code>TreeContacts</code> e <code>SolidRocks</code>; acrescenta cobertura baixa em <code>GroundCover</code> e os efeitos de quebra.</td></tr>
+                        <tr><th scope="row"><code>PhysicsProps</code></th><td>Props distribuídos na área inicial, em <code>RoadBlock</code>, <code>HilltopProps</code> e <code>LakesideProps</code>. São instâncias das três cenas físicas reutilizáveis.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Posições e escalas são preparadas na autoria. <code>build_mission_nature.gd</code> lê os triângulos dos terrenos para apoiar a cobertura e selecionar obstáculos expostos; não redistribui a vegetação durante a partida. A cena <code>mission_route_nature.tscn</code>, utilizada no playground antigo, é uma composição separada.</p>
+
+            <h3>7.2 — Sistema de vegetação</h3>
+            <p>Os grupos são <code>MultiMeshInstance3D</code> com malhas nativas <code>.res</code>, materiais compartilhados <code>.tres</code> e transformações por instância. Plantas menores não recebem um corpo físico individual. Folhas usam recorte alfa nos materiais nativos; não há animação de vento ou shader personalizado de vegetação.</p>
+            <p>Na fase, <a href="../../game/scripts/nature_interactions.gd"><code>nature_interactions.gd</code></a> relaciona cada árvore ao caminho do grupo, índice da instância e transformação original em <code>tree_bindings</code>. O recurso <code>MultiMesh</code> de cada grupo afetado é duplicado uma vez em <code>_ready()</code>, evitando modificar os recursos compartilhados com outras cenas. Há 90 vínculos de árvores na cena atual.</p>
+            <p>Os troncos possuem cápsulas em um <code>StaticBody3D</code> e cápsulas de detecção um pouco maiores em um <code>Area3D</code>. As rochas sólidas usam formas convexas, preparadas com até 14 pontos de suporte do modelo. A ferramenta deixa sem colisão rochas cuja altura exposta sobre o solo seja inferior a <code>0.65 m</code>.</p>
+            <p class="note">Em execução, os grupos referenciados pelas árvores e por <code>rock_multimeshes</code> recebem <code>visibility_range_end = 0</code>: esses visuais não desaparecem por distância enquanto os obstáculos continuam sólidos. Os limites de autoria citados na seção 6 continuam relevantes para as composições-base e grupos não sobrescritos; não descrevem sozinhos a visibilidade final da missão.</p>
+
+            <h3>7.3 — Árvores destrutíveis</h3>
+            <ol class="steps">
+                <li><code>TreeContacts.body_shape_entered</code> identifica o índice por <code>metadata/tree_index</code>. Só aceita a van correta, não congelada e fora da proteção de <code>0.5 s</code> acionada por R.</li>
+                <li>A aproximação horizontal em direção ao tronco é calculada pela projeção da velocidade atual e das duas amostras físicas anteriores. O maior valor precisa alcançar <code>break_speed = 7 m/s</code>; contato lento não quebra a árvore.</li>
+                <li><code>_broken[index]</code> é marcado antes dos efeitos. Os dois colisores correspondentes são desativados com <code>set_deferred()</code>, e a transformação daquela instância do MultiMesh é reduzida para escala <code>0.0001</code>.</li>
+                <li>Uma única <code>MeshInstance3D</code> temporária reutiliza a malha real da árvore. Um <code>Tween</code> gira seu visual aproximadamente <code>86.4°</code> em <code>fall_duration = 0.45 s</code>, espera <code>0.35 s</code>, reduz a escala por <code>0.3 s</code> e remove o nó.</li>
+                <li>Os emissores compartilhados são reposicionados perto do impacto e reiniciados. Por fim, <code>tree_broken(index, impact_speed)</code> informa a quebra efetiva aos observadores.</li>
+            </ol>
+            <p><a href="../../game/scenes/tree_break_fragments.tscn"><code>tree_break_fragments.tscn</code></a> contém 8 fragmentos de madeira com duração de <code>0.65 s</code> e 10 folhas com duração de <code>0.75 s</code>, em dois <code>GPUParticles3D</code> de emissão única, sem sombras. Caixas estreitas e prismas, cores e desvanecimento substituem corpos físicos de fragmentos. A queda é visual, não uma simulação de tronco rígido; a árvore não permanece como obstáculo caído.</p>
+            <p>A marca por índice impede nova destruição, novo sinal e novo incremento de <code>broken_count</code>. Não há pontos por árvore nesta versão. Como os emissores são reutilizados, quebras muito próximas no tempo podem reiniciar a apresentação anterior.</p>
+
+            <h3>7.4 — Objetos físicos</h3>
+            <div class="table-wrap">
+                <table>
+                    <caption>Props atuais: 20 caixas, 7 barris e 12 cones na fase</caption>
+                    <thead><tr><th scope="col">Cena e massa</th><th scope="col">Colisão e resposta nativa</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row"><a href="../../game/scenes/physics_crate.tscn"><code>physics_crate.tscn</code></a><br><code>12 kg</code></th><td><code>RigidBody3D</code> com <code>BoxShape3D</code>. Atrito <code>0.65</code>, restituição <code>0.08</code>; amortecimento linear/angular <code>0.15 / 0.25</code>. Pode ser empurrada e tombar; tábuas visuais agrupadas em MultiMeshes.</td></tr>
+                        <tr><th scope="row"><a href="../../game/scenes/physics_barrel.tscn"><code>physics_barrel.tscn</code></a><br><code>18 kg</code></th><td><code>RigidBody3D</code> com <code>CylinderShape3D</code>. Atrito <code>0.5</code>, restituição <code>0.08</code>; amortecimento <code>0.15 / 0.18</code>. Cilindro visual simples; pode cair e rolar.</td></tr>
+                        <tr><th scope="row"><a href="../../game/scenes/physics_cone.tscn"><code>physics_cone.tscn</code></a><br><code>2.5 kg</code></th><td><code>RigidBody3D</code> com forma convexa e base em caixa. Atrito <code>0.55</code>, restituição <code>0.12</code>; amortecimento <code>0.12 / 0.2</code>. A massa menor facilita deslocamento e tombamento.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>As três cenas habilitam <code>continuous_cd</code> e preservam a possibilidade padrão de repouso físico. Não possuem scripts de destruição ou detecção de impactos para recompensas. Não há pontuação completa por colisão com caixas, barris ou cones, nem contadores desses impactos nas estatísticas da sessão.</p>
+
+            <h3>7.5 — Considerações de desempenho</h3>
+            <p>MultiMeshes agrupam os visuais; colisores simples ficam separados. Só uma árvore atingida cria um visual temporário, e a detecção usa sinais de contato com leitura de velocidade por passo físico. A cobertura adicional usa alcance de <code>110 m</code>, plantas menores não projetam sombras e os efeitos de quebra têm quantidade fixa de partículas.</p>
+            <p>O preparo antecipado dos emissores de madeira e folhas reduz o custo de primeira utilização durante o gameplay; o fluxo real está na seção <a href="#hud">9.5</a>. Isso transfere trabalho para a preparação, sem eliminar custo gráfico, transparência, colisões ou corpos rígidos. MultiMesh não garante um único desenho para toda a vegetação; materiais e superfícies também influenciam o custo. Não há benchmark universal para PCs modestos nesta seção.</p>
         </section>
-        <section id="interactions" class="pending" data-status="em-elaboracao">
-            <h2>08. Água, lama e interações</h2><p class="status-tag draft">Em elaboração</p>
+
+        <section id="interactions" data-status="documentado">
+            <p class="section-kicker">Zonas de superfície e apresentação</p>
+            <h2>08. Água, lama e interações</h2>
+            <p><span class="status-tag implemented">Implementado</span> <a href="../../game/scripts/water_zone.gd"><code>water_zone.gd</code></a> e <a href="../../game/scripts/mud_zone.gd"><code>mud_zone.gd</code></a> notificam a entrada e saída da van. O controlador aplica os efeitos de condução; os scripts visuais apenas consultam esse estado.</p>
+
+            <h3>8.1 — Representação da água</h3>
+            <p>No lago da extensão, <code>LakeSurface</code> usa <code>water_mesh.res</code>: uma <code>ArrayMesh</code> preparada pelo gerador, com superfície em <code>Y = 24 m</code>, contorno em 64 direções e quatro anéis. Cores de vértice diferenciam centro e margens; pequenas marcas claras são geometria visual. O <code>StandardMaterial3D</code> é opaco, com <code>roughness = 0.82</code> e <code>metallic_specular = 0</code>, sem ondas ou reflexão dinâmica própria.</p>
+            <p><code>WaterZone</code> é um <code>Area3D</code>, com <code>collision_layer = 0</code> e <code>WaterVolume</code> convexo. Detecta o corpo sem criar uma parede ou chão sólido na superfície da água. A van continua apoiada na colisão do fundo do terreno. O playground mantém sua própria zona de água; não utiliza automaticamente a apresentação específica do lago.</p>
+
+            <h3>8.2 — Interação da van com a água</h3>
+            <p>Os sinais <code>body_entered</code> e <code>body_exited</code> chamam <code>enter_water()</code> e <code>exit_water()</code> nos corpos que oferecem esses métodos. No lago, <code>align_splashes_to_surface = true</code> também define e remove <code>water_surface_height</code>. Não há detecção de material por textura ou por cada roda para estabelecer <code>in_water</code>.</p>
+            <div class="table-wrap">
+                <table>
+                    <caption>Efeitos físicos da água em van_controller.gd</caption>
+                    <thead><tr><th scope="col">Parâmetro</th><th scope="col">Comportamento implementado</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">Propulsão e alvos</th><td>Potência multiplicada por <code>0.6</code>. Alvo de avanço limitado a <code>8 m/s</code>, ou <code>10 m/s</code> com turbo; ré limitada a metade de <code>reverse_speed</code> (<code>4 m/s</code> no padrão). São alvos de condução, não limites absolutos para todo impulso externo.</td></tr>
+                        <tr><th scope="row">Direção e aderência</th><td>Limite de giro multiplicado por <code>0.75</code>. Aderência lateral elevada para pelo menos <code>grip</code>, inclusive se houver lama ou freio de mão.</td></tr>
+                        <tr><th scope="row">Resistência horizontal</th><td>Força <code>−v_horizontal × mass × (1 − exp(−0.8 × delta)) / delta</code> enquanto <code>in_water</code>. Não freia diretamente a componente vertical nem implementa empuxo.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p><a href="../../game/scripts/water_impact_splash.gd"><code>water_impact_splash.gd</code></a>, em <code>WaterZone/ImpactSplash</code>, lê os fundos das rodas e os vértices do casco dentro do contorno. Ao cruzar a superfície, combina queda e velocidade horizontal ponderada por <code>0.6</code>. Exige impacto de pelo menos <code>3.5 m/s</code>; a referência de intensidade forte é <code>20 m/s</code>. Reinicia um emissor de 64 partículas, duração <code>1.1 s</code>, e emite <code>splash_triggered(impact_speed, strength)</code>, sem aplicar forças.</p>
+            <p>O efeito tem intervalo mínimo de <code>1 s</code>, proteção de recuperação de <code>0.6 s</code> e rearme após ficar <code>0.45 m</code> acima da superfície por <code>0.3 s</code>. Fora da interação e dos temporizadores necessários, desativa seu processamento físico. Não há natação, dano por submersão, correnteza ou simulação de fluido. Os estados das zonas são booleanos, sem contagem de volumes sobrepostos do mesmo tipo.</p>
+
+            <h3>8.3 — Lama e tipos de superfície</h3>
+            <p><code>mud_zone.gd</code> chama <code>enter_mud()</code>/<code>exit_mud()</code>. A extensão inclui <code>MudExit</code> em <code>(−222, 25, 11)</code>, com volume de <code>30 × 4 × 12 m</code>; o playground tem sua zona própria. A aparência de terra ou lama pintada no mesh não ativa essas funções sozinha.</p>
+            <div class="table-wrap">
+                <table>
+                    <caption>Interpolação da lama no controlador, de peso 0 a 1</caption>
+                    <thead><tr><th scope="col">Efeito</th><th scope="col">Valores confirmados</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">Transição e potência</th><td><code>_mud_weight</code> aproxima-se do estado da zona a <code>3 unidades/s</code>. Multiplicador de potência de <code>1.0</code> até <code>0.78</code>.</td></tr>
+                        <tr><th scope="row">Resistência e aderência</th><td><code>drag</code> de <code>0.12</code> até <code>0.42</code>; aderência lateral multiplicada por até <code>0.35</code> sem freio de mão ou <code>0.5</code> com ele.</td></tr>
+                        <tr><th scope="row">Curvas com freio de mão</th><td>Multiplicador do limite de giro de <code>1.25</code> até <code>1.55</code>. A água, se ativa simultaneamente, ainda aplica seus próprios modificadores.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>São modificadores arcade da condução já descrita na seção 4, não deformação do terreno, trilhas físicas ou simulação independente de aderência em cada pneu.</p>
+
+            <h3>8.4 — Efeitos de partículas</h3>
+            <p><a href="../../game/scripts/van_surface_particles.gd"><code>van_surface_particles.gd</code></a> controla os dois emissores traseiros existentes, com até 24 partículas cada. Em <code>_ready()</code>, prepara materiais por van, gradientes e curva de escala de 64 amostras e malhas de poeira/água duplicadas. Em execução, prioriza água, depois lama e então poeira; só troca a configuração quando a superfície muda.</p>
+            <div class="table-wrap">
+                <table>
+                    <caption>Variantes visuais dos emissores das rodas</caption>
+                    <thead><tr><th scope="col">Variante</th><th scope="col">Apresentação e ativação</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">Poeira</th><td>Nuvens ocres em quads de <code>0.45 × 0.45 m</code>, vida de <code>0.75 s</code>, crescimento e desvanecimento. Emissão cresce com velocidade, aceleração estimada, deslizamento lateral e turbo; é menor em cruzeiro.</td></tr>
+                        <tr><th scope="row">Lama e água antiga</th><td>Grumos marrons ou gotas claras, vida de <code>0.65 s</code> e gravidade visual para baixo. Lama considera acelerador e escorregamento; água multiplica a taxa-base por <code>1.6</code>.</td></tr>
+                        <tr><th scope="row">Jatos do lago</th><td>Quads de <code>0.14 × 0.55 m</code>, vida de <code>0.8 s</code> e material de processo por roda para direção lateral/traseira. Velocidade-base do jato <code>3 m/s</code>; emissão a partir de <code>0.35 m/s</code>, em vez dos <code>1.5 m/s</code> usuais.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>O script reaproveita os raycasts traseiros e <code>ground_contacts</code>. Exige proximidade efetiva do solo, normais coerentes com apoio e velocidade normal do ponto inferior a <code>1 m/s</code>; posiciona os emissores nos contatos. No lago, também verifica altura da roda e contorno recebido por metadados. Não emite novas partículas de solo durante o voo; partículas anteriores terminam sua duração normalmente.</p>
+            <p class="note">A preparação de objetos em <code>_ready()</code> não equivale à primeira utilização gráfica. O aquecimento da seção 9.5 exercita a poeira inicial e os fragmentos/folhas das árvores. Não prepara explicitamente todas as variantes de lama, jatos do lago ou o respingo de impacto.</p>
         </section>
-        <section id="hud" class="pending" data-status="em-elaboracao">
-            <h2>09. HUD e sistemas de gameplay</h2><p class="status-tag draft">Em elaboração</p>
+
+        <section id="hud" data-status="documentado">
+            <p class="section-kicker">Apresentação e ciclo experimental de sessão</p>
+            <h2>09. HUD e sistemas de gameplay</h2>
+
+            <h3>9.1 — HUD de direção</h3>
+            <p><span class="status-tag implemented">Implementado</span> <a href="../../game/scenes/driving_hud.tscn"><code>driving_hud.tscn</code></a> usa <code>CanvasLayer</code> e painel no canto inferior direito. <a href="../../game/scripts/driving_hud.gd"><code>driving_hud.gd</code></a> lê a van, sem aplicar comandos: a velocidade exibida é <code>roundi(length(Vector2(vx, vz)) × 3.6)</code>, em km/h. Portanto, não inclui a componente vertical de saltos ou encostas.</p>
+            <p>Texto de velocidade e percentual são atualizados a cada <code>0.05 s</code>; barra e estado são consultados a cada frame. A interface diferencia <code>PRONTO</code>, <code>ATIVO</code>, <code>RECARREGANDO</code>, <code>RECARGA · BLOQUEADO</code> e <code>RESERVA BLOQUEADA</code>, com cores próprias. A barra não controla o turbo.</p>
+            <div class="table-wrap">
+                <table>
+                    <caption>Reserva de turbo aplicada na fase avançada e herdada pelo ensaio</caption>
+                    <thead><tr><th scope="col">Configuração</th><th scope="col">Valor e responsabilidade</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">Ativação por cena</th><td><code>turbo_energy_enabled = true</code> em <code>mission_level.tscn</code>. O padrão do controlador permanece <code>false</code> para cenas antigas; sem reserva limitada, o HUD mostra <code>∞</code>.</td></tr>
+                        <tr><th scope="row">Capacidade e consumo</th><td><code>100</code> unidades; consumo de <code>25/s</code> somente com turbo ativo. As condições físicas de propulsão continuam as da seção 4.</td></tr>
+                        <tr><th scope="row">Recarga e desbloqueio</th><td>Espera de <code>2 s</code> sem uso, recarga de <code>10/s</code>. Após esgotar, é necessário soltar Shift e recuperar pelo menos <code>20</code> unidades para desbloquear.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>9.2 — Interface de manutenção</h3>
+            <p><a href="../../game/scripts/repair_antenna.gd"><code>repair_antenna.gd</code></a> é o componente reutilizado pelo equipamento. Na antena, <code>InteractionArea</code> possui cilindro de raio <code>7 m</code>, altura <code>5 m</code> e centro local em <code>Y = 2.5 m</code>. Para progredir, a van deve sobrepor a área, estar com velocidade 3D de no máximo <code>0.5 m/s</code> e manter <code>interact</code> (E) pressionado por <code>2 s</code>. Perder qualquer condição zera o progresso.</p>
+            <p>Ao completar, o componente marca <code>repaired</code>, desativa nova interação, muda o indicador de vermelho para verde e emite <code>repair_completed</code>. <a href="../../game/scripts/antenna_mission_ui.gd"><code>antenna_mission_ui.gd</code></a> valida as referências e apresenta “Chamado: reparar a antena.”, “Pare a van e segure E para reparar.” e “Serviço concluído!”. A barra recebe o percentual real do reparo.</p>
+            <p>O marcador em <code>ObjectiveUI/ObjectiveMarker</code> projeta um alvo <code>13 m</code> acima da antena na câmera ativa, mostra a distância 3D e limita a posição à tela. Fica oculto perto do equipamento, atrás da câmera ou após a conclusão, e evita o painel de direção. A UI não executa o reparo. O playground usa <code>service_sequence.gd</code> para antena → bomba; esse fluxo não é encerrado pelo controlador experimental de sessão.</p>
+
+            <h3>9.3 — Cena experimental de sessão</h3>
+            <p><span class="status-tag implemented">Implementado</span> <strong>Uso experimental:</strong> <a href="../../game/scenes/session_trial.tscn"><code>session_trial.tscn</code></a> herda <code>mission_level.tscn</code>, acrescenta <code>SessionUI</code> e <code>SessionController</code> e oculta apenas a linha de total acumulado no popup de façanhas. Não é a cena principal configurada; pode ser executada com F6.</p>
+            <div class="table-wrap">
+                <table>
+                    <caption>Estados de session_controller.gd</caption>
+                    <thead><tr><th scope="col">Estado</th><th scope="col">Transição e efeitos</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row"><code>PREPARATION</code></th><td>Valida os nós e conecta sinais. Bloqueia comandos via <code>set_player_input_enabled(false)</code>, desativa temporariamente reparo e monitor de façanhas e aguarda <code>VisualWarmup.prepared</code>. Não congela o corpo físico.</td></tr>
+                        <tr><th scope="row"><code>COUNTDOWN</code></th><td>Mostra PREPARE-SE! → 3 → 2 → 1, com intervalos de <code>1 s</code> em Tween atualizado pela física. Ainda não acumula estatísticas.</td></tr>
+                        <tr><th scope="row"><code>RUNNING</code></th><td>No VAI!, registra o instante monotônico, zera o tempo, inicia o coletor com os totais-base e libera comandos, reparo e monitor. O cronômetro soma <code>delta</code> dos passos físicos, não a duração da preparação.</td></tr>
+                        <tr><th scope="row"><code>FINISHED</code></th><td><code>repair_completed</code> encerra uma única vez. O monitor é desativado, o tempo é congelado e um resumo é impresso no Output. A apresentação original da missão permanece, sem tela de resultados ou bloqueio final de direção.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>O controlador usa prioridade física <code>200</code>, após o <code>StuntMonitor</code> de prioridade <code>100</code>. Eventos são aceitos apenas em <code>RUNNING</code>. Uma aterrissagem ainda pendente ao reparar a antena não concede recompensa posterior. O ciclo pertence ao ensaio; não altera <code>mission_level.tscn</code> ou <code>driving_test.tscn</code> com encerramento estatístico.</p>
+
+            <h3>9.4 — Estatísticas da sessão</h3>
+            <p><a href="../../game/scripts/session_stats.gd"><code>session_stats.gd</code></a> é um coletor <code>RefCounted</code>, criado pelo controlador, sem Autoload ou arquivo de salvamento. Não detecta saltos, recalcula pontos ou aplica forças.</p>
+            <div class="table-wrap">
+                <table>
+                    <caption>Origem dos dados coletados entre VAI! e o reparo</caption>
+                    <thead><tr><th scope="col">Dados</th><th scope="col">Coleta e proteção</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">Tempo e distância</th><td><code>elapsed_time</code> vem do controlador. <code>distance</code> acumula segmentos 3D entre amostras físicas: inclui relevo e voo, diferentemente da distância horizontal de um salto.</td></tr>
+                        <tr><th scope="row">Saltos e giros</th><td><code>stunt_landed(result)</code> incrementa <code>jumps</code>, atualiza <code>longest_jump</code>/<code>longest_air_time</code> e soma <code>total_air_time</code>, <code>pitch_rotations</code>, <code>roll_rotations</code> e <code>rotations</code>. Só resultados concluídos e aceitos pelo monitor entram nesses totais.</td></tr>
+                        <tr><th scope="row">Pousos</th><td>Um contador por <code>result.landing</code>: <code>clean_landings</code>, <code>brutal_landings</code> ou <code>rollovers</code>. Capotamentos aqui são somente os classificados após saltos, não um detector geral no solo.</td></tr>
+                        <tr><th scope="row">Árvores</th><td>Conecta <code>tree_broken</code> de cada origem encontrada. A chave <code>source_id:index</code> impede repetir a mesma árvore sem confundir índices de instâncias diferentes. Não conta contatos, partículas ou fragmentos.</td></tr>
+                        <tr><th scope="row">Pontos e estrelas</th><td>Usa <code>result.session_points</code> e <code>result.session_stars</code>, descontando os totais-base do início. A aceitação exige estrelas acumuladas maiores que o último resultado aceito; cada façanha válida acrescenta pelo menos uma estrela. Não soma o valor individual novamente ao acumulado.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>A proteção da distância usa <code>motion_budget = 2 × max(velocidade_atual, velocidade_anterior) × delta + WHEEL_RADIUS</code>, com raio atual de <code>0.45 m</code>. Descarta deslocamentos acima desse envelope, a amostra com R ou <code>_reset_requested</code> e a amostra seguinte; sempre atualiza a referência de posição. Não impõe o limite de velocidade de direção a saltos legítimos.</p>
+            <p>É uma proteção local, não um evento formal de teleporte: depende do campo interno <code>_reset_requested</code> e pode aceitar um reposicionamento pequeno, não sinalizado, dentro do envelope. A deduplicação de façanhas pressupõe um único monitor e totais monotônicos durante a sessão.</p>
+            <div class="composition" role="group" aria-label="Fluxo de coleta das estatísticas">
+                <p><strong>StuntMonitor → stunt_landed(result) → SessionController → SessionStats</strong><span>Resultados reais de saltos, giros, pousos, pontos e estrelas.</span></p>
+                <p><strong>NatureInteractions → tree_broken(index, velocidade) → SessionController → SessionStats</strong><span>Contagem silenciosa por origem e índice.</span></p>
+                <p><strong>RepairAntenna → repair_completed → FINISHED → cópia somente para leitura</strong><span>Desativa a coleta e publica um resumo uma única vez no Output.</span></p>
+            </div>
+            <p><code>finish()</code> desativa o coletor, grava o tempo e cria uma cópia com <code>Dictionary.make_read_only()</code>. <code>SessionController.get_results()</code> disponibiliza esse resultado congelado; antes do encerramento, o coletor retorna uma cópia de leitura, mas o tempo corrente deve ser consultado em <code>SessionController.elapsed_time</code>. Não há relatório visual, exportação JSON/CSV ou persistência. Uma nova execução da cena inicia outra sessão.</p>
+
+            <h3>9.5 — Preparação visual</h3>
+            <p><a href="../../game/scripts/visual_warmup.gd"><code>visual_warmup.gd</code></a>, no nó <code>VisualWarmup</code>, antecipa a primeira utilização gráfica da poeira e dos fragmentos/folhas de árvores. A investigação anterior associou os picos aos efeitos na primeira renderização; a criação do recurso ou <code>preload()</code> isoladamente não comprovava sua preparação no Compatibility/OpenGL. O componente não atribui todo custo a uma etapa específica do driver.</p>
+            <ol class="steps">
+                <li>Bloqueia comandos na missão normal, suspende reparo e monitor e cria um <code>CanvasLayer</code> de camada <code>100</code> com cobertura opaca e “PREPARANDO TERRENO...”. No ensaio, o controlador de sessão é responsável pelo bloqueio de entrada.</li>
+                <li>Aguarda <code>RenderingServer.frame_post_draw</code>, incluindo o primeiro desenho do cenário e a configuração inicial da poeira. Suspende a atualização visual da poeira para não reposicionar os emissores durante o preparo.</li>
+                <li>Salva transformação, proporção de emissão e modo de cada emissor real: duas rodas traseiras e madeira/folhas das instâncias de natureza encontradas. Coloca-os no campo de visão, aproximadamente <code>6 m</code> à frente da câmera, sob a cobertura 2D.</li>
+                <li>Executa um ciclo real em modo <code>one_shot</code>, com as mesmas malhas e materiais, e aguarda o sinal <code>finished</code> de todos, acompanhando os frames desenhados. Não é uma espera arbitrária por Timer ou emissão fora da câmera.</li>
+                <li>Restaura os estados salvos e o processamento, encerra a emissão, remove a cobertura, marca <code>is_prepared</code> e emite <code>prepared</code>.</li>
+            </ol>
+            <p>Em <code>mission_level.tscn</code>, o componente libera a direção ao terminar, sem contagem obrigatória. Em <code>session_trial.tscn</code>, a contagem só começa depois de <code>prepared</code>, e o cronômetro continua começando no VAI!. Não são quebradas árvores falsas, emitidos eventos de quebra ou concedidos pontos; colisores e MultiMeshes do mapa não são modificados pelo aquecimento.</p>
+            <p class="note">Em modo <code>headless</code>, a preparação gráfica é pulada. O fluxo gráfico depende de câmera, nós esperados e conclusão dos emissores; não possui timeout próprio. Transfere trabalho para a entrada da cena, não cobre todas as variantes de efeitos e não garante ausência de travamentos em qualquer hardware. Medições e condições de benchmark ficam reservadas à seção 12.</p>
         </section>
-        <section id="stunts" class="pending" data-status="em-elaboracao">
-            <h2>10. Façanhas e recompensas</h2><p class="status-tag draft">Em elaboração</p>
+
+        <section id="stunts" data-status="documentado">
+            <p class="section-kicker">Observação de movimento e reconhecimento arcade</p>
+            <h2>10. Façanhas e recompensas</h2>
+            <p><span class="status-tag implemented">Implementado</span> <a href="../../game/scripts/stunt_monitor.gd"><code>stunt_monitor.gd</code></a> observa a mesma van, sem aplicar forças ou atualizar raycasts adicionais. <a href="../../game/scenes/stunt_rewards.tscn"><code>stunt_rewards.tscn</code></a> reúne o monitor e sua interface, instanciados na missão e herdados pelo ensaio.</p>
+
+            <h3>10.1 — Identificação de saltos</h3>
+            <p>O monitor consulta os resultados existentes da suspensão e os contatos da carroceria via <code>PhysicsServer3D.body_get_direct_state()</code>. Um raycast só representa apoio com normal válida, compressão de pelo menos <code>0.015 m</code> e carga de suspensão positiva; contatos do casco com normal de apoio também contam. Não usa apenas <code>ground_contacts</code>, que pode incluir raios no limite do curso.</p>
+            <div class="table-wrap">
+                <table>
+                    <caption>Critérios atuais, exportados para calibração</caption>
+                    <thead><tr><th scope="col">Critério</th><th scope="col">Valor e uso</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">Tempo mínimo</th><td><code>minimum_air_time = 0.35 s</code> de tempo acumulado no ar.</td></tr>
+                        <tr><th scope="row">Salto por deslocamento</th><td>Distância horizontal de pelo menos <code>3 m</code> e maior trecho contínuo sem apoio de pelo menos <code>0.55 s</code>.</td></tr>
+                        <tr><th scope="row">Manobra com giro</th><td>Uma ou mais rotações completas e trecho contínuo no ar de pelo menos <code>0.35 s</code>; pode validar sem os <code>3 m</code> de deslocamento.</td></tr>
+                        <tr><th scope="row">Contato e rearme</th><td><code>0.12 s</code> para confirmar contato e <code>0.25 s</code> de apoio contínuo para rearme. Histórico de contatos breves e janela de quique evitam transformar oscilações repetidas em várias recompensas.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>A distância é <code>length(Vector2(posição_atual.x − início.x, posição_atual.z − início.z))</code>: deslocamento horizontal em linha reta, não arco percorrido. O resultado usa a posição do primeiro contato posteriormente confirmado. O tempo acumula amostras sem apoio; pequenos intervalos de contato não viram tempo de voo.</p>
+            <p>Após contato confirmado, um quique dentro da janela de <code>1.2 s</code> pode continuar a mesma manobra. Apoio estável seguido de decolagem permite fechar a anterior e iniciar outra. R ou descontinuidade de posição cancela o voo em andamento; uma aterrissagem já pendente preserva o resultado anterior de forma conservadora, sem usar o reset para criar outro salto.</p>
+
+            <h3>10.2 — Giros e manobras</h3>
+            <p>Durante o voo, a diferença de orientação é calculada por <code>(quaternion_atual × quaternion_anterior.inverse()).normalized()</code>, no hemisfério curto. Seu vetor eixo/ângulo é projetado nos eixos locais X e Z da orientação anterior: <code>pitch_rotations</code> para cambalhotas frontais/traseiras e <code>roll_rotations</code> para rolamentos laterais.</p>
+            <p>Acumuladores assinados descontam cada volta de aproximadamente <code>TAU</code> e incrementam os contadores; múltiplas voltas são preservadas. Inclinar e voltar não equivale a completar 360°. A rotação quase alinhada ao eixo vertical global (<code>|dot(eixo, UP)| &gt; 0.995</code>) é ignorada, assim como deltas angulares maiores que <code>90°</code> em uma amostra.</p>
+            <p>Os contadores só avançam nas amostras aéreas e <code>rotations</code> é a soma dos dois. O resultado não separa a direção positiva/negativa de cada volta. A projeção incremental é uma aproximação para rotações combinadas; descartar deltas extremos evita falsos positivos, mas pode subcontar movimentos muito rápidos entre amostras. Não existe classificação independente de giros executados no chão.</p>
+
+            <h3>10.3 — Aterrissagens</h3>
+            <p>O pouso não é classificado no primeiro toque. Após confirmação, o monitor observa a orientação em relação à normal de apoio em uma janela de <code>0.8 s</code>, podendo aguardar até <code>1.2 s</code>; o tempo de confirmação do contato já entra nessa janela. Estabilidade exige apoio, ângulo de até <code>25°</code>, velocidade normal absoluta de até <code>2.5 m/s</code> e velocidade angular de até <code>1.2 rad/s</code> durante <code>0.2 s</code> contínuos. Na ausência de nova normal válida, conserva a referência anterior.</p>
+            <div class="table-wrap">
+                <table>
+                    <caption>Uma classificação por resultado, com prioridade para capotamento</caption>
+                    <thead><tr><th scope="col">Classificação</th><th scope="col">Decisão implementada</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row"><code>ROLLOVER</code><br>Capotamento</th><td>Alinhamento final menor que <code>cos(60°)</code> em relação à normal de referência, indicando inclinação superior ao limite. Não se baseia apenas na vertical global de uma encosta.</td></tr>
+                        <tr><th scope="row"><code>BRUTAL</code><br>Pouso brutal</th><td>Sem capotamento final, mas houve contato breve/quique, orientação ou velocidade agressiva, interrupção por recuperação, ou faltou estabilidade. O impacto inicial é marcado como brutal acima de <code>7 m/s</code> na componente de aproximação normal; velocidade angular acima de <code>1.2 rad/s</code> também influencia.</td></tr>
+                        <tr><th scope="row"><code>CLEAN</code><br>Pouso limpo</th><td>Não houve marca de brutalidade ou capotamento e o intervalo de estabilidade foi alcançado. O critério é deliberadamente mais exigente que apenas estar sobre as rodas no último frame.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>R após impacto não apaga a façanha: mantém a orientação anterior ao reposicionamento e conclui na janela original, marcada como brutal quando aplicável. A exceção de contexto é o encerramento do ensaio: ali o controlador interrompe observações pendentes. Estes critérios não detectam todo capotamento independente da fase.</p>
+
+            <h3>10.4 — Pontuação</h3>
+            <div class="composition" role="group" aria-label="Fórmula de pontuação das façanhas">
+                <p><strong>Pontos = roundi(distância × 10 + tempo_no_ar × 50) + giros_completos × 400 + bônus_do_pouso</strong><span>Distância em metros, tempo em segundos; arredondamento da soma dos dois primeiros termos, antes de adicionar rotações e bônus.</span></p>
+            </div>
+            <div class="table-wrap">
+                <table>
+                    <caption>Pesos e limites atuais do monitor</caption>
+                    <thead><tr><th scope="col">Recompensa</th><th scope="col">Valor configurável</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">Bônus único de pouso</th><td>Limpo: <code>150</code>; brutal: <code>100</code>; capotamento: <code>100</code>. Não soma as três categorias nem zera a manobra por capotar.</td></tr>
+                        <tr><th scope="row">Estrelas</th><td>Uma estrela para resultado válido abaixo de <code>350</code> pontos; duas a partir de <code>350</code>; três a partir de <code>900</code>. O limite de três é protegido por <code>max(three_star_score, two_star_score + 1)</code>.</td></tr>
+                        <tr><th scope="row">Acumuladores</th><td><code>total_points</code> e <code>total_stars</code> recebem a recompensa individual uma vez em <code>_award_result()</code>; o dicionário inclui os totais como <code>session_points</code> e <code>session_stars</code>.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Travas de resultado, confirmação de contato, janela de quique e rearme impedem recompensas repetidas pelo mesmo salto ou por permanecer tombado. O sinal <code>stunt_landed(result)</code> transporta distância, tempo, giros, pouso, pontos, estrelas e acumulados; a UI apenas apresenta esses números. O coletor experimental aplica a proteção adicional descrita na seção 9.4. Uma façanha grande pode alcançar três estrelas mesmo terminando em capotamento.</p>
+
+            <h3>10.5 — Interface de façanhas</h3>
+            <p><a href="../../game/scripts/stunt_reward_ui.gd"><code>stunt_reward_ui.gd</code></a> recebe <code>flight_updated</code>, <code>flight_cancelled</code> e <code>stunt_landed</code>. O HUD aéreo aparece quando o monitor já atende aos critérios de validação, com distância e tempo em uma casa decimal e vírgula. Só inclui linhas de giros quando positivas: “1 giro lateral”/“2 giros laterais” e “1 giro frontal”/“2 giros frontais”.</p>
+            <p>Após o pouso, o painel mostra uma frase, resumo, classificação, pontos individuais e uma a três estrelas douradas. O resumo não inclui “0 giros” nem separador vazio; usa “1 giro” ou “2 giros” quando necessário. A linha dos acumulados aparece na missão, mas <code>session_trial.tscn</code> define <code>show_session_total = false</code>; isso não altera os totais reais.</p>
+            <p>Um Tween escala o painel de <code>0.85</code> para <code>1.08</code> em <code>0.12 s</code>, retorna a <code>1.0</code> em <code>0.12 s</code>, mantém e desvanece em <code>0.3 s</code>, dentro de <code>result_duration = 2.5 s</code>. A interface tenta quatro cantos com margem de <code>24 px</code>, evitando os retângulos da missão, marcador e HUD de direção com folga de <code>18 px</code>. Só verifica sobreposição enquanto visível; não garante espaço livre em toda combinação de viewport e painéis.</p>
+
+            <h3>10.6 — Frases por intensidade</h3>
+            <p>A seleção atual usa exclusivamente <code>result.stars</code>, sem reavaliar pontos, giros ou pouso. São 46 frases em três listas do próprio script; a classificação de aterrissagem permanece em uma linha separada.</p>
+            <div class="table-wrap">
+                <table>
+                    <caption>Grupos de intensidade em MESSAGES</caption>
+                    <thead><tr><th scope="col">Estrelas</th><th scope="col">Tom e exemplos presentes</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">1 estrela · 12 frases</th><td>Reconhecimento modesto e humor: “ATÉ QUE SAIU DO CHÃO!” e “TENTATIVA HONESTA!”.</td></tr>
+                        <tr><th scope="row">2 estrelas · 20 frases</th><td>Façanha de maior intensidade: “NADA MAL PRA UMA VAN!” e “ISSO MERECE UM REPLAY!”.</td></tr>
+                        <tr><th scope="row">3 estrelas · 14 frases</th><td>Exagero arcade: “NEWTON NÃO APROVOU!” e “A FÍSICA PEDIU DEMISSÃO!”.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p><code>RandomNumberGenerator</code> é inicializado na UI. O último índice é guardado por categoria; o próximo sorteio exclui esse índice, evitando repetição consecutiva dentro da mesma faixa. Não há fila de elogios simultâneos. Como a seleção é por intensidade, uma frase que menciona pouso ou seguro não comprova aquele tipo de aterrissagem; o campo técnico <code>landing</code> é a referência correta.</p>
+
+            <h3>10.7 — Relação com recompensas futuras</h3>
+            <p><span class="status-tag planned">Planejado</span> As estatísticas organizadas e o resultado somente para leitura poderão alimentar relatório visual, recompensas financeiras, garagem e melhorias. Esses consumidores, a conversão de pontos em dinheiro e o salvamento ainda não estão implementados. Pontos e estrelas atuais são reconhecimento de façanhas durante a execução, não uma economia persistente.</p>
         </section>
         <section id="progression" class="pending" data-status="em-elaboracao">
             <h2>11. Missões, garagem e progressão</h2><p class="status-tag draft">Em elaboração</p>
