@@ -15,3 +15,20 @@ export_credentials.cfg
 .mono/
 data_*/
 mono_crash.*.json
+
+# Local operating system metadata
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Private environment files; keep the example versionable
+.env
+.env.*
+!.env.example
+
+# Temporary logs and editor backups
+*.log
+*~
+*.swp
+*.swo
+*.bak
