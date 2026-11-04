@@ -53,6 +53,10 @@ func _ready() -> void:
 	_antenna.set_active(false)
 	_monitor_was_processing = _monitor.is_physics_processing()
 	_monitor.set_physics_process(false)
+	_countdown.hide()
+	var warmup: Node = get_node_or_null("../VisualWarmup")
+	if warmup != null and not warmup.is_prepared:
+		await warmup.prepared
 	_countdown.show()
 	state = State.COUNTDOWN
 	_show_countdown("PREPARE-SE!", 48)

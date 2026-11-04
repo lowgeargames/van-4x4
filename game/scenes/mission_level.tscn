@@ -11,6 +11,7 @@
 [ext_resource type="PackedScene" path="res://scenes/extreme_extension.tscn" id="9_extension"]
 [ext_resource type="ArrayMesh" path="res://assets/environment/extreme_extension/background_open_west.res" id="10_background"]
 [ext_resource type="PackedScene" path="res://scenes/mission_nature_interactions.tscn" id="11_nature"]
+[ext_resource type="Script" path="res://scripts/visual_warmup.gd" id="12_warmup"]
 
 [node name="MissionLevel" unique_id=237866557 instance=ExtResource("1_terrain")]
 
@@ -169,3 +170,6 @@ transform = Transform3D(-0.99997944, -0.006416923, 0.00025289558, -0.0064219045,
 [node name="ExtremeExtension" parent="." index="14" unique_id=862972411 instance=ExtResource("9_extension")]
 
 [node name="NatureInteractions" parent="." index="15" unique_id=224194472 instance=ExtResource("11_nature")]
+
+[node name="VisualWarmup" type="Node" parent="." index="16"]
+script = ExtResource("12_warmup")
