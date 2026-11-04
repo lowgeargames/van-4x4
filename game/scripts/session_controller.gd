@@ -1,9 +1,10 @@
 extends Node
-## Inicialização exclusiva do ensaio; não encerra a sessão ao concluir o reparo.
+## Ciclo de vida exclusivo do ensaio; a conclusão não interfere nas cenas originais.
 
 const VanController = preload("res://scripts/van_controller.gd")
 const RepairEquipment = preload("res://scripts/repair_antenna.gd")
-enum State { PREPARATION, COUNTDOWN, RUNNING }
+const SessionStats = preload("res://scripts/session_stats.gd")
+enum State { PREPARATION, COUNTDOWN, RUNNING, FINISHED }
 
 var state: State = State.PREPARATION
 ## Instante monotônico; o tempo acumulado abaixo acompanha os passos de física.
@@ -12,6 +13,7 @@ var elapsed_time: float = 0.0
 var _repair_was_active: bool = false
 var _monitor_was_processing: bool = false
 var _countdown_tween: Tween
+var _stats: SessionStats = SessionStats.new()
 
 @onready var _van: VanController = get_node_or_null("../VanPrototype") as VanController
 @onready var _antenna: RepairEquipment = get_node_or_null("../RepairAntenna") as RepairEquipment
@@ -39,6 +41,13 @@ func _ready() -> void:
 		set_physics_process(false)
 		return
 
+	# Amostra após o monitor (prioridade 100), sem alterar a ordem da física.
+	process_physics_priority = 200
+	_monitor.stunt_landed.connect(_on_stunt_landed)
+	_antenna.repair_completed.connect(_finish_session)
+	for source in get_parent().find_children("*", "Node3D", true, false):
+		if source.has_signal("tree_broken"):
+			source.tree_broken.connect(_on_tree_broken.bind(source.get_instance_id()))
 	_van.set_player_input_enabled(false)
 	_repair_was_active = _antenna.active
 	_antenna.set_active(false)
@@ -61,6 +70,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	if state == State.RUNNING:
 		elapsed_time += delta
+		_stats.sample_motion(_van, delta, Input.is_action_just_pressed("reset_vehicle") or _van._reset_requested)
 
 
 func _show_countdown(message: String, font_size: int) -> void:
@@ -74,7 +84,39 @@ func _start_session() -> void:
 	_show_countdown("VAI!", 64)
 	session_started_at_usec = Time.get_ticks_usec()
 	elapsed_time = 0.0
+	_stats.start(_van, _monitor.total_points, _monitor.total_stars)
 	state = State.RUNNING
 	_van.set_player_input_enabled(true)
 	_antenna.set_active(_repair_was_active)
 	_monitor.set_physics_process(_monitor_was_processing)
+
+
+func _on_stunt_landed(result: Dictionary) -> void:
+	if state == State.RUNNING:
+		_stats.record_stunt(result)
+
+
+func _on_tree_broken(index: int, _impact_speed: float, source_id: int) -> void:
+	if state == State.RUNNING:
+		_stats.record_tree(source_id, index)
+
+
+func get_results() -> Dictionary:
+	return _stats.get_snapshot()
+
+
+func _finish_session() -> void:
+	if state != State.RUNNING:
+		return
+	state = State.FINISHED
+	# Só resultados já emitidos entram no fechamento. Um pouso ainda pendente
+	# não concede recompensa tardia, nem exige alterar a detecção do monitor.
+	_monitor.set_physics_process(false)
+	_stats.finish(elapsed_time)
+	var result: Dictionary = get_results()
+	print("\n=======================================\nVAN 4X4 — SESSÃO ENCERRADA\n=======================================")
+	print("Tempo total: %.2f s\nDistância percorrida: %.2f m" % [result.elapsed_time, result.distance])
+	print("\nSaltos: %d\nMaior salto: %.2f m\nMaior tempo no ar: %.2f s\nTempo total no ar: %.2f s" % [result.jumps, result.longest_jump, result.longest_air_time, result.total_air_time])
+	print("\nGiros frontais: %d\nGiros laterais: %d\nGiros totais: %d" % [result.pitch_rotations, result.roll_rotations, result.rotations])
+	print("\nPousos limpos: %d\nPousos brutais: %d\nCapotamentos após salto: %d" % [result.clean_landings, result.brutal_landings, result.rollovers])
+	print("\nÁrvores derrubadas: %d\nPontos de façanhas: %d\nEstrelas acumuladas: %d\n=======================================" % [result.trees_broken, result.points, result.stars])
