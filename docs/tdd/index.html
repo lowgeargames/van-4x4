@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="TDD do Van 4x4: ambiente técnico, organização do projeto e arquitetura existente. Versão 0.1. Documento em elaboração.">
-    <title>Van 4x4 — Technical Design Document</title>
+    <meta name="description" content="TDD do Van 4x4: arquitetura, sistemas implementados, planejamento e validação técnica. Versão 1.0.">
+    <title>Van 4x4 — Technical Design Document — Versão 1.0</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,7 +14,7 @@
         <h1>Van 4x4</h1>
         <p class="subtitle">Technical Design Document</p>
         <p class="hero-description">Estrutura técnica de um jogo 3D arcade off-road, baseado em cenas e nós da Godot.</p>
-        <p class="edition">Versão 0.1 · Documento em elaboração</p>
+        <p class="edition">Versão 1.0 · Jogo em desenvolvimento</p>
         <a class="document-link" href="../gdd/index.html">Consultar o Game Design Document →</a>
     </header>
 
@@ -29,20 +29,20 @@
         <a href="#interactions">08 · Água, lama e interações</a>
         <a href="#hud">09 · HUD e gameplay</a>
         <a href="#stunts">10 · Façanhas e recompensas</a>
-        <a href="#progression">11 · Missões e progressão <small>Em elaboração</small></a>
-        <a href="#validation">12 · Dependências e testes <small>Em elaboração</small></a>
+        <a href="#progression">11 · Missões e progressão</a>
+        <a href="#validation">12 · Dependências e testes</a>
     </nav>
 
     <main id="main">
         <section id="environment" data-status="documentado">
             <p class="section-kicker">Fundamentos técnicos</p>
             <h2>01. Introdução e ambiente técnico</h2>
-            <p>Este TDD registra a estrutura e as relações técnicas verificadas no repositório. Complementa o GDD, sem repetir suas decisões de game design. Nesta versão, as seções 1 a 10 possuem conteúdo desenvolvido; as seções 11 e 12 permanecem em elaboração.</p>
+            <p>Este TDD registra a estrutura e as relações técnicas verificadas no repositório. Complementa o GDD, sem repetir suas decisões de game design. As 12 seções estão desenvolvidas. O jogo continua em desenvolvimento; a conclusão do documento não significa que o escopo planejado esteja implementado.</p>
             <p>O protótipo é um jogo 3D de direção com uma van controlada por física arcade, terrenos estáticos, objetos físicos, interações e interfaces. A composição de cenas reutilizáveis permite manter o playground, a experiência de terreno e a fase mais avançada sem criar outro controlador de veículo.</p>
             <div class="status-legend" aria-label="Como interpretar os estados">
                 <p><span class="status-tag implemented">Implementado</span> Sistema presente no projeto inspecionado.</p>
                 <p><span class="status-tag planned">Planejado</span> Escopo previsto no GDD, ainda sem implementação correspondente.</p>
-                <p><span class="status-tag draft">Em elaboração</span> Seção do TDD ainda não desenvolvida; não significa ausência do sistema no jogo.</p>
+                <p><span class="status-tag draft">Experimental</span> Implementação isolada de teste, ainda sem integração ao ciclo completo da campanha.</p>
             </div>
 
             <h3>Ambiente registrado e editor utilizado</h3>
@@ -157,7 +157,7 @@
             <h3>Papel das cenas de missão</h3>
             <p>Em <code>mission_level.tscn</code>, <a href="../../game/scripts/antenna_mission_ui.gd"><code>game/scripts/antenna_mission_ui.gd</code></a> lê a proximidade e o progresso da antena, utiliza o painel contido no equipamento e posiciona o marcador <code>ObjectiveUI/ObjectiveMarker</code> com a câmera ativa. Conecta <code>repair_completed</code> para exibir a conclusão. Não realiza o reparo no lugar do componente.</p>
             <p>No playground, <a href="../../game/scripts/service_sequence.gd"><code>game/scripts/service_sequence.gd</code></a> conecta o mesmo sinal nos dois equipamentos, ativa a bomba após a antena e reutiliza o painel de missão. Esse controlador de dois serviços não está integrado à fase atual como um sistema de campanha.</p>
-            <p class="note"><span class="status-tag planned">Planejado</span> Quatro serviços integrados, garagem, economia, peças com vantagens e desvantagens, relatório visual, retorno dirigido ou rápido e salvamento pertencem ao escopo do GDD. Sua arquitetura ainda não está definida neste TDD. Os pontos e estrelas existentes são de sessão, não progressão persistente ou dinheiro.</p>
+            <p class="note"><span class="status-tag planned">Planejado</span> Quatro serviços integrados, garagem, economia, peças com vantagens e desvantagens, relatório visual, retorno dirigido ou rápido e salvamento pertencem ao escopo do GDD. As diretrizes da campanha estão na seção 11; seus componentes de implementação ainda não estão definidos. Os pontos e estrelas existentes são de sessão, não progressão persistente ou dinheiro.</p>
         </section>
 
         <section id="vehicle" data-status="documentado">
@@ -618,7 +618,7 @@
                 <li>Restaura os estados salvos e o processamento, encerra a emissão, remove a cobertura, marca <code>is_prepared</code> e emite <code>prepared</code>.</li>
             </ol>
             <p>Em <code>mission_level.tscn</code>, o componente libera a direção ao terminar, sem contagem obrigatória. Em <code>session_trial.tscn</code>, a contagem só começa depois de <code>prepared</code>, e o cronômetro continua começando no VAI!. Não são quebradas árvores falsas, emitidos eventos de quebra ou concedidos pontos; colisores e MultiMeshes do mapa não são modificados pelo aquecimento.</p>
-            <p class="note">Em modo <code>headless</code>, a preparação gráfica é pulada. O fluxo gráfico depende de câmera, nós esperados e conclusão dos emissores; não possui timeout próprio. Transfere trabalho para a entrada da cena, não cobre todas as variantes de efeitos e não garante ausência de travamentos em qualquer hardware. Medições e condições de benchmark ficam reservadas à seção 12.</p>
+            <p class="note">Em modo <code>headless</code>, a preparação gráfica é pulada. O fluxo gráfico depende de câmera, nós esperados e conclusão dos emissores; não possui timeout próprio. Transfere trabalho para a entrada da cena, não cobre todas as variantes de efeitos e não garante ausência de travamentos em qualquer hardware. As referências históricas de desempenho e suas condições estão na seção 12.</p>
         </section>
 
         <section id="stunts" data-status="documentado">
@@ -703,18 +703,164 @@
             <h3>10.7 — Relação com recompensas futuras</h3>
             <p><span class="status-tag planned">Planejado</span> As estatísticas organizadas e o resultado somente para leitura poderão alimentar relatório visual, recompensas financeiras, garagem e melhorias. Esses consumidores, a conversão de pontos em dinheiro e o salvamento ainda não estão implementados. Pontos e estrelas atuais são reconhecimento de façanhas durante a execução, não uma economia persistente.</p>
         </section>
-        <section id="progression" class="pending" data-status="em-elaboracao">
-            <h2>11. Missões, garagem e progressão</h2><p class="status-tag draft">Em elaboração</p>
+        <section id="progression" data-status="documentado">
+            <p class="section-kicker">Serviços atuais e campanha planejada</p>
+            <h2>11. Missões, garagem e progressão</h2>
+            <p>A manutenção já funciona como objetivo de direção. A ligação entre serviços, garagem e recompensas financeiras ainda pertence ao planejamento do <a href="../gdd/index.html#missions">GDD</a>. Não existe um gerenciador genérico de campanha.</p>
+
+            <h3>11.1 — Estrutura de missões</h3>
+            <p><span class="status-tag implemented">Implementado</span> A fase jogável com relevo é <code>mission_level.tscn</code>, que herda <code>terrain_showcase.tscn</code> e acrescenta antena, marcador, interfaces, obstáculos, extensão e natureza interativa. O objetivo é chegar ao mirante e concluir um serviço. Não há seleção de missão, troca de fase ou retorno automático ao terminar.</p>
+            <p><span class="status-tag draft">Experimental</span> <code>session_trial.tscn</code> herda essa fase. <code>session_controller.gd</code> coordena contagem, liberação dos comandos e coleta até o reparo; <code>session_stats.gd</code> reúne os resultados em memória. A estrutura e os estados estão detalhados em <a href="#hud">9.3 e 9.4</a>. Não é uma campanha com quatro missões.</p>
+            <p>No playground <code>driving_test.tscn</code>, <a href="../../game/scripts/service_sequence.gd"><code>service_sequence.gd</code></a> mantém um fluxo separado de dois serviços. O controlador referencia antena e bomba por caminhos exportados e reutiliza o painel da antena. São integrações locais por nós e sinais, sem catálogo de missões, identificadores persistentes ou desbloqueios salvos.</p>
+
+            <h3>11.2 — Reparo da antena</h3>
+            <p>O equipamento <code>repair_antenna.tscn</code> usa <code>repair_antenna.gd</code>. <code>is_van_nearby()</code> consulta a sobreposição da van em <code>InteractionArea</code>. Com o equipamento ativo e ainda não reparado, a interação exige E (<code>interact</code>), velocidade 3D de até <code>0.5 m/s</code> e permanência na área por <code>repair_duration = 2 s</code>. Não há personagem a pé ou minijogo adicional.</p>
+            <p>O progresso acumula <code>delta</code> físico; soltar E, sair da área ou exceder a velocidade zera a contagem. <code>get_repair_progress()</code> fornece o percentual à UI. <code>_complete_repair()</code> marca o reparo, desativa a interação, muda o indicador para verde e emite <code>repair_completed</code> uma vez. <code>set_active()</code> não reativa equipamento já concluído.</p>
+            <p>Na missão, <code>antenna_mission_ui.gd</code> recebe o sinal e anuncia a conclusão. No ensaio, o mesmo sinal também chama <code>SessionController._finish_session()</code>: para o cronômetro e a coleta, desativa o monitor de façanhas e disponibiliza a cópia de resultados somente para leitura. Uma aterrissagem ainda pendente fica fora desse fechamento. O serviço conclui diretamente; a futura escolha de retorno não existe nesse fluxo.</p>
+
+            <h3>11.3 — Outros serviços de manutenção</h3>
+            <div class="table-wrap">
+                <table>
+                    <caption>Estado real dos quatro serviços previstos no GDD</caption>
+                    <thead><tr><th scope="col">Serviço</th><th scope="col">Implementação e integração pendente</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">Antena</th><td><span class="status-tag implemented">Implementado</span> Reparo na fase com relevo e no playground. No ensaio, encerra a sessão estatística. Integração à garagem e à campanha ainda planejada.</td></tr>
+                        <tr><th scope="row">Bomba de água</th><td><span class="status-tag draft">Experimental</span> <a href="../../game/scenes/repair_water_pump.tscn"><code>repair_water_pump.tscn</code></a> reutiliza o script da antena. No playground, começa inativa e é liberada por <code>service_sequence.gd</code> após a antena; concluí-la mostra “Todos os serviços concluídos!”. Ainda não está integrada à fase com relevo ou à campanha.</td></tr>
+                        <tr><th scope="row">Gerador remoto</th><td><span class="status-tag planned">Planejado</span> Serviço em instalação isolada, com acesso por terreno irregular. Não há equipamento, cena de reparo ou fluxo de missão correspondente implementado.</td></tr>
+                        <tr><th scope="row">Estação meteorológica</th><td><span class="status-tag planned">Planejado</span> Serviço em região de percurso extremo, aproveitando áreas existentes. Não há implementação própria; não exige um sistema de clima dinâmico.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>A sequência do playground é fixa: o sinal da antena ativa a bomba e troca o objetivo, mantendo uma mensagem de conclusão por <code>3 s</code>. Não equivale a selecionar serviços livremente nem registra progresso de campanha.</p>
+
+            <h3>11.4 — Ciclo de missão previsto</h3>
+            <div class="composition" role="group" aria-label="Ciclo planejado da campanha">
+                <p><strong>Garagem → Seleção de serviço → Preparação da van</strong><span>Planejado: definir destino e peças equipadas.</span></p>
+                <p><strong>Deslocamento → Façanhas e obstáculos → Manutenção</strong><span>A direção, as façanhas e o reparo da antena já existem; falta integrá-los à campanha.</span></p>
+                <p><strong>Retorno opcional → Relatório → Recompensas</strong><span>Planejado: retorno dirigido ou rápido, fechamento na garagem e pagamento.</span></p>
+                <p><strong>Melhorias → Próximo serviço → Garagem</strong><span>Planejado: reaproveitar o mapa e a mesma van em novos atendimentos.</span></p>
+            </div>
+            <p>O protótipo atual termina o serviço no equipamento. O ensaio fecha as estatísticas nesse mesmo momento. A campanha prevista no GDD muda essa fronteira: o reparo libera a escolha de retorno, e o encerramento com relatório e pagamento acontece na garagem. Essa transição ainda precisa de implementação; os estados atuais da sessão não representam etapas de retorno.</p>
+
+            <h3>11.5 — Garagem e personalização</h3>
+            <p><span class="status-tag planned">Planejado</span> A garagem será inicialmente uma interface de seleção de serviços, consulta de saldo e configuração da van. Permitirá comprar, equipar e trocar peças adquiridas, sem exigir uma oficina 3D explorável. Não há cena funcional de garagem, inventário de equipamentos ou aplicação de peças em execução.</p>
+            <div class="table-wrap">
+                <table>
+                    <caption>Categorias de melhorias previstas, sem valores definidos</caption>
+                    <thead><tr><th scope="col">Categoria</th><th scope="col">Variações pretendidas</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">Motor</th><td>Força e aceleração, com compromissos de controle e agilidade a balancear.</td></tr>
+                        <tr><th scope="row">Pneus</th><td>Tração e aderência, alterando a resposta em terrenos e a facilidade de derrapar.</td></tr>
+                        <tr><th scope="row">Suspensão</th><td>Estabilidade, resposta a impactos e comportamento em saltos e manobras.</td></tr>
+                        <tr><th scope="row">Turbo</th><td>Intensidade e disponibilidade, com vantagens e limitações perceptíveis.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>O GDD descreve combinações ilustrativas: van bruta, veloz ou saltadora. São estilos possíveis, não classes implementadas ou conjuntos obrigatórios. As peças devem ter vantagens e desvantagens, e a van básica deverá completar os serviços. Parâmetros exportados do controlador são pontos possíveis de configuração, mas ainda não há vínculo técnico entre compras e esses parâmetros.</p>
+
+            <h3>11.6 — Economia e recompensas</h3>
+            <p><span class="status-tag planned">Planejado</span> Cada manutenção terá pagamento básico; pontos de façanhas e possíveis bônus por destruição poderão complementar os ganhos. O dinheiro será usado na garagem. Preços, taxas de conversão, limites e regras de desbloqueio não estão definidos. O GDD prevê evitar exploração por colisões repetidas ou fragmentos contados como novos eventos.</p>
+            <p>Atualmente, apenas pontos e estrelas de façanhas são acumulados. O coletor da sessão registra esses totais e árvores derrubadas, mas não concede dinheiro por árvores ou impactos em props. Não há carteira, transação, economia persistente ou relatório visual com pagamento. Estrelas são reconhecimento visual, não moeda.</p>
+
+            <h3>11.7 — Retorno e progressão</h3>
+            <p><span class="status-tag planned">Planejado</span> Após o reparo, o jogador poderá voltar dirigindo e continuar acumulando resultados, ou escolher retorno rápido mantendo o pagamento normal e os resultados já obtidos. O relatório deverá distinguir o tipo de retorno, separar tempos de ida e volta quando houver direção e não inventar tempo de viagem no retorno rápido.</p>
+            <p>Serviços concluídos e ganhos alimentarão a progressão, com compra e disponibilidade de melhorias e escolha do próximo atendimento. O salvamento futuro deverá preservar dinheiro, serviços concluídos, peças compradas e equipadas e progresso relevante. Formato, localização dos arquivos, compatibilidade de versões e ordem dos desbloqueios ainda não foram definidos.</p>
+            <p class="note">No ensaio atual, o reparo congela os resultados. Continuar dirigindo depois dele não acrescenta estatísticas ou novas façanhas ao resultado fechado. Retorno dirigido, retorno rápido, relatório e persistência precisam ser integrados antes de representar o ciclo final do GDD.</p>
         </section>
-        <section id="validation" class="pending" data-status="em-elaboracao">
-            <h2>12. Dependências, limitações e testes</h2><p class="status-tag draft">Em elaboração</p>
+
+        <section id="validation" data-status="documentado">
+            <p class="section-kicker">Ambiente, evidências e limites de validação</p>
+            <h2>12. Dependências, limitações e testes</h2>
+
+            <h3>12.1 — Ambiente de desenvolvimento</h3>
+            <p>O ambiente de referência é Godot <code>4.7.2</code>, GDScript, Jolt Physics e Compatibility/OpenGL. <code>project.godot</code> registra a família <code>4.7</code>, o motor <code>Jolt Physics</code> e <code>gl_compatibility</code>, mas não fixa o patch do executável. A configuração completa está na <a href="#environment">seção 1</a>. Não há requisitos mínimos de CPU, GPU ou memória consolidados.</p>
+            <p>O jogo fica em <code>game/</code> e usa cenas, scripts e recursos nativos; não foram identificados plugins externos ou bibliotecas de gameplay adicionais. Git/GitHub são ferramentas de versionamento e acompanhamento. HTML/CSS apresentam a documentação; não são dependências de execução do jogo. As três ferramentas em <code>game/tools/</code> preparam recursos fora da partida e não precisam ser executadas para jogar.</p>
+
+            <h3>12.2 — Dependências e recursos externos</h3>
+            <div class="table-wrap">
+                <table>
+                    <caption>Procedência e uso dos recursos</caption>
+                    <thead><tr><th scope="col">Recurso</th><th scope="col">Origem e observações</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">Natureza Quaternius</th><td>Seleção de 12 modelos do Stylized Nature MegaKit [Standard], com fontes glTF/bin/PNG, malhas e materiais derivados. Licença <a href="../../game/assets/environment/quaternius_nature/License_Standard.txt">CC0 1.0</a> e <a href="../../game/assets/environment/quaternius_nature/ASSET_MANIFEST.md">manifesto</a> incluídos.</td></tr>
+                        <tr><th scope="row">Terrenos e materiais</th><td>Malhas estáticas, colisões, curvas e materiais preparados pelas ferramentas do projeto em <code>terrain_showcase/</code> e <code>extreme_extension/</code>. Os recursos salvos são carregados pelas cenas; a textura não modifica sua geometria física.</td></tr>
+                        <tr><th scope="row">Detalhe do solo</th><td><code>ground_detail.png</code>, gerada com imagegen conforme o <a href="../../game/assets/environment/terrain_showcase/README.md">README do terreno</a>. Usada por material padrão com cores de vértice e projeção triplanar; importação limitada a 512 pixels. Essa procedência não atribui automaticamente a ela a licença CC0 do pack Quaternius.</td></tr>
+                        <tr><th scope="row">Arte do projeto e documentação</th><td>Van, equipamentos e props usam formas e materiais simples. Não foi identificada licença geral do repositório; a autorização e procedência das imagens conceituais do GDD precisam de registro próprio. Não se presume uma licença uniforme para todos os arquivos.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3>12.3 — Execução e teste das cenas</h3>
+            <ol class="steps">
+                <li>Importar <code>game/project.godot</code> na Godot 4.7.2 e aguardar a importação normal dos recursos.</li>
+                <li>Abrir <code>mission_level.tscn</code> e usar <strong>F6</strong> para a fase com relevo e antena. A preparação visual ocorre antes da liberação dos comandos.</li>
+                <li>Abrir <code>session_trial.tscn</code> e usar <strong>F6</strong> para o ensaio: preparação → PREPARE-SE! → 3 → 2 → 1 → VAI!. Ao reparar a antena, conferir o resumo no Output.</li>
+                <li>Usar <strong>F6</strong> em <code>terrain_showcase.tscn</code> para dirigir sem missão ou HUD próprio, ou em <code>driving_test.tscn</code> para o playground e seus dois reparos.</li>
+            </ol>
+            <p><strong>F5</strong> executa <code>res://scenes/driving_test.tscn</code>, configurada em <code>run/main_scene</code>; não inicia uma campanha. <code>van_cinematic.tscn</code> é uma cena separada para capturas, com veículo congelado e comandos de tomadas próprios. Os controles de gameplay estão na seção 5.</p>
+
+            <h3>12.4 — Testes funcionais</h3>
+            <p>Há validações manuais relatadas ao longo do desenvolvimento e registros de testes automatizados pontuais. Não foi identificada suíte de testes versionada ou configuração de integração contínua. Ausência de erro em uma abertura da cena não comprova dirigibilidade, estabilidade ou correção de todos os eventos.</p>
+            <div class="table-wrap">
+                <table>
+                    <caption>Evidências disponíveis e seu alcance</caption>
+                    <thead><tr><th scope="col">Sistema</th><th scope="col">Validação registrada</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">Direção, suspensão, turbo e câmera</th><td>Aprovados em testes manuais informados pelo desenvolvedor no terreno com relevo. O README registra travessia automatizada do showcase em <code>54.2 s</code>, desvio máximo de <code>1.76 m</code>, apoio inicial e alvo da câmera conferidos. Não cobre todo o terreno expandido.</td></tr>
+                        <tr><th scope="row">Terreno e colisões</th><td>O mesmo registro descreve amostragem a cada <code>2 m</code> no centro e a <code>3.2 m</code> de cada lado sem lacunas; inclinações máximas de <code>8.87°</code> longitudinal e <code>2.33°</code> transversal. São resultados anteriores de uma rota, não garantias para todos os contatos.</td></tr>
+                        <tr><th scope="row">Saltos, giros e pontuação</th><td>Funcionamento e ajustes de HUD/frases relatados em testes manuais anteriores. Código define filtros, giros completos e pousos descritos na seção 10. Não há cobertura automatizada reproduzível versionada para todas as rotações, quiques e recuperações.</td></tr>
+                        <tr><th scope="row">Natureza, água, lama e props</th><td>Impactos em objetos, quebra de árvores e efeitos foram avaliados em testes anteriores de gameplay e profiling. Não há matriz versionada de todas as superfícies, velocidades e colisões; a inspeção dos scripts confirma a implementação, não essa cobertura.</td></tr>
+                        <tr><th scope="row">Reparo e sessão experimental</th><td>O desenvolvedor confirmou manualmente contagem, bloqueio até VAI!, direção e encerramento ao reparar a antena. O coletor e seus sinais foram inspecionados. A precisão de cada estatística em casos extremos continua exigindo comparação com eventos controlados.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p>Esses registros não são novos testes de gameplay ou benchmarks. Para reproduzir uma validação funcional, conferir a contagem sem coleta antecipada, dirigir e saltar, usar R, quebrar árvores distintas, concluir o reparo e verificar que tempo e resultados não mudam depois. No playground, verificar a liberação da bomba somente após a antena.</p>
+
+            <h3>12.5 — Otimização e desempenho</h3>
+            <p>A investigação anterior isolou picos na primeira emissão da poeira e na primeira destruição de árvore, seguidos de eventos mais rápidos. A quebra em script consumia cerca de <code>5 ms</code>, enquanto o maior custo aparecia na preparação/apresentação gráfica. Testes controlados com componentes separados apontaram os emissores de madeira e folhas como responsáveis pelos maiores picos, em vez da malha individual da queda.</p>
+            <p><a href="../../game/scripts/visual_warmup.gd"><code>visual_warmup.gd</code></a> exercita os emissores reais no campo de visão, sob uma cobertura opaca, e aguarda a conclusão de um ciclo antes de restaurá-los. A missão libera os comandos depois disso; o ensaio inicia a contagem somente após <code>prepared</code>. Poeira, queda, madeira e folhas permanecem no jogo. O fluxo está detalhado em 9.5.</p>
+            <div class="table-wrap">
+                <table>
+                    <caption>Resultados históricos informados — Radeon RX 9070 XT, Godot 4.7.2, Jolt, Compatibility, janela 1280 × 720</caption>
+                    <thead><tr><th scope="col">Evento</th><th scope="col">Referências antes e depois da preparação</th></tr></thead>
+                    <tbody>
+                        <tr><th scope="row">Primeira acelerada</th><td>Antes: aproximadamente <code>328–332 ms</code>. Depois: aproximadamente <code>6.7–9.2 ms</code> no maior frame associado ao evento.</td></tr>
+                        <tr><th scope="row">Primeira árvore</th><td>Antes: aproximadamente <code>534–535 ms</code>. Depois: aproximadamente <code>7.5–8.8 ms</code> no evento.</td></tr>
+                        <tr><th scope="row">Preparação adicional</th><td>Aproximadamente <code>2.8–2.9 s</code> antes do gameplay. É tempo de preparação, não um frame da primeira acelerada.</td></tr>
+                        <tr><th scope="row">Primeira apresentação da cena</th><td>Os relatos anteriores também registram pico de cerca de <code>5.7 s</code> no primeiro desenho. O aquecimento não elimina todo o custo de entrada da cena.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="note">Origem: resultados históricos fornecidos pelo desenvolvedor e relatórios anteriores de investigação. Não foram localizados logs brutos ou um benchmark versionado que permita reproduzir esses números diretamente do repositório. Não são medições repetidas para esta versão documental, médias de FPS ou resultados de hardware modesto.</p>
+            <p>As evidências sustentam um custo de primeira utilização gráfica dos efeitos; não identificam completamente a etapa interna do driver ou compilador responsável. O preparo transfere esse trabalho para antes do controle do jogador e aumenta o carregamento. Aguardar apenas um Timer, instanciar invisível ou usar <code>preload()</code> não demonstra a mesma utilização gráfica. Em <code>headless</code>, o componente pula a preparação, portanto esse modo não valida a correção gráfica.</p>
+            <p>Os resultados não são generalizáveis a outras GPUs, drivers ou resoluções. O aquecimento atual não inclui explicitamente todas as variantes de água, lama e respingo do lago; sua primeira utilização ainda precisa de medição. Não há promessa de ausência universal de travamentos ou FPS mínimo comprovado.</p>
+
+            <h3>12.6 — Limitações atuais</h3>
+            <ul class="steps">
+                <li><strong>Mundo e renderização:</strong> terreno finito, sem streaming ou LOD geométrico do solo; alcance por grupo em parte da vegetação e custo de sombras, recorte alfa e textura triplanar. Detalhes na seção 6.</li>
+                <li><strong>Câmera:</strong> sem teste de obstrução ou colisão; yaw acompanha a orientação da van inclusive em capotamentos. Não há remapeamento ou suporte a gamepad validado. Detalhes na seção 5.</li>
+                <li><strong>Façanhas:</strong> projeção incremental pode limitar rotações combinadas/extremas; capotamentos são classificados após saltos, não detectados de forma independente no solo. Props não geram pontuação por impacto. Detalhes nas seções 7 e 10.</li>
+                <li><strong>Sessão:</strong> coleta experimental de um serviço, sem relatório visual; eventos pendentes são excluídos no fechamento. Proteção de distância depende de amostras e do pedido de recuperação, não de um sinal formal de teleporte. Detalhes na seção 9.</li>
+                <li><strong>Campanha:</strong> sem garagem funcional, economia persistente, retorno, salvamento ou integração dos quatro serviços. A bomba existe somente no fluxo de testes; gerador e estação não foram implementados.</li>
+                <li><strong>Validação:</strong> faltam benchmarks sustentados em hardware modesto, matriz multiplataforma e suíte versionada de regressão. Metas de 60 FPS ou taxas maiores do GDD são objetivos, não certificação de desempenho.</li>
+            </ul>
+
+            <h3>12.7 — Próximos testes técnicos</h3>
+            <ol class="steps">
+                <li>Definir uma rota e comparar hardware modesto e potente em resoluções diferentes, registrando versão da engine, driver, configuração, frame times e uso de memória.</li>
+                <li>Separar processos novos de reexecuções aquecidas, sem apagar caches; medir carregamento, primeira aceleração e primeira, segunda e terceira árvores, além do desempenho sustentado.</li>
+                <li>Medir primeira utilização de lama, jatos e impacto na água; conferir que os efeitos e a coleta não recebem eventos fictícios durante a preparação.</li>
+                <li>Repetir curvas, subidas, saltos, turbo, suspensão, recuperação e colisões em todas as cenas de gameplay, com diferentes taxas de quadros. Não alterar a física para facilitar os testes.</li>
+                <li>Comparar estatísticas com eventos controlados: giros completos e incompletos, yaw, quiques, árvores repetidas, R e fechamento com pouso pendente. Conferir que pontos e estrelas coincidem com o monitor e permanecem congelados após o reparo.</li>
+                <li>Quando implementados, validar pontuação por impacto sem duplicação, retorno e relatório final contra os dados coletados. Só então verificar conversão financeira, melhorias e persistência. Esses testes dependem de sistemas ainda planejados.</li>
+            </ol>
         </section>
     </main>
 
     <footer>
         <p>Low Gear Games — Van 4x4</p>
         <p>Jogos Digitais — Universidade Federal de Pelotas</p>
-        <p>TDD em desenvolvimento progressivo · Versão 0.1</p>
+        <p>Technical Design Document · Versão 1.0 · Jogo em desenvolvimento</p>
     </footer>
 </body>
 </html>
