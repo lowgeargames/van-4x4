@@ -15,6 +15,7 @@ var _monitor_was_processing: bool = false
 var _countdown_tween: Tween
 var _stats: SessionStats = SessionStats.new()
 
+@onready var _prop_tracker: Node = get_node_or_null("../PropImpactTracker")
 @onready var _van: VanController = get_node_or_null("../VanPrototype") as VanController
 @onready var _antenna: RepairEquipment = get_node_or_null("../RepairAntenna") as RepairEquipment
 @onready var _monitor: Node = get_node_or_null("../StuntRewards/StuntMonitor")
@@ -26,6 +27,7 @@ var _stats: SessionStats = SessionStats.new()
 func _ready() -> void:
 	var required_nodes: Dictionary = {
 		"VanPrototype": _van,
+		"PropImpactTracker": _prop_tracker,
 		"RepairAntenna": _antenna,
 		"StuntRewards/StuntMonitor": _monitor,
 		"SessionUI/Center": _countdown,
@@ -44,6 +46,7 @@ func _ready() -> void:
 	# Amostra após o monitor (prioridade 100), sem alterar a ordem da física.
 	process_physics_priority = 200
 	_monitor.stunt_landed.connect(_on_stunt_landed)
+	_prop_tracker.prop_hit.connect(_on_prop_hit)
 	_antenna.repair_completed.connect(_finish_session)
 	for source in get_parent().find_children("*", "Node3D", true, false):
 		if source.has_signal("tree_broken"):
@@ -90,6 +93,7 @@ func _start_session() -> void:
 	elapsed_time = 0.0
 	_stats.start(_van, _monitor.total_points, _monitor.total_stars)
 	state = State.RUNNING
+	_prop_tracker.start()
 	_van.set_player_input_enabled(true)
 	_antenna.set_active(_repair_was_active)
 	_monitor.set_physics_process(_monitor_was_processing)
@@ -105,6 +109,11 @@ func _on_tree_broken(index: int, _impact_speed: float, source_id: int) -> void:
 		_stats.record_tree(source_id, index)
 
 
+func _on_prop_hit(instance_id: int, category: String, _approach_speed: float) -> void:
+	if state == State.RUNNING:
+		_stats.record_prop(instance_id, category)
+
+
 func get_results() -> Dictionary:
 	return _stats.get_snapshot()
 
@@ -113,6 +122,7 @@ func _finish_session() -> void:
 	if state != State.RUNNING:
 		return
 	state = State.FINISHED
+	_prop_tracker.stop()
 	# Só resultados já emitidos entram no fechamento. Um pouso ainda pendente
 	# não concede recompensa tardia, nem exige alterar a detecção do monitor.
 	_monitor.set_physics_process(false)
@@ -123,4 +133,5 @@ func _finish_session() -> void:
 	print("\nSaltos: %d\nMaior salto: %.2f m\nMaior tempo no ar: %.2f s\nTempo total no ar: %.2f s" % [result.jumps, result.longest_jump, result.longest_air_time, result.total_air_time])
 	print("\nGiros frontais: %d\nGiros laterais: %d\nGiros totais: %d" % [result.pitch_rotations, result.roll_rotations, result.rotations])
 	print("\nPousos limpos: %d\nPousos brutais: %d\nCapotamentos após salto: %d" % [result.clean_landings, result.brutal_landings, result.rollovers])
-	print("\nÁrvores derrubadas: %d\nPontos de façanhas: %d\nEstrelas acumuladas: %d\n=======================================" % [result.trees_broken, result.points, result.stars])
+	print("\nÁrvores derrubadas: %d\nCaixas atingidas: %d\nBarris atingidos: %d\nCones atingidos: %d\nProps únicos: %d" % [result.trees_broken, result.crates_hit, result.barrels_hit, result.cones_hit, result.props_hit])
+	print("\nPontos de façanhas: %d\nPontos de árvores: %d\nPontos de props: %d\nPONTOS TOTAIS: %d\nEstrelas acumuladas: %d\n=======================================" % [result.points, result.tree_points, result.prop_points, result.total_points, result.stars])

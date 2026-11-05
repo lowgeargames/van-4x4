@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://cfo5kkdpdjlrd" path="res://scenes/mission_level.tscn" id="1_level"]
 [ext_resource type="Script" uid="uid://x6urtn1hncpa" path="res://scripts/session_controller.gd" id="2_session"]
+[ext_resource type="Script" uid="uid://f2ycn7ua3bwy" path="res://scripts/prop_impact_tracker.gd" id="3_props"]
 
 [sub_resource type="StyleBoxFlat" id="CountdownStyle"]
 bg_color = Color(0.05, 0.075, 0.09, 0.9)
@@ -54,3 +55,6 @@ vertical_alignment = 1
 
 [node name="SessionController" type="Node" parent="." index="17" unique_id=1002740926]
 script = ExtResource("2_session")
+
+[node name="PropImpactTracker" type="Node" parent="." index="18" unique_id=294707157]
+script = ExtResource("3_props")
