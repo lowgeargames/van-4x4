@@ -1,0 +1,220 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/session_results.gd" id="1_results"]
+[ext_resource type="FontFile" path="res://assets/ui/fonts/BarlowCondensed-Bold.ttf" id="2_font"]
+
+[sub_resource type="StyleBoxFlat" id="SheetStyle"]
+bg_color = Color(0.094118, 0.129412, 0.14902, 0.97)
+border_width_left = 6
+border_color = Color(1, 0.454902, 0.180392, 1)
+shadow_color = Color(0, 0, 0, 0.25)
+shadow_size = 12
+
+[sub_resource type="StyleBoxFlat" id="ButtonStyle"]
+bg_color = Color(0.16, 0.21, 0.23, 1)
+content_margin_left = 24.0
+content_margin_top = 12.0
+content_margin_right = 24.0
+content_margin_bottom = 12.0
+border_width_bottom = 3
+border_color = Color(1, 0.454902, 0.180392, 1)
+
+[sub_resource type="StyleBoxFlat" id="ButtonHover"]
+bg_color = Color(0.26, 0.32, 0.34, 1)
+content_margin_left = 24.0
+content_margin_top = 12.0
+content_margin_right = 24.0
+content_margin_bottom = 12.0
+border_width_bottom = 3
+border_color = Color(1, 0.784314, 0.239216, 1)
+
+[sub_resource type="StyleBoxFlat" id="ButtonFocus"]
+bg_color = Color(0, 0, 0, 0)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.784314, 0.239216, 1)
+
+[sub_resource type="Theme" id="ResultsTheme"]
+default_font = ExtResource("2_font")
+default_font_size = 24
+Label/colors/font_color = Color(1, 0.952941, 0.839216, 1)
+Button/colors/font_color = Color(1, 0.952941, 0.839216, 1)
+Button/colors/font_hover_color = Color(1, 0.952941, 0.839216, 1)
+Button/colors/font_focus_color = Color(1, 0.952941, 0.839216, 1)
+Button/styles/normal = SubResource("ButtonStyle")
+Button/styles/hover = SubResource("ButtonHover")
+Button/styles/pressed = SubResource("ButtonHover")
+Button/styles/focus = SubResource("ButtonFocus")
+
+[node name="SessionResults" type="CanvasLayer"]
+layer = 10
+visible = false
+script = ExtResource("1_results")
+
+[node name="Screen" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("ResultsTheme")
+
+[node name="Shade" type="ColorRect" parent="Screen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.025, 0.04, 0.045, 0.72)
+
+[node name="Center" type="CenterContainer" parent="Screen"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="Sheet" type="PanelContainer" parent="Screen/Center"]
+custom_minimum_size = Vector2(1320, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("SheetStyle")
+
+[node name="Margin" type="MarginContainer" parent="Screen/Center/Sheet"]
+layout_mode = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 28
+
+[node name="Content" type="VBoxContainer" parent="Screen/Center/Sheet/Margin"]
+layout_mode = 2
+theme_override_constants/separation = 22
+
+[node name="Header" type="VBoxContainer" parent="Screen/Center/Sheet/Margin/Content"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Title" type="Label" parent="Screen/Center/Sheet/Margin/Content/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.784314, 0.239216, 1)
+theme_override_font_sizes/font_size = 64
+text = "SERVIÇO CONCLUÍDO!"
+
+[node name="Mark" type="Control" parent="Screen/Center/Sheet/Margin/Content/Header/Title"]
+layout_mode = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -110.0
+offset_top = 12.0
+offset_right = -14.0
+offset_bottom = 64.0
+mouse_filter = 2
+
+[node name="SlashA" type="Polygon2D" parent="Screen/Center/Sheet/Margin/Content/Header/Title/Mark"]
+polygon = PackedVector2Array(24, 0, 48, 0, 24, 52, 0, 52)
+color = Color(1, 0.454902, 0.180392, 1)
+
+[node name="SlashB" type="Polygon2D" parent="Screen/Center/Sheet/Margin/Content/Header/Title/Mark"]
+polygon = PackedVector2Array(68, 0, 92, 0, 68, 52, 44, 52)
+color = Color(1, 0.454902, 0.180392, 0.45)
+
+[node name="Subtitle" type="Label" parent="Screen/Center/Sheet/Margin/Content/Header"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.396078, 0.839216, 0.745098, 1)
+theme_override_font_sizes/font_size = 24
+text = "ANTENA REPARADA"
+
+[node name="Summary" type="HBoxContainer" parent="Screen/Center/Sheet/Margin/Content"]
+layout_mode = 2
+theme_override_constants/separation = 32
+
+[node name="Body" type="HBoxContainer" parent="Screen/Center/Sheet/Margin/Content"]
+layout_mode = 2
+theme_override_constants/separation = 52
+
+[node name="Stats" type="VBoxContainer" parent="Screen/Center/Sheet/Margin/Content/Body"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_stretch_ratio = 2.1
+theme_override_constants/separation = 16
+
+[node name="FeatsTitle" type="Label" parent="Screen/Center/Sheet/Margin/Content/Body/Stats"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.454902, 0.180392, 1)
+theme_override_font_sizes/font_size = 24
+text = "FAÇANHAS"
+
+[node name="Feats" type="VBoxContainer" parent="Screen/Center/Sheet/Margin/Content/Body/Stats"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ImpactsTitle" type="Label" parent="Screen/Center/Sheet/Margin/Content/Body/Stats"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.454902, 0.180392, 1)
+theme_override_font_sizes/font_size = 24
+text = "DESTRUIÇÃO E IMPACTOS"
+
+[node name="Impacts" type="VBoxContainer" parent="Screen/Center/Sheet/Margin/Content/Body/Stats"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="Footnote" type="Label" parent="Screen/Center/Sheet/Margin/Content/Body/Stats"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.66, 0.71, 0.72, 1)
+theme_override_font_sizes/font_size = 18
+text = "¹ Capotamentos classificados após saltos."
+
+[node name="Rewards" type="VBoxContainer" parent="Screen/Center/Sheet/Margin/Content/Body"]
+custom_minimum_size = Vector2(400, 0)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 22
+
+[node name="ScoresTitle" type="Label" parent="Screen/Center/Sheet/Margin/Content/Body/Rewards"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.454902, 0.180392, 1)
+theme_override_font_sizes/font_size = 24
+text = "PONTUAÇÃO"
+
+[node name="Scores" type="VBoxContainer" parent="Screen/Center/Sheet/Margin/Content/Body/Rewards"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Payment" type="VBoxContainer" parent="Screen/Center/Sheet/Margin/Content/Body/Rewards"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="Title" type="Label" parent="Screen/Center/Sheet/Margin/Content/Body/Rewards/Payment"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.454902, 0.180392, 1)
+theme_override_font_sizes/font_size = 24
+text = "PAGAMENTO DEMONSTRATIVO"
+
+[node name="Notice" type="Label" parent="Screen/Center/Sheet/Margin/Content"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.66, 0.71, 0.72, 1)
+theme_override_font_sizes/font_size = 18
+text = "CRÉDITOS DEMONSTRATIVOS · SEM SALVAMENTO"
+
+[node name="Buttons" type="HBoxContainer" parent="Screen/Center/Sheet/Margin/Content"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="ShowAll" type="Button" parent="Screen/Center/Sheet/Margin/Content/Buttons"]
+layout_mode = 2
+text = "MOSTRAR TUDO"
+
+[node name="Space" type="Control" parent="Screen/Center/Sheet/Margin/Content/Buttons"]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="Restart" type="Button" parent="Screen/Center/Sheet/Margin/Content/Buttons"]
+layout_mode = 2
+text = "REINICIAR SESSÃO"

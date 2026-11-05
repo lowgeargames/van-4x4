@@ -4,7 +4,7 @@ extends Node
 const VanController = preload("res://scripts/van_controller.gd")
 const RepairEquipment = preload("res://scripts/repair_antenna.gd")
 const SessionStats = preload("res://scripts/session_stats.gd")
-enum State { PREPARATION, COUNTDOWN, RUNNING, FINISHED }
+enum State { PREPARATION, COUNTDOWN, RUNNING, FINISHED, RESULTS }
 
 var state: State = State.PREPARATION
 ## Instante monotônico; o tempo acumulado abaixo acompanha os passos de física.
@@ -16,6 +16,7 @@ var _countdown_tween: Tween
 var _stats: SessionStats = SessionStats.new()
 
 @onready var _prop_tracker: Node = get_node_or_null("../PropImpactTracker")
+@onready var _results_ui: CanvasLayer = get_node_or_null("../SessionResults") as CanvasLayer
 @onready var _van: VanController = get_node_or_null("../VanPrototype") as VanController
 @onready var _antenna: RepairEquipment = get_node_or_null("../RepairAntenna") as RepairEquipment
 @onready var _monitor: Node = get_node_or_null("../StuntRewards/StuntMonitor")
@@ -28,6 +29,7 @@ func _ready() -> void:
 	var required_nodes: Dictionary = {
 		"VanPrototype": _van,
 		"PropImpactTracker": _prop_tracker,
+		"SessionResults": _results_ui,
 		"RepairAntenna": _antenna,
 		"StuntRewards/StuntMonitor": _monitor,
 		"SessionUI/Center": _countdown,
@@ -47,6 +49,7 @@ func _ready() -> void:
 	process_physics_priority = 200
 	_monitor.stunt_landed.connect(_on_stunt_landed)
 	_prop_tracker.prop_hit.connect(_on_prop_hit)
+	_results_ui.restart_requested.connect(_restart_session)
 	_antenna.repair_completed.connect(_finish_session)
 	for source in get_parent().find_children("*", "Node3D", true, false):
 		if source.has_signal("tree_broken"):
@@ -127,6 +130,14 @@ func _finish_session() -> void:
 	# não concede recompensa tardia, nem exige alterar a detecção do monitor.
 	_monitor.set_physics_process(false)
 	_stats.finish(elapsed_time)
+	_van.set_player_input_enabled(false)
+	if _countdown_tween != null and _countdown_tween.is_valid():
+		_countdown_tween.kill()
+	_countdown.hide()
+	# Cancela a apresentação existente só neste ensaio, sem editar a UI compartilhada.
+	get_node("../StuntRewards")._hide_panel()
+	for path in ["../StuntRewards", "../DrivingHUD", "../ObjectiveUI", "../RepairAntenna/MissionUI"]:
+		get_node(path).hide()
 	var result: Dictionary = get_results()
 	print("\n=======================================\nVAN 4X4 — SESSÃO ENCERRADA\n=======================================")
 	print("Tempo total: %.2f s\nDistância percorrida: %.2f m" % [result.elapsed_time, result.distance])
@@ -135,3 +146,15 @@ func _finish_session() -> void:
 	print("\nPousos limpos: %d\nPousos brutais: %d\nCapotamentos após salto: %d" % [result.clean_landings, result.brutal_landings, result.rollovers])
 	print("\nÁrvores derrubadas: %d\nCaixas atingidas: %d\nBarris atingidos: %d\nCones atingidos: %d\nProps únicos: %d" % [result.trees_broken, result.crates_hit, result.barrels_hit, result.cones_hit, result.props_hit])
 	print("\nPontos de façanhas: %d\nPontos de árvores: %d\nPontos de props: %d\nPONTOS TOTAIS: %d\nEstrelas acumuladas: %d\n=======================================" % [result.points, result.tree_points, result.prop_points, result.total_points, result.stars])
+	_results_ui.present(result)
+	state = State.RESULTS
+
+
+func _restart_session() -> void:
+	if state != State.RESULTS:
+		return
+	var error: Error = get_tree().reload_current_scene()
+	if error != OK:
+		push_error("SessionController: não foi possível reiniciar a sessão: " + error_string(error))
+		_results_ui.present(get_results())
+		_results_ui.show_all()
