@@ -1,17 +1,13 @@
 extends CanvasLayer
 
 const VanController = preload("res://scripts/van_controller.gd")
+const ArcadeSpeedometer = preload("res://scripts/arcade_speedometer.gd")
 
 @export var van_path: NodePath = NodePath("../VanPrototype")
 
 var _text_elapsed: float = 0.0
-var _last_state: String = ""
-var _fill: StyleBoxFlat
 @onready var _van: VanController = get_node_or_null(van_path) as VanController
-@onready var _speed: Label = $Panel/Margin/Content/Speed
-@onready var _energy: Label = $Panel/Margin/Content/TurboLine/Energy
-@onready var _bar: ProgressBar = $Panel/Margin/Content/Reserve
-@onready var _status: Label = $Panel/Margin/Content/Status
+@onready var _instrument: ArcadeSpeedometer = $Panel
 
 
 func _ready() -> void:
@@ -19,8 +15,6 @@ func _ready() -> void:
 		push_error("DrivingHUD: van_path deve apontar para a van com van_controller.gd.")
 		set_process(false)
 		return
-	_fill = _bar.get_theme_stylebox("fill").duplicate() as StyleBoxFlat
-	_bar.add_theme_stylebox_override("fill", _fill)
 	_update_text()
 	_update_reserve()
 
@@ -34,27 +28,24 @@ func _process(delta: float) -> void:
 
 
 func _update_text() -> void:
+	# Mesma medição horizontal do HUD original, independente da escala do arco.
 	var velocity: Vector3 = _van.linear_velocity
-	_speed.text = "%d km/h" % roundi(Vector2(velocity.x, velocity.z).length() * 3.6)
-	_energy.text = "%d%%" % roundi(_van.turbo_energy / _van.turbo_energy_max * 100.0) if _van.turbo_energy_enabled else "∞"
+	_instrument.set_speed(Vector2(velocity.x, velocity.z).length() * 3.6)
 
 
 func _update_reserve() -> void:
-	_bar.max_value = _van.turbo_energy_max
-	_bar.value = _van.turbo_energy if _van.turbo_energy_enabled else _van.turbo_energy_max
+	var unlimited: bool = not _van.turbo_energy_enabled
+	var ratio: float = 1.0 if unlimited else clampf(_van.turbo_energy / _van.turbo_energy_max, 0.0, 1.0)
 	var state: String = "PRONTO"
-	var color: Color = Color(0.95, 0.73, 0.3)
+	var color: Color = ArcadeSpeedometer.YELLOW
 	if _van.turbo_active:
 		state = "ATIVO"
-		color = Color(1.0, 0.43, 0.13)
+		color = ArcadeSpeedometer.ORANGE
 	elif _van.turbo_recharging:
-		state = "RECARGA · BLOQUEADO" if _van.turbo_blocked else "RECARREGANDO"
-		color = Color(0.35, 0.83, 0.72)
+		state = "RECARGA · BLOQUEADO" if _van.turbo_blocked else "RECARGA"
+		color = ArcadeSpeedometer.MINT
 	elif _van.turbo_blocked:
-		state = "RESERVA BLOQUEADA"
-		color = Color(0.8, 0.43, 0.37)
-	if state != _last_state:
-		_last_state = state
-		_status.text = state
-		_status.modulate = color
-		_fill.bg_color = color
+		# O bloqueio também pode aguardar a soltura de Shift após recuperar energia.
+		state = "BLOQUEADO"
+		color = ArcadeSpeedometer.GRAY
+	_instrument.set_turbo(ratio, state, color, _van.turbo_active, _van.turbo_blocked, unlimited)
