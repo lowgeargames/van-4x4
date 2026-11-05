@@ -42,136 +42,224 @@ const LANDING_LABELS: Array[String] = ["POUSO LIMPO", "POUSO BRUTAL", "CAPOTAMEN
 @export var objective_marker_path: NodePath = NodePath("../ObjectiveUI/ObjectiveMarker")
 @export var driving_hud_panel_path: NodePath = NodePath("../DrivingHUD/Panel")
 
+const RewardArt = preload("res://scripts/stunt_reward_art.gd")
 var _tween: Tween
+var _spin_tween: Tween
+var _generation: int = 0
+var _mode: String = "hidden"
+var _placed: bool = false
 var _last_messages: Dictionary = {}
-var _rng: RandomNumberGenerator = RandomNumberGenerator.new()
+var _rng := RandomNumberGenerator.new()
 var _protected_controls: Array[Control] = []
+var _star_pool: Array[Control] = []
 @onready var _monitor: StuntMonitor = $StuntMonitor
 @onready var _panel: PanelContainer = $Reward
 @onready var _title: Label = $Reward/Margin/Content/Title
 @onready var _distance: Label = $Reward/Margin/Content/Distance
-@onready var _stars: Label = $Reward/Margin/Content/Stars
+@onready var _stars: HBoxContainer = $Reward/Margin/Content/Stars
 @onready var _total: Label = $Reward/Margin/Content/Total
 @onready var _stats: Label = $Reward/Margin/Content/Stats
 @onready var _landing: Label = $Reward/Margin/Content/Landing
+@onready var _burst: Control = $Reward/Burst
 
 
 func _ready() -> void:
 	_rng.randomize()
-	for path in [mission_panel_path, objective_marker_path, driving_hud_panel_path]:
-		var control: Control = get_node_or_null(path) as Control
+	for path in [mission_panel_path, objective_marker_path, driving_hud_panel_path, NodePath("../SessionUI/Center/Panel")]:
+		var control := get_node_or_null(path) as Control
 		if control != null:
 			_protected_controls.append(control)
 	_monitor.flight_updated.connect(_show_flight)
 	_monitor.flight_cancelled.connect(_hide_reward)
 	_monitor.stunt_landed.connect(_show_result)
 	_panel.resized.connect(_update_pivot)
-	_update_pivot()
+	get_viewport().size_changed.connect(_viewport_changed)
 	set_process(false)
 
 
-func _process(_delta: float) -> void:
-	# Só verifica sobreposição enquanto a recompensa está visível.
-	var occupied: Rect2 = _panel.get_global_rect().grow(18.0)
+func _blocked(rect: Rect2) -> bool:
 	for control in _protected_controls:
-		if is_instance_valid(control) and control.is_visible_in_tree() and occupied.intersects(control.get_global_rect()):
-			_place_reward()
-			break
+		if is_instance_valid(control) and control.is_visible_in_tree() and rect.grow(20.0).intersects(control.get_global_rect()):
+			return true
+	return false
 
 
-func _place_reward() -> void:
-	var screen: Vector2 = get_viewport().get_visible_rect().size
-	var bottom: float = screen.y - _panel.size.y - 24.0
-	var right: float = maxf(24.0, screen.x - _panel.size.x - 24.0)
-	for position_now in [Vector2(24, bottom), Vector2(right, bottom), Vector2(right, 24), Vector2(24, 24)]:
-		var available: bool = true
-		for control in _protected_controls:
-			if is_instance_valid(control) and control.is_visible_in_tree() and Rect2(position_now, _panel.size).grow(18.0).intersects(control.get_global_rect()):
-				available = false
-				break
-		if available:
-			_panel.position = position_now
-			return
+func _process(_delta: float) -> void:
+	if not visible:
+		_hide_panel()
+		return
+	if _placed:
+		# Mantém a posição durante a apresentação. Se um marcador móvel a invadir,
+		# oculta só este feedback até liberar espaço, sem disputar o marcador.
+		_panel.visible = not _blocked(_panel.get_global_rect())
+
+
+func _viewport_changed() -> void:
+	_placed = false
+	_layout_presentation.call_deferred(_generation)
 
 
 func _update_pivot() -> void:
-	_panel.pivot_offset = _panel.size * 0.5
-	if _panel.visible:
-		_place_reward()
+	_panel.pivot_offset = Vector2.ZERO if _mode == "result" else _panel.size * 0.5
+
+
+func _layout_presentation(generation: int) -> void:
+	if generation != _generation or _mode == "hidden":
+		return
+	_panel.reset_size()
+	_update_pivot()
+	# Compacta apenas o resultado; o HUD aéreo mantém a proporção aprovada.
+	_panel.scale = Vector2.ONE * (0.9 if _mode == "result" else 1.0)
+	_distance.pivot_offset = _distance.size * 0.5
+	_stats.pivot_offset = _stats.size * 0.5
+	for star in _star_pool:
+		star.pivot_offset = star.size * 0.5
+	_burst.origin = (_stars.get_global_rect().get_center() - _panel.global_position) / _panel.scale
+	_burst.pivot_offset = _burst.origin
+	if _placed:
+		return
+	var screen := get_viewport().get_visible_rect().size
+	var visual_size: Vector2 = _panel.size * _panel.scale
+	var below_mission: float = 24.0
+	var mission := get_node_or_null(mission_panel_path) as Control
+	if is_instance_valid(mission) and mission.is_visible_in_tree():
+		below_mission = mission.get_global_rect().end.y + 32.0
+	# Voo e resultado compartilham a coluna esquerda; o mesmo painel é reutilizado.
+	# Se houver outro controle nessa faixa, empilha abaixo dele sem ir ao centro.
+	var candidate := Vector2(24, below_mission)
+	for attempt in _protected_controls.size() + 1:
+		for control in _protected_controls:
+			if is_instance_valid(control) and control.is_visible_in_tree():
+				if Rect2(candidate, visual_size).grow(20.0).intersects(control.get_global_rect()):
+					candidate.y = maxf(candidate.y, control.get_global_rect().end.y + 32.0)
+		if candidate.y + visual_size.y > screen.y - 24.0:
+			break
+		if not _blocked(Rect2(candidate, visual_size)):
+			_panel.position = candidate
+			_placed = true
+			_panel.show()
+			return
+	# Sem espaço na coluna esquerda, preserva a prioridade da missão/contagem.
+	_panel.hide()
 
 
 func _stop_animation() -> void:
-	if _tween != null and _tween.is_valid():
-		_tween.kill()
+	_generation += 1
+	for animation in [_tween, _spin_tween]:
+		if animation != null and animation.is_valid():
+			animation.kill()
 	_panel.scale = Vector2.ONE
-	_panel.modulate.a = 1.0
+	_panel.modulate = Color.WHITE
+	_distance.scale = Vector2.ONE
+	_stats.scale = Vector2.ONE
+	_burst.hide()
+	_burst.scale = Vector2.ONE
+	_burst.modulate = Color.WHITE
+	for star in _star_pool:
+		star.hide()
+		star.scale = Vector2.ONE
+		star.rotation = 0.0
+		star.modulate = Color.WHITE
+
+
+func _begin_presentation(mode: String) -> void:
+	_stop_animation()
+	_mode = mode
+	_placed = false
+	_panel.show()
+	set_process(true)
 
 
 func _show_flight(distance: float, air_time: float, pitch_rotations: int, roll_rotations: int) -> void:
-	var entering_flight: bool = not _panel.visible or _stars.visible
-	if entering_flight:
-		_stop_animation()
-		_panel.offset_top = -145.0
-		_panel.offset_bottom = -24.0
-		_panel.show()
-		set_process(true)
-		_title.text = "SALTO"
+	var entering: bool = _mode != "flight"
+	if entering:
+		_begin_presentation("flight")
+		_title.text = "SALTO!"
 		_stars.hide()
 		_total.hide()
 		_landing.hide()
-		_distance.add_theme_font_size_override("font_size", 30)
-		# No voo, distância/tempo vêm antes das linhas menores de giros.
-		_distance.get_parent().move_child(_distance, 1)
-	var rotation_lines := PackedStringArray()
+		_distance.add_theme_font_size_override("font_size", 60)
+		_stats.text = ""
+		_stats.set_meta("spins", "")
+	var spins := PackedStringArray()
 	if roll_rotations > 0:
-		rotation_lines.append("1 giro lateral" if roll_rotations == 1 else "%d giros laterais" % roll_rotations)
+		spins.append("1 GIRO LATERAL" if roll_rotations == 1 else "%d GIROS LATERAIS" % roll_rotations)
 	if pitch_rotations > 0:
-		rotation_lines.append("1 giro frontal" if pitch_rotations == 1 else "%d giros frontais" % pitch_rotations)
-	var rotation_text: String = "\n".join(rotation_lines)
-	var refit: bool = entering_flight or _stats.text != rotation_text
-	_stats.text = rotation_text
-	_stats.visible = not rotation_lines.is_empty()
-	_distance.text = ("%.1f m | %.1f s" % [distance, air_time]).replace(".", ",")
-	if refit:
-		_fit_flight_panel.call_deferred()
+		spins.append("1 GIRO FRONTAL" if pitch_rotations == 1 else "%d GIROS FRONTAIS" % pitch_rotations)
+	var secondary: String = ("%.1f s" % air_time).replace(".", ",")
+	if not spins.is_empty():
+		secondary += " · " + " · ".join(spins)
+	# Tempo cresce sem disparar o pulso; apenas novos contadores de giro o fazem.
+	var changed: bool = not spins.is_empty() and _stats.get_meta("spins", "") != " · ".join(spins)
+	_stats.set_meta("spins", " · ".join(spins))
+	_stats.text = secondary
+	_stats.modulate = Color("65d6be") if not spins.is_empty() else Color("fff3d6")
+	_distance.text = ("%.1f m" % distance).replace(".", ",")
+	if changed:
+		if _spin_tween != null and _spin_tween.is_valid():
+			_spin_tween.kill()
+		_stats.scale = Vector2.ONE * 1.12
+		_spin_tween = create_tween()
+		_spin_tween.tween_property(_stats, "scale", Vector2.ONE, 0.22).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	if entering or changed:
+		_layout_presentation.call_deferred(_generation)
 
 
-func _fit_flight_panel() -> void:
-	if not _panel.visible or _stars.visible:
-		return
-	# Aguarda o layout: encolhe o popup anterior ou acomoda duas linhas de giros.
-	_panel.size = Vector2(_panel.size.x, _panel.get_combined_minimum_size().y)
-	_place_reward()
+func _set_display_points(value: float) -> void:
+	_distance.text = "+%s PTS" % _format_points(roundi(value))
 
 
 func _show_result(result: Dictionary) -> void:
-	_stop_animation()
-	# Preserva a ordem original dos elementos no popup de resultado.
-	_distance.get_parent().move_child(_distance, 3)
-	_panel.offset_top = -280.0
-	_panel.offset_bottom = -24.0
-	_panel.show()
-	set_process(true)
+	_begin_presentation("result")
 	_title.text = _choose_message(result.stars)
-	_stats.text = ("%.1f m | %.1f s" % [result.distance, result.air_time]).replace(".", ",")
+	_stats.modulate = Color("fff3d6")
+	_stats.text = ("%.1f m · %.1f s" % [result.distance, result.air_time]).replace(".", ",")
 	if result.rotations > 0:
-		_stats.text += " | 1 giro" if result.rotations == 1 else " | %d giros" % result.rotations
-	_stats.show()
+		_stats.text += " · 1 giro" if result.rotations == 1 else " · %d giros" % result.rotations
 	_landing.text = LANDING_LABELS[result.landing]
 	_landing.show()
-	_distance.add_theme_font_size_override("font_size", 38)
-	_distance.text = "+%s PTS" % _format_points(result.points)
-	_stars.text = "★ ".repeat(result.stars).strip_edges()
+	_distance.add_theme_font_size_override("font_size", 72)
+	_set_display_points(0)
 	_stars.show()
+	while _star_pool.size() < result.stars:
+		var star := Control.new()
+		star.set_script(RewardArt)
+		star.kind = 1
+		star.custom_minimum_size = Vector2(64, 62)
+		star.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_stars.add_child(star)
+		_star_pool.append(star)
 	_total.text = "SESSÃO: %s PTS · %d ★" % [_format_points(result.session_points), result.session_stars]
 	_total.visible = show_session_total
-	_panel.scale = Vector2.ONE * 0.85
-	_tween = create_tween()
-	_tween.tween_property(_panel, "scale", Vector2.ONE * 1.08, 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	_tween.tween_property(_panel, "scale", Vector2.ONE, 0.12)
-	_tween.tween_interval(maxf(0.0, result_duration - 0.54))
-	_tween.tween_property(_panel, "modulate:a", 0.0, 0.3)
-	_tween.tween_callback(_hide_panel)
+	_tween = create_tween().set_parallel(true)
+	# Só anima uma cópia visual do valor final recebido; não escreve no resultado.
+	_tween.tween_method(_set_display_points, 0.0, float(result.points), 0.4).set_trans(Tween.TRANS_QUART).set_ease(Tween.EASE_OUT)
+	_tween.tween_property(_distance, "scale", Vector2.ONE * 1.08, 0.08).set_delay(0.4)
+	_tween.tween_property(_distance, "scale", Vector2.ONE, 0.14).set_delay(0.48)
+	for i in result.stars:
+		var star: Control = _star_pool[i]
+		# Modulate permite reservar o espaço no HBox antes do carimbo aparecer.
+		star.show()
+		star.modulate.a = 0.0
+		var impact: float = 1.2 + 0.06 * i + (0.18 if result.stars == 3 and i == 2 else 0.0)
+		star.scale = Vector2.ONE * impact
+		star.rotation = deg_to_rad(-12.0 if i % 2 == 0 else 12.0)
+		var delay: float = 0.08 + i * 0.14
+		_tween.tween_property(star, "modulate:a", 1.0, 0.07).set_delay(delay)
+		_tween.tween_property(star, "scale", Vector2.ONE * 0.92, 0.17).set_delay(delay).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		_tween.tween_property(star, "scale", Vector2.ONE, 0.13).set_delay(delay + 0.17).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		_tween.tween_property(star, "rotation", 0.0, 0.3).set_delay(delay)
+	if result.stars == 3:
+		_burst.show()
+		_burst.modulate.a = 0.0
+		_burst.scale = Vector2.ONE * 0.7
+		_tween.tween_property(_burst, "modulate:a", 1.0, 0.05).set_delay(0.4)
+		_tween.tween_property(_burst, "scale", Vector2.ONE * 1.45, 0.4).set_delay(0.4).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+		_tween.tween_property(_burst, "modulate:a", 0.0, 0.35).set_delay(0.45)
+	var hold: float = maxf(result_duration, 1.2)
+	_tween.tween_property(_panel, "modulate:a", 0.0, 0.3).set_delay(hold - 0.3)
+	_tween.chain().tween_callback(_hide_panel)
+	_layout_presentation.call_deferred(_generation)
 
 
 func _choose_message(stars: int) -> String:
@@ -194,13 +282,17 @@ func _format_points(points: int) -> String:
 
 
 func _hide_panel() -> void:
+	_stop_animation()
+	_mode = "hidden"
 	_panel.hide()
 	set_process(false)
 
 
 func _hide_reward() -> void:
-	# Uma oscilação inválida não apaga o resultado anterior antes dos dois segundos.
-	if _stars.visible:
-		return
+	# Um salto inválido não apaga uma recompensa ainda em apresentação.
+	if _mode != "result":
+		_hide_panel()
+
+
+func _exit_tree() -> void:
 	_stop_animation()
-	_hide_panel()

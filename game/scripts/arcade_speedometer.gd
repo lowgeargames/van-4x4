@@ -44,6 +44,7 @@ func set_turbo(ratio: float, state: String, color: Color, active: bool, blocked:
 	_energy.text = "∞" if unlimited else "%d%%" % roundi(ratio * 100.0)
 	_status.text = state
 	_status.modulate = color
+	_energy.modulate = color
 	if active != _active:
 		_active = active
 		_pulse_time = 0.0
@@ -75,7 +76,7 @@ func _draw() -> void:
 	for i in 33:
 		plate.append(CENTER + Vector2.from_angle(START + SWEEP * i / 32.0) * 116.0)
 	plate.append_array(PackedVector2Array([Vector2(282, 200), Vector2(282, 262), Vector2(266, 278), Vector2(18, 278)]))
-	draw_colored_polygon(plate, Color(GRAPHITE, 0.88))
+	draw_colored_polygon(plate, Color(GRAPHITE, 0.84))
 	draw_arc(CENTER, 94, START, START + SWEEP, 65, Color(GRAY, 0.25), 11, true)
 	if _arc_ratio > 0.0001:
 		draw_arc(CENTER, 94, START, START + SWEEP * _arc_ratio, 65, YELLOW, 11, true)
@@ -83,7 +84,7 @@ func _draw() -> void:
 		var direction := Vector2.from_angle(START + SWEEP * i / 8.0)
 		draw_line(CENTER + direction * 103.0, CENTER + direction * (113.0 if i % 4 == 0 else 108.0), IVORY if i % 4 == 0 else GRAY, 2.0, true)
 	var font: Font = get_theme_font("font")
-	for mark in [["0", Vector2(57, 182)], ["80", Vector2(150, 51)], ["160", Vector2(243, 182)]]:
+	for mark in [["0", Vector2(84, 190)], ["80", Vector2(150, 51)], ["160", Vector2(216, 190)]]:
 		var label: String = mark[0]
 		var width: float = font.get_string_size(label, HORIZONTAL_ALIGNMENT_LEFT, -1, 24).x
 		draw_string(font, mark[1] - Vector2(width * 0.5, 0), label, HORIZONTAL_ALIGNMENT_LEFT, -1, 24, GRAY)
@@ -91,7 +92,8 @@ func _draw() -> void:
 	# Mesmo pivô de Turbo: texto e segmentos expandem juntos sem mover a área reservada.
 	var pivot := Vector2(150, 233)
 	draw_set_transform(pivot * (1.0 - _boost_scale), 0.0, Vector2.ONE * _boost_scale)
-	var fill: Color = Color(GRAY, 0.32) if _blocked else _turbo_color
+	# A recarga bloqueada conserva a cor de recuperação, com brilho reduzido.
+	var fill: Color = _turbo_color.darkened(0.25) if _blocked else _turbo_color
 	if _active:
 		fill = fill.lerp(IVORY, (sin(_pulse_time * TAU / 0.8) + 1.0) * 0.07)
 	for i in 8:
