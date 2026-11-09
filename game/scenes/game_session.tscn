@@ -4,6 +4,8 @@
 [ext_resource type="PackedScene" uid="uid://yrslti06iqq2" path="res://scenes/van_prototype.tscn" id="2_van"]
 [ext_resource type="Script" uid="uid://deukatryh0cl5" path="res://scripts/camera_follow.gd" id="3_camera"]
 [ext_resource type="PackedScene" path="res://scenes/driving_hud.tscn" id="4_hud"]
+[ext_resource type="PackedScene" path="res://scenes/world/world_nature.tscn" id="5_nature"]
+[ext_resource type="Script" uid="uid://bcati17lycoyg" path="res://scripts/visual_warmup.gd" id="6_warmup"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMaterial"]
 sky_top_color = Color(0.16, 0.43, 0.76, 1)
@@ -30,6 +32,9 @@ fog_sky_affect = 0.0
 [node name="GameSession" type="Node3D" unique_id=1932835433]
 
 [node name="World" parent="." unique_id=426459018 instance=ExtResource("1_world")]
+
+[node name="NatureInteractions" parent="World" unique_id=1820514876 instance=ExtResource("5_nature")]
+van_path = NodePath("../../VanPrototype")
 
 [node name="Environment" type="Node3D" parent="." unique_id=1454438060]
 
@@ -58,3 +63,7 @@ current = true
 far = 450.0
 
 [node name="DrivingHUD" parent="." unique_id=2147121203 instance=ExtResource("4_hud")]
+
+[node name="VisualWarmup" type="Node" parent="." unique_id=1986566489]
+script = ExtResource("6_warmup")
+particle_paths = Array[NodePath]([NodePath("../VanPrototype/SurfaceParticles/RearLeft"), NodePath("../VanPrototype/SurfaceParticles/RearRight"), NodePath("../World/NatureInteractions/BreakFragments"), NodePath("../World/NatureInteractions/BreakFragments/Leaves")])
