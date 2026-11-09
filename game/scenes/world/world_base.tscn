@@ -1,0 +1,19 @@
+[gd_scene format=3]
+
+[ext_resource type="ArrayMesh" path="res://assets/environment/terrain_showcase/terrain_mesh.res" id="1_terrain"]
+[ext_resource type="ConcavePolygonShape3D" path="res://assets/environment/terrain_showcase/terrain_collision.res" id="2_collision"]
+[ext_resource type="ArrayMesh" path="res://assets/environment/terrain_showcase/background_mesh.res" id="3_ridges"]
+
+[node name="World" type="Node3D"]
+
+[node name="Terrain" type="StaticBody3D" parent="."]
+
+[node name="TerrainMesh" type="MeshInstance3D" parent="Terrain"]
+mesh = ExtResource("1_terrain")
+
+[node name="TerrainCollision" type="CollisionShape3D" parent="Terrain"]
+shape = ExtResource("2_collision")
+
+[node name="DistantRidges" type="MeshInstance3D" parent="."]
+cast_shadow = 0
+mesh = ExtResource("3_ridges")

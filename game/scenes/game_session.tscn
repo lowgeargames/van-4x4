@@ -1,0 +1,60 @@
+[gd_scene format=3 uid="uid://v3u3saya17av"]
+
+[ext_resource type="PackedScene" path="res://scenes/world/world_base.tscn" id="1_world"]
+[ext_resource type="PackedScene" uid="uid://yrslti06iqq2" path="res://scenes/van_prototype.tscn" id="2_van"]
+[ext_resource type="Script" uid="uid://deukatryh0cl5" path="res://scripts/camera_follow.gd" id="3_camera"]
+[ext_resource type="PackedScene" path="res://scenes/driving_hud.tscn" id="4_hud"]
+
+[sub_resource type="ProceduralSkyMaterial" id="SkyMaterial"]
+sky_top_color = Color(0.16, 0.43, 0.76, 1)
+sky_horizon_color = Color(0.73, 0.85, 0.91, 1)
+sky_curve = 0.2
+ground_bottom_color = Color(0.34, 0.39, 0.25, 1)
+ground_horizon_color = Color(0.73, 0.85, 0.91, 1)
+
+[sub_resource type="Sky" id="Sky"]
+sky_material = SubResource("SkyMaterial")
+radiance_size = 2
+
+[sub_resource type="Environment" id="Daylight"]
+background_mode = 2
+sky = SubResource("Sky")
+ambient_light_source = 2
+ambient_light_color = Color(0.78, 0.85, 0.95, 1)
+ambient_light_energy = 0.5
+fog_enabled = true
+fog_light_color = Color(0.65, 0.76, 0.83, 1)
+fog_density = 0.0009
+fog_sky_affect = 0.0
+
+[node name="GameSession" type="Node3D" unique_id=1932835433]
+
+[node name="World" parent="." unique_id=426459018 instance=ExtResource("1_world")]
+
+[node name="Environment" type="Node3D" parent="." unique_id=1454438060]
+
+[node name="DaylightEnvironment" type="WorldEnvironment" parent="Environment" unique_id=2020334364]
+environment = SubResource("Daylight")
+
+[node name="Sun" type="DirectionalLight3D" parent="Environment" unique_id=548168046]
+transform = Transform3D(0.81915206, 0.43938506, -0.36868784, 0, 0.64278764, 0.76604444, 0.57357645, -0.62750685, 0.5265408, 0, 0, 0)
+light_color = Color(1, 0.96, 0.87, 1)
+shadow_enabled = true
+shadow_bias = 0.3
+shadow_normal_bias = 3.0
+directional_shadow_mode = 1
+directional_shadow_max_distance = 85.0
+
+[node name="VanPrototype" parent="." unique_id=898361625 instance=ExtResource("2_van")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -75, 3.3, 94)
+turbo_energy_enabled = true
+
+[node name="CameraRig" type="Node3D" parent="." unique_id=1906031241]
+script = ExtResource("3_camera")
+
+[node name="FollowCamera" type="Camera3D" parent="CameraRig" unique_id=1053576856]
+transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, 0, 4, 8)
+current = true
+far = 450.0
+
+[node name="DrivingHUD" parent="." unique_id=2147121203 instance=ExtResource("4_hud")]
