@@ -17,6 +17,8 @@ var _revealed: bool = false
 
 @onready var _shade: ColorRect = $Screen/Shade
 @onready var _sheet: PanelContainer = $Screen/Center/Sheet
+@onready var _title: Label = $Screen/Center/Sheet/Margin/Content/Header/Title
+@onready var _subtitle: Label = $Screen/Center/Sheet/Margin/Content/Header/Subtitle
 @onready var _summary: HBoxContainer = $Screen/Center/Sheet/Margin/Content/Summary
 @onready var _feats: VBoxContainer = $Screen/Center/Sheet/Margin/Content/Body/Stats/Feats
 @onready var _impacts: VBoxContainer = $Screen/Center/Sheet/Margin/Content/Body/Stats/Impacts
@@ -39,7 +41,7 @@ func _ready() -> void:
 	var landings := _row(_feats)
 	_metric(landings, "clean_landings", "POUSOS LIMPOS", "", 1.56, 32)
 	_metric(landings, "brutal_landings", "POUSOS BRUTAIS", "", 1.68, 32)
-	_metric(landings, "rollovers", "CAPOTAMENTOS¹", "", 1.80, 32)
+	_metric(landings, "rollovers", "CAPOTAMENTOS NO POUSO", "", 1.80, 32)
 	var objects := _row(_impacts)
 	_metric(objects, "trees_broken", "ÁRVORES DERRUBADAS", "", 2.02)
 	_metric(objects, "crates_hit", "CAIXAS ATINGIDAS", "", 2.14)
@@ -105,6 +107,12 @@ func present(final_results: Dictionary) -> void:
 	_cancel_animation()
 	_results = final_results.duplicate(true)
 	_results.make_read_only()
+	if _results.has("services_total"):
+		_title.text = "SESSÃO CONCLUÍDA!"
+		_subtitle.text = "SERVIÇOS CONCLUÍDOS · %d/%d" % [_results.services_completed, _results.services_total]
+	else:
+		_title.text = "SERVIÇO CONCLUÍDO!"
+		_subtitle.text = "ANTENA REPARADA"
 	_payment = calculate_payment(int(_results.get("total_points", 0)))
 	_payment.make_read_only()
 	_revealed = false
@@ -176,7 +184,6 @@ func _plan_presentation() -> void:
 	var stats: Control = _feats.get_parent()
 	stats.get_node("FeatsTitle").visible = _feats.visible
 	stats.get_node("ImpactsTitle").visible = _impacts.visible
-	stats.get_node("Footnote").visible = _entries.rollovers.control.visible
 	stats.visible = _feats.visible or _impacts.visible
 	_sheet.custom_minimum_size.x = 1320.0 if stats.visible else 900.0
 	var step: float = minf(0.22, 2.5 / maxf(1.0, order.size() - 1.0))

@@ -164,12 +164,6 @@ text = "DESTRUIÇÃO E IMPACTOS"
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="Footnote" type="Label" parent="Screen/Center/Sheet/Margin/Content/Body/Stats"]
-layout_mode = 2
-theme_override_colors/font_color = Color(0.66, 0.71, 0.72, 1)
-theme_override_font_sizes/font_size = 18
-text = "¹ Capotamentos classificados após saltos."
-
 [node name="Rewards" type="VBoxContainer" parent="Screen/Center/Sheet/Margin/Content/Body"]
 custom_minimum_size = Vector2(400, 0)
 layout_mode = 2

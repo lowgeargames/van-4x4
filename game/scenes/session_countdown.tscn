@@ -1,0 +1,46 @@
+[gd_scene format=3]
+
+[sub_resource type="StyleBoxFlat" id="CountdownStyle"]
+bg_color = Color(0.05, 0.075, 0.09, 0.9)
+border_width_left = 4
+border_color = Color(1, 0.55, 0.16, 1)
+corner_radius_top_left = 12
+corner_radius_top_right = 12
+corner_radius_bottom_right = 12
+corner_radius_bottom_left = 12
+
+[node name="SessionUI" type="CanvasLayer"]
+layer = 3
+
+[node name="Center" type="CenterContainer" parent="."]
+visible = false
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="Panel" type="PanelContainer" parent="Center"]
+custom_minimum_size = Vector2(440, 180)
+layout_mode = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("CountdownStyle")
+
+[node name="Margin" type="MarginContainer" parent="Center/Panel"]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 16
+
+[node name="Message" type="Label" parent="Center/Panel/Margin"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.96, 0.9, 1)
+theme_override_colors/font_outline_color = Color(0.03, 0.04, 0.05, 1)
+theme_override_constants/outline_size = 2
+theme_override_font_sizes/font_size = 48
+text = "PREPARE-SE!"
+horizontal_alignment = 1
+vertical_alignment = 1

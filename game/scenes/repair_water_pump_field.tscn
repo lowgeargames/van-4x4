@@ -1,0 +1,63 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/repair_water_pump.tscn" id="1_pump"]
+
+[sub_resource type="BoxMesh" id="FootingMesh"]
+size = Vector3(3.2, 0.64, 2.4)
+
+[sub_resource type="StandardMaterial3D" id="FittingMetal"]
+albedo_color = Color(0.22, 0.25, 0.26, 1)
+roughness = 0.85
+metallic_specular = 0.0
+
+[sub_resource type="StandardMaterial3D" id="ServiceOchre"]
+albedo_color = Color(0.69, 0.44, 0.2, 1)
+roughness = 0.85
+metallic_specular = 0.0
+
+[sub_resource type="CylinderMesh" id="FlangeMesh"]
+top_radius = 0.24
+bottom_radius = 0.24
+height = 0.16
+radial_segments = 8
+rings = 1
+
+[sub_resource type="BoxMesh" id="ServicePanelMesh"]
+size = Vector3(0.84, 0.52, 0.12)
+
+[node name="RepairWaterPumpField" instance=ExtResource("1_pump")]
+
+[node name="Base" parent="." index="0"]
+position = Vector3(0, -0.06, 0)
+mesh = SubResource("FootingMesh")
+
+[node name="VerticalPipe" parent="." index="3"]
+position = Vector3(1.2, 1.7, 0)
+scale = Vector3(1, 0.72, 1)
+
+[node name="Outlet" parent="." index="4"]
+position = Vector3(0.55, 2.56, 0)
+
+[node name="Indicator" parent="." index="5"]
+position = Vector3(-0.9, 1.29, 0.85)
+scale = Vector3(0.72, 0.72, 0.72)
+
+[node name="NameLabel" parent="." index="6"]
+position = Vector3(0, 3.6, 0)
+pixel_size = 0.006
+
+[node name="ServicePanel" type="MeshInstance3D" parent="."]
+position = Vector3(-0.9, 1.26, 0.77)
+mesh = SubResource("ServicePanelMesh")
+material_override = SubResource("ServiceOchre")
+
+[node name="PipeCoupling" type="MeshInstance3D" parent="."]
+position = Vector3(1.2, 1.13, 0)
+mesh = SubResource("FlangeMesh")
+material_override = SubResource("FittingMetal")
+
+[node name="OutletRim" type="MeshInstance3D" parent="."]
+position = Vector3(-0.21, 2.56, 0)
+rotation_degrees = Vector3(0, 0, 90)
+mesh = SubResource("FlangeMesh")
+material_override = SubResource("FittingMetal")

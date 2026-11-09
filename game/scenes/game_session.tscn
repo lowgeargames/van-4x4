@@ -6,6 +6,17 @@
 [ext_resource type="PackedScene" path="res://scenes/driving_hud.tscn" id="4_hud"]
 [ext_resource type="PackedScene" path="res://scenes/world/world_nature.tscn" id="5_nature"]
 [ext_resource type="Script" uid="uid://bcati17lycoyg" path="res://scripts/visual_warmup.gd" id="6_warmup"]
+[ext_resource type="PackedScene" path="res://scenes/repair_antenna.tscn" id="7_antenna"]
+[ext_resource type="Script" uid="uid://dxsinqipmovx5" path="res://scripts/antenna_mission_ui.gd" id="8_objective_ui"]
+[ext_resource type="PackedScene" path="res://scenes/stunt_rewards.tscn" id="9_stunts"]
+[ext_resource type="PackedScene" path="res://scenes/session_countdown.tscn" id="10_countdown"]
+[ext_resource type="PackedScene" path="res://scenes/session_results.tscn" id="11_results"]
+[ext_resource type="Script" uid="uid://x6urtn1hncpa" path="res://scripts/session_controller.gd" id="12_session"]
+[ext_resource type="Script" uid="uid://f2ycn7ua3bwy" path="res://scripts/prop_impact_tracker.gd" id="13_prop_tracker"]
+[ext_resource type="PackedScene" path="res://scenes/physics_crate.tscn" id="14_crate"]
+[ext_resource type="PackedScene" path="res://scenes/physics_barrel.tscn" id="15_barrel"]
+[ext_resource type="PackedScene" path="res://scenes/physics_cone.tscn" id="16_cone"]
+[ext_resource type="PackedScene" path="res://scenes/repair_water_pump_field.tscn" id="17_pump"]
 
 [sub_resource type="ProceduralSkyMaterial" id="SkyMaterial"]
 sky_top_color = Color(0.16, 0.43, 0.76, 1)
@@ -35,6 +46,17 @@ fog_sky_affect = 0.0
 
 [node name="NatureInteractions" parent="World" unique_id=1820514876 instance=ExtResource("5_nature")]
 van_path = NodePath("../../VanPrototype")
+
+[node name="PhysicsProps" type="Node3D" parent="World" unique_id=946556370]
+
+[node name="Crate" parent="World/PhysicsProps" unique_id=886716595 instance=ExtResource("14_crate")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -70, 3.05, 72)
+
+[node name="Barrel" parent="World/PhysicsProps" unique_id=1485206908 instance=ExtResource("15_barrel")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -70, 3.12, 69)
+
+[node name="Cone" parent="World/PhysicsProps" unique_id=1624331414 instance=ExtResource("16_cone")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -68, 3.07, 72)
 
 [node name="Environment" type="Node3D" parent="." unique_id=1454438060]
 
@@ -67,3 +89,48 @@ far = 450.0
 [node name="VisualWarmup" type="Node" parent="." unique_id=1986566489]
 script = ExtResource("6_warmup")
 particle_paths = Array[NodePath]([NodePath("../VanPrototype/SurfaceParticles/RearLeft"), NodePath("../VanPrototype/SurfaceParticles/RearRight"), NodePath("../World/NatureInteractions/BreakFragments"), NodePath("../World/NatureInteractions/BreakFragments/Leaves")])
+repair_path = NodePath("")
+
+[node name="Objectives" type="Node3D" parent="." unique_id=1880802668]
+
+[node name="Antenna" parent="Objectives" unique_id=236112370 instance=ExtResource("7_antenna")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14, 24, 0)
+van_path = NodePath("../../VanPrototype")
+
+[node name="WaterPump" parent="Objectives" unique_id=750049021 instance=ExtResource("17_pump")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 38, 6.54, -1)
+van_path = NodePath("../../VanPrototype")
+metadata/mission_equipment = "a bomba"
+metadata/mission_hint = "Procure a bomba junto à estrada, no vale."
+metadata/mission_marker = "BOMBA"
+metadata/mission_marker_height = 4.5
+
+[node name="AntennaMissionUI" type="Node" parent="." unique_id=436766134]
+script = ExtResource("8_objective_ui")
+antenna_path = NodePath("../Objectives/Antenna")
+session_controller_path = NodePath("../SessionController")
+
+[node name="ObjectiveUI" type="CanvasLayer" parent="." unique_id=2127613786]
+
+[node name="ObjectiveMarker" type="Label" parent="ObjectiveUI" unique_id=245651285]
+visible = false
+theme_override_colors/font_color = Color(1, 0.9, 0.62, 1)
+theme_override_colors/font_outline_color = Color(0.05, 0.06, 0.07, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 18
+text = "ANTENA"
+
+[node name="StuntRewards" parent="." unique_id=1434441681 instance=ExtResource("9_stunts")]
+show_session_total = false
+mission_panel_path = NodePath("../Objectives/Antenna/MissionUI/Panel")
+
+[node name="PropImpactTracker" type="Node" parent="." unique_id=58362761]
+script = ExtResource("13_prop_tracker")
+
+[node name="SessionUI" parent="." unique_id=1943414558 instance=ExtResource("10_countdown")]
+
+[node name="SessionResults" parent="." unique_id=910589763 instance=ExtResource("11_results")]
+
+[node name="SessionController" type="Node" parent="." unique_id=353438370]
+script = ExtResource("12_session")
+repair_objective_paths = Array[NodePath]([NodePath("../Objectives/Antenna"), NodePath("../Objectives/WaterPump")])

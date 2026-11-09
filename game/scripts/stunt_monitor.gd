@@ -7,6 +7,7 @@ signal stunt_landed(result: Dictionary)
 
 const VanController = preload("res://scripts/van_controller.gd")
 enum Landing { CLEAN, BRUTAL, ROLLOVER }
+enum LandingType { SOFT, FIRM, BRUTAL, ROLLOVER }
 
 @export var van_path: NodePath
 @export_range(0.1, 2.0, 0.05) var minimum_air_time: float = 0.35
@@ -25,7 +26,8 @@ enum Landing { CLEAN, BRUTAL, ROLLOVER }
 @export_range(0.1, 0.5, 0.05) var stable_landing_time: float = 0.2
 @export_range(10.0, 40.0) var clean_landing_angle: float = 25.0
 @export_range(45.0, 80.0) var rollover_angle: float = 60.0
-@export_range(3.0, 15.0) var brutal_impact_speed: float = 7.0
+@export_range(1.0, 10.0, 0.1) var soft_impact_speed: float = 5.0
+@export_range(3.0, 15.0, 0.1) var brutal_impact_speed: float = 8.0
 @export_range(0.3, 3.0, 0.1) var stable_angular_speed: float = 1.2
 @export_range(0.5, 5.0, 0.1) var stable_normal_speed: float = 2.5
 
@@ -57,12 +59,14 @@ var _roll_rotations: int = 0
 var _has_sample: bool = false
 var _surface_normal: Vector3 = Vector3.UP
 var _previous_velocity: Vector3 = Vector3.ZERO
-var _previous_angular_speed: float = 0.0
+var _loaded_wheels: int = 0
+var _chassis_normal: Vector3 = Vector3.ZERO
+var _had_chassis_support: bool = false
 var _landing_pending: bool = false
 var _landing_elapsed: float = 0.0
 var _stable_time: float = 0.0
 var _landing_distance: float = 0.0
-var _landing_brutal: bool = false
+var _landing_impact: LandingType = LandingType.SOFT
 var _landing_interrupted: bool = false
 var _landing_alignment: float = 1.0
 var _clear_air_time: float = 0.0
@@ -71,8 +75,7 @@ var _contact_time: float = 0.0
 var _contact_gap: float = 0.0
 var _contact_position: Vector3
 var _contact_alignment: float = 1.0
-var _contact_brutal: bool = false
-var _brief_contact_seen: bool = false
+var _contact_impact: LandingType = LandingType.SOFT
 var _reward_locked: bool = false
 var _bounce_window: bool = false
 var _bounce_elapsed: float = 0.0
@@ -102,14 +105,17 @@ func _physics_process(delta: float) -> void:
 	if _has_sample and position_now.distance_to(_previous_position) > maxf(3.0, maxf(_previous_velocity.length(), _van.linear_velocity.length()) * delta * 2.0):
 		_cancel_flight("descontinuidade de posição")
 		_has_sample = false
-	var grounded: bool = _has_ground_support(state)
-	var normal: Vector3 = _read_surface_normal(state) if grounded else _surface_normal
+	var normal: Vector3 = _read_ground_support(state)
+	var grounded: bool = _loaded_wheels > 0 or not _chassis_normal.is_zero_approx()
 	_observe_sample(delta, grounded, position_now, _van.global_basis.get_rotation_quaternion(), normal, _van.linear_velocity, _van.angular_velocity.length())
 
 
-func _has_ground_support(state: PhysicsDirectBodyState3D) -> bool:
+func _read_ground_support(state: PhysicsDirectBodyState3D) -> Vector3:
 	# ground_contacts inclui raios no limite do curso, mesmo sem força de apoio.
 	# Lê o resultado existente e verifica compressão/carga, sem atualizar raycasts.
+	_loaded_wheels = 0
+	var wheel_normal_sum := Vector3.ZERO
+	var damping: float = 2.0 * sqrt(_van.suspension_strength) * 0.85
 	for ray in _van._rays:
 		if not ray.is_colliding():
 			continue
@@ -120,30 +126,20 @@ func _has_ground_support(state: PhysicsDirectBodyState3D) -> bool:
 		var compression: float = _van.SUSPENSION_LENGTH - clampf(length, 0.0, _van.SUSPENSION_LENGTH)
 		var offset: Vector3 = ray.get_collision_point() - state.transform.origin - state.center_of_mass
 		var point_velocity: Vector3 = state.linear_velocity + state.angular_velocity.cross(offset)
-		var support: float = _van.suspension_strength * compression - 2.0 * sqrt(_van.suspension_strength) * 0.85 * point_velocity.dot(normal)
+		var support: float = _van.suspension_strength * compression - damping * point_velocity.dot(normal)
 		if compression >= minimum_suspension_compression and support > 0.0:
-			return true
+			_loaded_wheels += 1
+			wheel_normal_sum += normal
+	var chassis_normal_sum := Vector3.ZERO
+	# A normal reportada por Jolt está em coordenadas globais.
 	for i in state.get_contact_count():
-		if state.get_contact_local_normal(i).dot(Vector3.UP) > _van.MIN_GROUND_DOT:
-			return true
-	return false
-
-
-func _read_surface_normal(state: PhysicsDirectBodyState3D) -> Vector3:
-	var normal_sum: Vector3 = Vector3.ZERO
-	# Apenas lê os raycasts que a suspensão já atualizou; nenhuma nova consulta.
-	for ray in _van._rays:
-		if ray.is_colliding():
-			var normal: Vector3 = ray.get_collision_normal()
-			if normal.dot(Vector3.UP) > _van.MIN_GROUND_DOT and normal.dot(_van.global_basis.y) > 0.25:
-				normal_sum += normal
-	if normal_sum.is_zero_approx():
-		# Jolt entrega a normal do contato da carroceria em coordenadas globais.
-		for i in state.get_contact_count():
-			var normal: Vector3 = state.get_contact_local_normal(i)
-			if normal.dot(Vector3.UP) > _van.MIN_GROUND_DOT:
-				normal_sum += normal
-	return normal_sum.normalized() if not normal_sum.is_zero_approx() else _surface_normal
+		var normal: Vector3 = state.get_contact_local_normal(i)
+		if normal.dot(Vector3.UP) > _van.MIN_GROUND_DOT:
+			chassis_normal_sum += normal
+	_chassis_normal = chassis_normal_sum.normalized()
+	if _loaded_wheels > 0:
+		return wheel_normal_sum.normalized()
+	return _chassis_normal if not _chassis_normal.is_zero_approx() else _surface_normal
 
 
 func _observe_sample(delta: float, grounded: bool, position_now: Vector3, rotation_now: Quaternion, surface_normal: Vector3 = Vector3.UP, velocity: Vector3 = Vector3.ZERO, angular_speed: float = 0.0) -> void:
@@ -151,7 +147,11 @@ func _observe_sample(delta: float, grounded: bool, position_now: Vector3, rotati
 		_previous_position = position_now
 		_previous_rotation = rotation_now
 		_has_sample = true
-	var alignment: float = Basis(rotation_now).y.dot(surface_normal)
+	var body_up: Vector3 = Basis(rotation_now).y
+	var alignment: float = body_up.dot(surface_normal)
+	var chassis_supported: bool = not _chassis_normal.is_zero_approx()
+	var new_chassis_contact: bool = chassis_supported and not _had_chassis_support
+	_had_chassis_support = chassis_supported
 	_last_grounded = grounded
 	if _bounce_window:
 		_bounce_elapsed += delta
@@ -171,7 +171,6 @@ func _observe_sample(delta: float, grounded: bool, position_now: Vector3, rotati
 			# Quique após contato confirmado: continua a mesma medição, com janela finita.
 			_landing_pending = false
 			_flying = true
-			_brief_contact_seen = true
 			_contact_time = 0.0
 			_contact_gap = 0.0
 			_clear_air_time = 0.0
@@ -179,6 +178,8 @@ func _observe_sample(delta: float, grounded: bool, position_now: Vector3, rotati
 			_debug_event("voo retomado após quique")
 			_sample_air(delta, position_now, rotation_now)
 		else:
+			if new_chassis_contact:
+				_landing_impact = _stronger_impact(_landing_impact, _measure_impact(_chassis_normal, body_up, true))
 			_ground_time = _ground_time + delta if grounded and alignment >= cos(deg_to_rad(rollover_angle)) else 0.0
 			_observe_landing(delta, grounded, alignment, velocity.dot(surface_normal), angular_speed)
 	elif grounded:
@@ -186,8 +187,11 @@ func _observe_sample(delta: float, grounded: bool, position_now: Vector3, rotati
 			if _contact_time == 0.0:
 				_contact_position = position_now
 				_contact_alignment = alignment
-				_contact_brutal = alignment < cos(deg_to_rad(clean_landing_angle)) or -_previous_velocity.dot(surface_normal) > brutal_impact_speed or _previous_angular_speed > stable_angular_speed
-				_debug_event("contato em confirmação")
+				_contact_impact = _measure_impact(surface_normal, body_up, _loaded_wheels == 0)
+			elif _contact_gap > 0.0:
+				_contact_impact = _stronger_impact(_contact_impact, _measure_impact(surface_normal, body_up, _loaded_wheels == 0))
+			if new_chassis_contact and _loaded_wheels > 0:
+				_contact_impact = _stronger_impact(_contact_impact, _measure_impact(_chassis_normal, body_up, true))
 			_contact_gap = 0.0
 			_contact_time += delta
 			_clear_air_time = 0.0
@@ -210,7 +214,6 @@ func _observe_sample(delta: float, grounded: bool, position_now: Vector3, rotati
 	_previous_position = position_now
 	_previous_rotation = rotation_now
 	_previous_velocity = velocity
-	_previous_angular_speed = angular_speed
 
 
 func _begin_flight(position_now: Vector3, rotation_now: Quaternion) -> void:
@@ -223,7 +226,7 @@ func _begin_flight(position_now: Vector3, rotation_now: Quaternion) -> void:
 	_longest_clear_air = 0.0
 	_contact_time = 0.0
 	_contact_gap = 0.0
-	_brief_contact_seen = false
+	_landing_impact = LandingType.SOFT
 	_bounce_window = false
 	_bounce_elapsed = 0.0
 	_pitch = 0.0
@@ -238,7 +241,6 @@ func _sample_air(delta: float, position_now: Vector3, rotation_now: Quaternion) 
 	if _contact_time > 0.0:
 		if _contact_gap == 0.0:
 			_debug_event("contato breve ignorado", "%.3f s" % _contact_time)
-			_brief_contact_seen = true
 			_previous_rotation = rotation_now
 		_contact_gap += delta
 		# Apoios repetidos entre gaps curtíssimos confirmam pouso, não um voo infinito.
@@ -320,7 +322,7 @@ func _finish_flight(position_now: Vector3, alignment: float) -> void:
 	_stable_time = 0.0
 	_landing_alignment = alignment
 	_landing_interrupted = false
-	_landing_brutal = _contact_brutal or _brief_contact_seen
+	_landing_impact = _stronger_impact(_landing_impact, _contact_impact)
 	if not _bounce_window:
 		_bounce_window = true
 		_bounce_elapsed = _contact_time
@@ -329,22 +331,43 @@ func _finish_flight(position_now: Vector3, alignment: float) -> void:
 func _observe_landing(delta: float, grounded: bool, alignment: float, normal_speed: float, angular_speed: float) -> void:
 	_landing_elapsed += delta
 	_landing_alignment = alignment
-	var controlled: bool = grounded and alignment >= cos(deg_to_rad(clean_landing_angle)) and absf(normal_speed) <= stable_normal_speed and angular_speed <= stable_angular_speed
+	var controlled: bool = grounded and _loaded_wheels >= 2 and alignment >= cos(deg_to_rad(clean_landing_angle)) and absf(normal_speed) <= stable_normal_speed and angular_speed <= stable_angular_speed
 	_stable_time = _stable_time + delta if controlled else 0.0
-	if not grounded or alignment < cos(deg_to_rad(clean_landing_angle)) or absf(normal_speed) > brutal_impact_speed or angular_speed > stable_angular_speed:
-		_landing_brutal = true
 	if _landing_elapsed < landing_observation_time:
 		return
 	if _stable_time >= stable_landing_time or _landing_elapsed >= maxf(landing_timeout, landing_observation_time):
 		_award_result(_classify_landing())
 
 
-func _classify_landing() -> Landing:
+func _measure_impact(normal: Vector3, body_up: Vector3, chassis_contact: bool) -> LandingType:
+	# A amostra anterior precede o apoio que está sendo confirmado.
+	# Velocidade tangente à superfície não aumenta a pancada.
+	var normal_speed: float = maxf(0.0, -_previous_velocity.dot(normal))
+	var alignment: float = body_up.dot(normal)
+	var aligned: bool = alignment >= cos(deg_to_rad(clean_landing_angle))
+	if debug_events:
+		_debug_event("contato em confirmação", "v anterior=%s | aproximação normal=%.2f m/s | ângulo=%.1f° | rodas com carga=%d | carroceria=%s" % [
+			_previous_velocity, normal_speed, rad_to_deg(acos(clampf(alignment, -1.0, 1.0))), _loaded_wheels, chassis_contact
+		])
+	var soft_limit: float = minf(soft_impact_speed, brutal_impact_speed)
+	var tilted_chassis_hit: bool = chassis_contact and not aligned
+	if normal_speed >= brutal_impact_speed or (tilted_chassis_hit and normal_speed >= soft_limit):
+		return LandingType.BRUTAL
+	if normal_speed >= soft_limit or chassis_contact:
+		return LandingType.FIRM
+	return LandingType.SOFT
+
+
+func _stronger_impact(previous: LandingType, current: LandingType) -> LandingType:
+	return current if current > previous else previous
+
+
+func _classify_landing() -> LandingType:
 	if _landing_alignment < cos(deg_to_rad(rollover_angle)):
-		return Landing.ROLLOVER
-	if _landing_brutal or _stable_time < stable_landing_time:
-		return Landing.BRUTAL
-	return Landing.CLEAN
+		return LandingType.ROLLOVER
+	if _landing_impact == LandingType.SOFT and _stable_time < stable_landing_time:
+		return LandingType.FIRM
+	return _landing_impact
 
 
 func _observe_interrupted_landing(delta: float) -> void:
@@ -371,18 +394,25 @@ func _calculate_reward(landing: Landing) -> Dictionary:
 	return {"distance": _landing_distance, "air_time": _air_time, "pitch_rotations": _pitch_rotations, "roll_rotations": _roll_rotations, "rotations": rotations, "landing": landing, "points": points, "stars": stars}
 
 
-func _award_result(landing: Landing) -> void:
+func _award_result(landing_type: LandingType) -> void:
 	_landing_pending = false
 	_landing_interrupted = false
 	_armed = _last_grounded and _ground_time >= ground_rearm_time and _landing_alignment >= cos(deg_to_rad(rollover_angle))
 	_reward_locked = not _armed
 	_bounce_window = false
+	# O pouso firme compartilha o bônus e o contador existentes de pouso limpo.
+	var landing: Landing = Landing.CLEAN
+	if landing_type == LandingType.BRUTAL:
+		landing = Landing.BRUTAL
+	elif landing_type == LandingType.ROLLOVER:
+		landing = Landing.ROLLOVER
 	last_result = _calculate_reward(landing)
+	last_result["landing_type"] = landing_type
 	total_points += last_result.points
 	total_stars += last_result.stars
 	last_result["session_points"] = total_points
 	last_result["session_stars"] = total_stars
-	_debug_event("manobra concluída", "pouso=%d; pontos=%d" % [landing, last_result.points], _landing_distance)
+	_debug_event("manobra concluída", "pouso=%s | pontos=%d" % [LandingType.keys()[landing_type], last_result.points], _landing_distance)
 	stunt_landed.emit(last_result)
 
 
@@ -392,7 +422,6 @@ func _cancel_flight(reason: String = "cancelamento explícito") -> void:
 	last_discard_reason = reason
 	if _landing_pending:
 		_landing_interrupted = true
-		_landing_brutal = true
 	if _flying:
 		flight_cancelled.emit()
 	_flying = false

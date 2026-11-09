@@ -59,30 +59,36 @@ func _physics_process(delta: float) -> void:
 	if reset:
 		_reset_grace = 0.5
 	var eligible: bool = _has_sample and _reset_grace == 0.0 and not _van.freeze
+	var van_state: PhysicsDirectBodyState3D
+	if eligible:
+		van_state = PhysicsServer3D.body_get_direct_state(_van.get_rid())
 	for entry in _props:
 		var body: RigidBody3D = entry.body
 		if not is_instance_valid(body) or _seen.has(body.get_instance_id()):
 			continue
 		if eligible:
-			var state: PhysicsDirectBodyState3D = PhysicsServer3D.body_get_direct_state(body.get_rid())
-			if state != null:
-				for i in state.get_contact_count():
-					if state.get_contact_collider_id(i) != _van.get_instance_id():
-						continue
-					# Aproximação linear entre centros na amostra anterior à resposta.
-					# É uma estimativa conservadora, não impulso nem velocidade pós-impacto.
-					var direction: Vector3 = (entry.position - _van_position).normalized()
-					var approach: float = (_van_velocity - entry.velocity).dot(direction)
-					if _van_velocity.dot(direction) > 0.0 and approach >= minimum_impact_speed:
-						var id: int = body.get_instance_id()
-						_seen[id] = true
-						prop_hit.emit(id, entry.category, approach)
-						break
+			var id: int = body.get_instance_id()
+			var prop_state := PhysicsServer3D.body_get_direct_state(body.get_rid())
+			# O Jolt pode reportar o primeiro contato só na van enquanto o prop acorda.
+			if _reports_contact(van_state, id) or _reports_contact(prop_state, _van.get_instance_id()):
+				# Estima a aproximação na amostra anterior à resposta física.
+				var direction: Vector3 = (entry.position - _van_position).normalized()
+				var approach: float = (_van_velocity - entry.velocity).dot(direction)
+				if _van_velocity.dot(direction) > 0.0 and approach >= minimum_impact_speed:
+					_seen[id] = true
+					prop_hit.emit(id, entry.category, approach)
 		entry.position = body.global_position
 		entry.velocity = body.linear_velocity
 	_van_position = _van.global_position
 	_van_velocity = _van.linear_velocity
 	_has_sample = true
+
+func _reports_contact(state: PhysicsDirectBodyState3D, collider_id: int) -> bool:
+	if state != null:
+		for i in state.get_contact_count():
+			if state.get_contact_collider_id(i) == collider_id:
+				return true
+	return false
 
 func _exit_tree() -> void:
 	stop()

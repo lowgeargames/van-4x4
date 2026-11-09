@@ -35,6 +35,7 @@ const MESSAGES: Dictionary = {
 	],
 }
 const LANDING_LABELS: Array[String] = ["POUSO LIMPO", "POUSO BRUTAL", "CAPOTAMENTO"]
+const LANDING_TYPE_LABELS: Array[String] = ["POUSO SUAVE", "POUSO FIRME", "POUSO BRUTAL", "CAPOTAMENTO"]
 
 @export_range(1.0, 5.0, 0.1) var result_duration: float = 2.5
 @export var show_session_total: bool = true
@@ -216,7 +217,7 @@ func _show_result(result: Dictionary) -> void:
 	_stats.text = ("%.1f m · %.1f s" % [result.distance, result.air_time]).replace(".", ",")
 	if result.rotations > 0:
 		_stats.text += " · 1 giro" if result.rotations == 1 else " · %d giros" % result.rotations
-	_landing.text = LANDING_LABELS[result.landing]
+	_landing.text = LANDING_TYPE_LABELS[result.landing_type] if result.has("landing_type") else LANDING_LABELS[result.landing]
 	_landing.show()
 	_distance.add_theme_font_size_override("font_size", 72)
 	_set_display_points(0)
