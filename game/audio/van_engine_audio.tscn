@@ -1,0 +1,34 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://audio/van_engine_audio.gd" id="1_engine"]
+[ext_resource type="AudioStream" path="res://audio/sfx/v8_idle_loop.wav" id="2_idle"]
+[ext_resource type="AudioStream" path="res://audio/sfx/v8_accel_loop.wav" id="3_accel"]
+[ext_resource type="AudioStream" path="res://audio/sfx/v8_rev_blip.wav" id="4_blip"]
+
+[node name="VanEngineAudio" type="Node3D"]
+script = ExtResource("1_engine")
+
+[node name="EngineIdle" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("2_idle")
+volume_db = -80.0
+unit_size = 12.0
+max_db = 0.0
+max_distance = 150.0
+panning_strength = 0.5
+
+[node name="EngineAccel" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("3_accel")
+volume_db = -80.0
+unit_size = 12.0
+max_db = 0.0
+max_distance = 150.0
+panning_strength = 0.5
+
+[node name="RevBlip" type="AudioStreamPlayer3D" parent="."]
+stream = ExtResource("4_blip")
+volume_db = -80.0
+unit_size = 12.0
+max_db = 0.0
+max_distance = 150.0
+max_polyphony = 1
+panning_strength = 0.5

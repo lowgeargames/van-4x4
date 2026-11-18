@@ -1,0 +1,43 @@
+[gd_scene format=3 uid="uid://dpqeqwt62dpyo"]
+
+[ext_resource type="Script" uid="uid://dyv4lu2ng8w3d" path="res://audio/demo/engine_audio_demo.gd" id="1_demo"]
+[ext_resource type="Script" uid="uid://c2ku7saxg6ghp" path="res://audio/demo/demo_vehicle_stub.gd" id="2_stub"]
+[ext_resource type="PackedScene" path="res://audio/van_engine_audio.tscn" id="3_audio"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_ground"]
+size = Vector2(60, 60)
+
+[sub_resource type="BoxMesh" id="BoxMesh_van"]
+size = Vector3(2.2, 1.8, 4.6)
+
+[node name="EngineAudioDemo" type="Node3D" unique_id=2139389197]
+script = ExtResource("1_demo")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=797836677]
+transform = Transform3D(0.8660254, 0.35355338, -0.35355338, 0, 0.70710677, 0.70710677, 0.5, -0.6123724, 0.6123724, 0, 0, 0)
+light_color = Color(1, 0.96, 0.85, 1)
+
+[node name="Ground" type="MeshInstance3D" parent="." unique_id=1970608635]
+mesh = SubResource("PlaneMesh_ground")
+
+[node name="FakeVan" type="Node3D" parent="." unique_id=36488318]
+script = ExtResource("2_stub")
+
+[node name="Body" type="MeshInstance3D" parent="FakeVan" unique_id=2061144775]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1, 0)
+mesh = SubResource("BoxMesh_van")
+
+[node name="VanEngineAudio" parent="." unique_id=1696203474 instance=ExtResource("3_audio")]
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=140792049]
+transform = Transform3D(1, 0, 0, 0, 0.9659258, 0.25881904, 0, -0.25881904, 0.9659258, 0, 4, 8)
+current = true
+
+[node name="HUD" type="CanvasLayer" parent="." unique_id=1921260156]
+
+[node name="Info" type="Label" parent="HUD" unique_id=628982447]
+offset_left = 24.0
+offset_top = 24.0
+offset_right = 1000.0
+offset_bottom = 400.0
+theme_override_font_sizes/font_size = 22
