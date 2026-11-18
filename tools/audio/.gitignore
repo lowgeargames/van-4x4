@@ -1,0 +1,3 @@
+# Caches gerados pelo Python ao rodar os scripts desta pasta
+__pycache__/
+*.pyc

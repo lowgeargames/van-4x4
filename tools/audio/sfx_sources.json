@@ -1,0 +1,84 @@
+{
+  "version": 1,
+  "nota": "Registro das gravações do pacote de efeitos de gameplay. Dados de título, autor, licença e duração vieram das páginas originais do Freesound, consultadas em 2026-11-09. Nenhum arquivo de áudio foi baixado ainda (o ambiente de trabalho não tem rede e o Freesound exige login para baixar). Os campos 'original_glob' são padrões de busca na pasta de originais, para que o script ache o arquivo baixado por você sem que eu invente nomes.",
+  "entries": [
+    {
+      "id": "tree_fall_ecfike_139952",
+      "event": "tree_break",
+      "folder": "arvore",
+      "title": "A Tree Falling Down.wav",
+      "author": "ecfike",
+      "url": "https://freesound.org/people/ecfike/sounds/139952/",
+      "license": "Creative Commons 0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "attribution_required": false,
+      "source_duration_s": 4.519,
+      "description": "Gravação de árvore grande sendo derrubada numa fazenda (descrição do autor).",
+      "status": "candidata: não baixada, não ouvida",
+      "original_glob": "139952__*.wav",
+      "output": "arvore_01.wav",
+      "process": {}
+    },
+    {
+      "id": "twigs_breaking_elementslib_683793",
+      "event": "wood_leaves",
+      "folder": "madeira_folhas",
+      "title": "Twigs Breaking",
+      "author": "Elements-Library (nome na URL; a página exibe o nome truncado)",
+      "url": "https://freesound.org/people/Elements-Library/sounds/683793/",
+      "license": "Creative Commons 0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "attribution_required": false,
+      "source_duration_s": 1.771,
+      "description": "Galhos finos quebrando e estalando; mono, 48 kHz, 24 bits (Rode NT1).",
+      "status": "candidata: não baixada, não ouvida (galhos secos; não há folhas verdes nesta gravação)",
+      "original_glob": "683793__*.wav",
+      "output": "madeira_folhas_01.wav",
+      "process": {}
+    },
+    {
+      "id": "crate_destroy1_bertsz_500902",
+      "event": "crate",
+      "folder": "caixa",
+      "title": "Wood Crate Destory 1",
+      "author": "Bertsz",
+      "url": "https://freesound.org/people/Bertsz/sounds/500902/",
+      "license": "Creative Commons 0",
+      "license_url": "https://creativecommons.org/publicdomain/zero/1.0/",
+      "attribution_required": false,
+      "source_duration_s": 1.610,
+      "description": "Camadas de madeira, do pacote 'Destroy Crate'. É uma caixa sendo destruída, não um simples impacto: pode ser forte demais para batidas leves.",
+      "status": "candidata: não baixada, não ouvida",
+      "original_glob": "500902__*.wav",
+      "output": "caixa_01.wav",
+      "process": {}
+    }
+  ],
+  "candidates_not_used": [
+    {
+      "event": "crate",
+      "title": "heavy_crate_smash.wav",
+      "author": "Srehpog",
+      "url": "https://freesound.org/people/Srehpog/sounds/31625/",
+      "license": "Attribution 3.0",
+      "source_duration_s": 1.147,
+      "motivo": "Exige atribuição (CC BY 3.0). Só entra se você aprovar manter a atribuição no jogo."
+    },
+    {
+      "event": "tree_break",
+      "title": "Big Conifer Tree Creaks And Groans As It Crashes To The Ground in a Forest",
+      "author": "não informado na página",
+      "url": "https://freesound.org/people/Kinoton/sounds/494071/",
+      "license": "a página não informa a licença",
+      "source_duration_s": 7.984,
+      "motivo": "Licença não confirmada na página consultada. Não usar até conferir a licença no site (logado)."
+    }
+  ],
+  "pending_categories": {
+    "barril": "nenhuma gravação com licença verificada encontrada",
+    "cone": "nenhuma gravação com licença verificada encontrada",
+    "aterrissagem_suave": "nenhuma gravação com licença verificada encontrada",
+    "aterrissagem_firme": "nenhuma gravação com licença verificada encontrada",
+    "aterrissagem_brutal": "nenhuma gravação com licença verificada encontrada"
+  }
+}
