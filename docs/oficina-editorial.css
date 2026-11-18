@@ -1,0 +1,144 @@
+@font-face {
+    font-family: "Barlow Condensed";
+    src: url("../game/assets/ui/fonts/BarlowCondensed-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-display: swap;
+}
+
+.document-cover {
+    --paper: #fff3d6;
+    --gold: #ffc83d;
+    --rail: #586369;
+    --display: "Barlow Condensed", "Arial Narrow", sans-serif;
+    background: #182126;
+    color: var(--paper);
+    padding: clamp(22px, 4vw, 65px) max(5vw, calc((100% - 1360px) / 2));
+}
+.cover-mast, .cover-crossref, .cover-photo figcaption, .cover-imprint {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+}
+.cover-mast {
+    align-items: center;
+    border-bottom: 1px solid var(--rail);
+    padding-bottom: 0.8rem;
+    font: 700 1.12rem/1.1 var(--display);
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+}
+.cover-brand { display: flex; align-items: center; gap: 0.8em; }
+.cover-brand::before {
+    content: "";
+    width: 1em;
+    height: 0.9em;
+    border-inline: 0.35em solid #ff742e;
+    transform: skew(-22deg);
+    box-sizing: border-box;
+}
+.cover-mast > :last-child { color: var(--gold); }
+.cover-spread {
+    display: grid;
+    grid-template-columns: 0.76fr 1.24fr;
+    align-items: center;
+    gap: clamp(24px, 4vw, 72px);
+    padding-block: clamp(32px, 4vw, 68px);
+}
+.document-cover h1 {
+    font: 700 clamp(5.2rem, 8.8vw, 10rem)/0.88 var(--display);
+    letter-spacing: -0.035em;
+    text-transform: uppercase;
+    color: var(--paper);
+}
+.document-cover h1 span { color: var(--gold); }
+.cover-type {
+    font: 700 clamp(1.4rem, 2.4vw, 2.8rem)/1.1 var(--display);
+    text-transform: uppercase;
+    margin-top: 0.6em;
+}
+.cover-intro { max-width: 32em; margin-top: 1.2em; color: #d1d8d6; line-height: 1.48; }
+.cover-photo { margin: 0; min-width: 0; }
+.cover-photo img { display: block; width: 100%; height: auto; }
+.cover-photo figcaption {
+    font: 700 0.85rem/1.25 var(--display);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #d1d8d6;
+    padding-block: 0.65em;
+    border-top: 3px solid var(--gold);
+}
+.cover-photo figcaption span:first-child { color: var(--paper); }
+.cover-imprint { border-top: 1px solid var(--rail); padding-top: 1.2rem; }
+.cover-imprint strong { display: block; font: 700 1.65rem/1.15 var(--display); }
+.cover-imprint span { font-size: 0.94rem; }
+.cover-imprint dl { display: flex; gap: clamp(24px, 4vw, 64px); }
+.cover-imprint dt, .cover-crossref { font-size: 0.85rem; color: #c8d0d0; }
+.cover-imprint dd { font: 700 1.5rem/1.15 var(--display); margin-top: 0.2em; }
+.cover-crossref { margin-top: 1.25rem; }
+.cover-crossref a { color: var(--gold); text-decoration: underline; text-underline-offset: 0.2em; }
+.companion-print { display: none; }
+
+@media screen and (max-width: 760px) {
+    .cover-spread { grid-template-columns: 1fr; gap: 20px; padding-block: 26px 16px; }
+    .cover-type { margin-top: 0.35em; }
+    .cover-intro { margin-top: 0.65em; }
+    .cover-imprint, .cover-crossref { flex-wrap: wrap; }
+    .cover-imprint dl { gap: 20px; flex-wrap: wrap; }
+    .cover-crossref { gap: 4px 18px; }
+}
+
+@page gdd {
+    @bottom-right { content: "Van 4x4 — GDD | " counter(page); }
+}
+@page tdd {
+    @bottom-right { content: "Van 4x4 — TDD | " counter(page); }
+}
+@page {
+    @bottom-right { font: 9pt Arial, sans-serif; color: #525b5d; }
+}
+@page cover { size: A4; margin: 0; }
+
+@media print {
+    .companion-link { display: none; }
+    .companion-print { display: inline; }
+    .gdd { page: gdd; }
+    .tdd { page: tdd; }
+    .document-cover {
+        page: cover;
+        break-after: page;
+        break-inside: avoid;
+        height: 296.9mm;
+        padding: 15mm 16mm 12mm;
+        display: flex;
+        flex-direction: column;
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+    }
+    .cover-mast { font-size: 13pt; padding-bottom: 4mm; }
+    .cover-spread { display: block; padding: 0; }
+    .cover-title { padding: 12mm 0 9mm; }
+    .document-cover h1 { font-size: 98pt; }
+    .cover-type { font-size: 26pt; margin-top: 2mm; }
+    .cover-intro { max-width: 147mm; min-height: 2.96em; font-size: 11pt; margin-top: 4mm; }
+    .cover-photo { margin-inline: -16mm; }
+    .cover-photo img { width: 210mm; height: auto; }
+    .cover-photo figcaption { padding: 3mm 16mm 0; font-size: 9.5pt; }
+    .cover-imprint { margin-top: auto; padding-top: 5mm; }
+    .cover-imprint strong { font-size: 18pt; }
+    .cover-imprint dl { gap: 8mm; }
+    .cover-imprint dd { font-size: 15pt; }
+    .cover-imprint dt, .cover-crossref { font-size: 9pt; }
+    .cover-crossref { margin-top: 5mm; }
+    main {
+        --accent: #7b5011;
+        --accent-soft: #ba8d42;
+        --panel-soft: #f5f2eb;
+        --border: #cbc9c2;
+        print-color-adjust: exact;
+    }
+    main thead th { background: #253036; color: #fff3d6; }
+    main h2 { font-family: "Barlow Condensed", sans-serif; }
+    .section-kicker { break-after: avoid; }
+    .design-list > div { break-inside: avoid; }
+}

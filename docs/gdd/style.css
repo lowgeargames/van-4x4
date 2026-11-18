@@ -738,44 +738,6 @@ footer p {
     border-style: dashed;
 }
 
-.campaign-loop {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.8rem;
-    margin: 1.25rem 0;
-    padding: 0;
-    list-style: none;
-    counter-reset: campaign-step;
-}
-
-.campaign-loop li {
-    counter-increment: campaign-step;
-    padding: 1rem;
-    background: var(--panel-soft);
-    border: 1px solid var(--border);
-    border-top: 2px solid var(--accent-soft);
-    border-radius: 10px;
-}
-
-.campaign-loop li::before {
-    content: counter(campaign-step, decimal-leading-zero);
-    display: block;
-    margin-bottom: 0.4rem;
-    color: var(--accent);
-    font-weight: bold;
-}
-
-.campaign-loop strong,
-.campaign-loop span {
-    display: block;
-}
-
-.campaign-loop span {
-    margin-top: 0.4rem;
-    font-size: 0.9rem;
-    color: var(--muted);
-}
-
 .return-options {
     grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -960,4 +922,123 @@ footer p {
         font-size: 0.9rem;
     }
 
+}
+
+/* Ritmo de leitura, consulta e diagramas documentais. */
+:root { --max-width: 960px; }
+html { scroll-padding-top: 128px; }
+body { font-size: 17px; line-height: 1.7; }
+main { width: min(var(--max-width), 92%); }
+section { padding: clamp(1.4rem, 2.5vw, 2rem); }
+/* O cartão limita a linha; texto e destaques compartilham a área das tabelas. */
+section > p, section > .gdd-list, section > .steps { max-width: none; }
+section h2 { line-height: 1.25; margin-bottom: 1.4rem; }
+section h3 { font-size: 1.2rem; line-height: 1.4; margin-top: 2.2rem; }
+h4 { color: var(--text); font-size: 1.05rem; margin: 1.6rem 0 0.8rem; }
+section > p + p { margin-top: 0.6rem; }
+main a { color: var(--accent); text-decoration: underline; text-underline-offset: 0.2em; }
+a:focus-visible, .table-wrap:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.skip-link { position: absolute; top: -100px; left: 1rem; padding: 0.75rem; z-index: 200; background: var(--panel); }
+.skip-link:focus { top: 1rem; }
+.document-context { padding-left: 1.2rem; border-left: 3px solid var(--accent); }
+.section-index { display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; border-bottom: 1px solid var(--border); padding-bottom: 1.2rem; margin-bottom: 1.6rem; }
+.section-index a { font-size: 0.95rem; }
+.table-wrap { overflow-x: auto; margin: 1.6rem 0; }
+table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: 1rem; }
+caption { text-align: left; color: var(--muted); font-size: 0.95rem; padding-bottom: 0.8rem; }
+th, td { padding: 1rem 1.15rem; border: 1px solid var(--border); text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+thead th { color: var(--accent); background: var(--bg); }
+tbody th { color: var(--text); background: var(--panel-soft); font-weight: normal; }
+td { color: var(--muted); }
+.three-columns th:first-child { width: 24%; }
+.three-columns th:nth-child(2) { width: 27%; }
+.diagram { margin: 2rem 0; padding: 1.5rem; border-block: 1px solid var(--accent-soft); background: var(--bg); }
+.diagram figcaption { color: var(--muted); font-size: 0.95rem; margin-bottom: 1.2rem; }
+.diagram-root { color: var(--text); font-size: 1.2rem; border-bottom: 2px solid var(--accent); padding-bottom: 0.8rem; }
+.node-tree { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.3rem; padding: 0; }
+.node-tree > li { min-width: 0; padding-left: 1rem; border-left: 2px solid var(--accent-soft); color: var(--text); }
+.node-tree ul { padding-left: 1.2rem; margin-top: 0.5rem; color: var(--muted); }
+.node-tree small { display: block; color: var(--muted); font-size: 0.95rem; }
+.flow-diagram, .journey { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem 2rem; padding: 0; list-style: none; counter-reset: flow; }
+.flow-step, .journey li { min-width: 0; padding-left: 1.4rem; border-left: 2px solid var(--accent-soft); counter-increment: flow; }
+.flow-step::before, .journey li::before { content: counter(flow, decimal-leading-zero) " →"; color: var(--accent); display: block; margin-bottom: 0.4rem; }
+.flow-step strong, .flow-step span, .journey strong, .journey span { display: block; }
+.flow-step strong, .journey strong { color: var(--text); }
+.flow-step span, .journey span { color: var(--muted); margin-top: 0.4rem; }
+@media (max-width: 700px) {
+    html { scroll-padding-top: 90px; }
+    main { width: 94%; }
+    section { padding: 1.25rem; }
+    .node-tree, .flow-diagram, .journey { grid-template-columns: 1fr; }
+    .table-wrap table { min-width: 640px; font-size: 1rem; }
+    .table-wrap { scrollbar-width: auto; }
+    .diagram { padding: 1.1rem; }
+    .section-index { display: block; }
+    .section-index a { display: block; margin-bottom: 0.5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { transition: none !important; }
+}
+@page { size: A4; margin: 17mm 15mm; }
+@media print {
+    :root { --bg: #fff; --panel: #fff; --panel-soft: #f2f2f2; --text: #111; --muted: #333; --accent: #704500; --accent-soft: #aaa; --border: #bbb; }
+    body { background: white; color: black; font-size: 10.5pt; line-height: 1.4; }
+    .hero { min-height: 0; padding: 12mm 0; }
+    .hero h1 { font-size: 36pt; }
+    .navigation, .skip-link, .section-index { display: none; }
+    main { width: 100%; padding: 0; }
+    section { border: 0; border-radius: 0; padding: 0; margin: 7mm 0; }
+    h2 { font-size: 20pt !important; }
+    h3 { font-size: 13pt !important; }
+    h2, h3, h4, caption { break-after: avoid; }
+    p, li { orphans: 3; widows: 3; }
+    .table-wrap { overflow: visible; }
+    .table-wrap table { min-width: 0; font-size: 10pt; }
+    th, td { padding: 2.5mm; }
+    thead { display: table-header-group; break-after: avoid; }
+    tbody tr:first-child { break-before: avoid; }
+    tr, .gdd-figure, .diagram, .note { break-inside: avoid; }
+    .print-keep { break-inside: avoid; }
+    /* Parágrafos curtos ficam inteiros; seções e listas longas continuam pagináveis. */
+    section > p { break-inside: avoid; }
+    #delivery .schedule li { padding: 2mm 0; }
+    #delivery th, #delivery td { padding-block: 2mm; }
+    #delivery { margin-bottom: 0; }
+    #delivery h3 { margin-top: 5mm; }
+    .architecture-tree { break-inside: auto; }
+    .node-tree > li, .flow-step { break-inside: avoid; }
+    .diagram-root, .diagram figcaption { break-after: avoid; }
+    section > p, section > .steps, section > .gdd-list { max-width: none; }
+    .diagram-root, section p, code { overflow-wrap: anywhere; }
+    .diagram, .composition, .gdd-figure { box-shadow: none; border-radius: 0; }
+    .node-tree { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    a { color: inherit; }
+    .gdd-figure { margin: 4mm 0; }
+    .gdd-figure img { max-height: 100mm; object-fit: contain; }
+    .info-card, .feature-card, .control-card, .mission-card, .technology-card { min-height: 0; break-inside: avoid; padding: 4mm; }
+    footer { padding: 2mm 0; font-size: 9pt; break-inside: avoid; }
+}
+
+
+.design-list { margin: 1.5rem 0 2rem; }
+.design-list > div { display: grid; grid-template-columns: minmax(130px, 23%) 1fr; gap: 1.5rem; padding: 1.1rem 0; border-bottom: 1px solid var(--border); }
+.design-list dt { color: var(--accent); font-weight: bold; }
+.design-list dd { min-width: 0; color: var(--muted); }
+.design-list dd p + p { margin-top: 0.7rem; }
+.schedule { list-style: none; margin: 1.3rem 0; padding: 0; }
+.schedule li { display: grid; grid-template-columns: 110px 1fr; gap: 1rem; padding: 0.8rem 0; border-bottom: 1px solid var(--border); color: var(--muted); }
+.schedule strong { color: var(--accent); }
+.hero > a { margin-bottom: 1.4rem; color: var(--accent); }
+.info-card:hover, .feature-card:hover, .mission-card:hover, .technology-card:hover, .gdd-figure:hover { transform: none; }
+@media (max-width: 600px) {
+    .design-list > div, .schedule li { grid-template-columns: 1fr; gap: 0.45rem; }
+    .controls-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .control-card { min-height: 110px; }
+}
+
+/* A navegação móvel ocupa uma linha e mantém todos os destinos acessíveis. */
+@media screen and (max-width: 700px) {
+    .navigation { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; }
+    .navigation a { flex-shrink: 0; }
 }

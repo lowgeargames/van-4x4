@@ -8,33 +8,44 @@
     <title>Van 4x4 — Game Design Document</title>
 
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="../oficina-editorial.css">
 </head>
 
-<body>
+<body class="gdd">
+    <a class="skip-link" href="#main">Ir para o conteúdo</a>
 
-    <header class="hero">
-
-        <p class="team-name">
-            Low Gear Games
-        </p>
-
-        <h1>
-            Van 4x4
-        </h1>
-
-        <p class="subtitle">
-            Game Design Document
-        </p>
-
-        <p class="hero-description">
-            Um jogo 3D off-road com física arcade, terrenos extremos
-            e uma van que se recusa a parar.
-        </p>
-
+    <header class="document-cover">
+        <div class="cover-mast">
+            <p class="cover-brand">Low Gear Games</p>
+            <p>GDD</p>
+        </div>
+        <div class="cover-spread">
+            <div class="cover-title">
+                <h1>Van <span>4x4</span></h1>
+                <p class="cover-type">Game Design Document</p>
+                <p class="cover-intro">Um jogo 3D off-road com física arcade, terrenos extremos e uma van que se recusa a parar.</p>
+            </div>
+            <figure class="cover-photo">
+                <img src="assets/capa-van-estrada.jpg" width="2560" height="1440" alt="Vista lateral da van de manutenção levantando poeira na estrada de terra, com montanhas ao fundo.">
+                <figcaption><span>GameSession · Estrada de terra</span><span>Captura do protótipo</span></figcaption>
+            </figure>
+        </div>
+        <div class="cover-imprint">
+            <div><strong>Jogos Digitais</strong><span>Universidade Federal de Pelotas</span></div>
+            <dl>
+                <div><dt>Entrega documental</dt><dd><time datetime="2026-11-18">18/11/2026</time></dd></div>
+                <div><dt>Versão final planejada do jogo</dt><dd><time datetime="2026-12-09">09/12/2026</time></dd></div>
+            </dl>
+        </div>
+        <div class="cover-crossref">
+            <span>Visão da entrega final</span>
+            <a class="companion-link" href="../tdd/index.html">Consultar o Technical Design Document →</a>
+            <span class="companion-print">Technical Design Document (TDD) · Entregue separadamente</span>
+        </div>
     </header>
 
 
-    <nav class="navigation">
+    <nav class="navigation" aria-label="Seções do GDD">
 
         <a href="#overview">Visão Geral</a>
         <a href="#game-info">Informações</a>
@@ -51,17 +62,20 @@
         <a href="#performance">Performance</a>
         <a href="#team">Equipe</a>
         <a href="#technology">Tecnologias</a>
+        <a href="#presentation">Visual e som</a>
+        <a href="#delivery">Andamento e entrega</a>
 
     </nav>
 
 
-    <main>
+    <main id="main">
 
         <!-- VISÃO GERAL -->
 
         <section id="overview">
 
             <h2>Visão Geral</h2>
+<p class="document-context">Este GDD descreve a experiência prevista para 09/12/2026. O <a href="#delivery">quadro de andamento</a> reúne o que está implementado, em desenvolvimento e planejado. As imagens distinguem referências conceituais de capturas do protótipo.</p>
 
             <p>
                 Van 4x4 é um jogo 3D de direção off-road com física arcade
@@ -164,6 +178,9 @@
                 O jogo deve ser rápido de entender e permitir que uma pessoa
                 comece a dirigir poucos segundos após iniciar a partida.
             </p>
+<h3>Primeiro acesso e continuidade</h3>
+<p>O menu oferecerá Nova partida, Continuar quando existir progresso, Opções e Sair. Uma nova partida leva à garagem com a van básica e o primeiro chamado disponível. A garagem mostra o objetivo, as recompensas previstas, o saldo e as peças equipadas. Iniciar um atendimento abre o mundo, prepara os efeitos e libera a direção após a contagem.</p>
+<p>O menu de opções deverá permitir volume e ajustes gráficos simples. O jogador poderá aprender os comandos na interface, escolher o serviço disponível e começar sem uma introdução longa. Continuar recuperará o estado da garagem salvo ao fim de uma transação, sem prometer retomada de um veículo no meio de um salto.</p>
 
         </section>
 
@@ -172,12 +189,12 @@
 
         <section id="scope">
 
-            <h2>Escopo da Versão Inicial</h2>
+            <h2>Escopo da Entrega Final</h2>
 
             <div class="status-legend" aria-label="Estados de desenvolvimento">
                 <p><span class="status-tag implemented">Implementado</span> Presente no protótipo.</p>
                 <p><span class="status-tag planned">Planejado</span> Meta da versão final de dezembro.</p>
-                <p><span class="status-tag future">Futuro</span> Fora do compromisso principal.</p>
+                <p><span class="status-tag planned">Em desenvolvimento</span> Integração parcial ou frente de trabalho em andamento.</p>
             </div>
 
             <p>
@@ -192,53 +209,36 @@
                 reaproveitado por várias missões.
             </p>
 
-            <div class="feature-grid">
-
-                <div class="feature-card">
-
-                    <h3>1 Mapa Principal</h3>
-
-                    <p>
+            <dl class="design-list">
+<div>
+<dt>1 Mapa Principal</dt>
+<dd><p>
                         <strong>Planejado:</strong> aproveitar o terreno e a extensão
                         já existentes em um mesmo mapa, com regiões e rotas variadas.
-                    </p>
-
-                </div>
-
-                <div class="feature-card">
-
-                    <h3>4 Serviços de Manutenção</h3>
-
-                    <p>
+                    </p></dd>
+</div>
+<div>
+<dt>4 Serviços de Manutenção</dt>
+<dd><p>
                         <strong>Planejado:</strong> quatro destinos, reutilizando
                         a interação básica de reparo e variando o desafio do percurso.
-                    </p>
-
-                </div>
-
-                <div class="feature-card">
-
-                    <h3>Sem Personagem a Pé</h3>
-
-                    <p>
+                    </p></dd>
+</div>
+<div>
+<dt>Sem Personagem a Pé</dt>
+<dd><p>
                         A versão inicial mantém toda a experiência centrada
                         na van e evita a criação de um segundo sistema
                         de movimentação.
-                    </p>
+                    </p></dd>
+</div>
+</dl>
 
-                </div>
-
-            </div>
-
-            <p class="note">
-                <strong>Estado atual:</strong> a fase com relevo já permite dirigir,
-                explorar, realizar façanhas e concluir o reparo da antena. Garagem,
-                economia, retorno, relatório e salvamento ainda serão implementados.
-            </p>
+            <p><strong>Estado em 16/11/2026.</strong> A GameSession reúne dois serviços sequenciais, estatísticas e relatório animado com pagamento demonstrativo. Menu, garagem, carteira, peças, retorno e salvamento integram o compromisso de 09/12/2026. A entrega documental de 18/11 apresenta a visão completa e seu andamento.</p>
 
             <h3>Marcos de Entrega</h3>
             <div class="info-grid">
-                <div class="info-card"><span>Primeiro TDD · previsto</span><strong><time datetime="2026-10-28">28/10/2026</time></strong></div>
+                <div class="info-card"><span>Primeiro TDD · previsão original</span><strong><time datetime="2026-10-28">28/10/2026</time></strong><p>Marco histórico de planejamento. A data efetiva de entrega não está comprovada neste documento.</p></div>
                 <div class="info-card"><span>GDD + TDD + Andamento · previsto</span><strong><time datetime="2026-11-18">18/11/2026</time></strong></div>
                 <div class="info-card"><span>Versão final · prevista</span><strong><time datetime="2026-12-09">09/12/2026</time></strong></div>
             </div>
@@ -272,53 +272,36 @@
                 indestrutível, e o jogador deve poder recuperar o controle e continuar.
             </p>
 
-            <div class="feature-grid design-principles">
-
-                <div class="feature-card">
-
-                    <h3>Diversão antes do Realismo</h3>
-
-                    <p>
+            <dl class="design-list">
+<div>
+<dt>Diversão antes do Realismo</dt>
+<dd><p>
                         A física poderá quebrar expectativas realistas sempre
                         que isso resultar em uma experiência mais divertida.
-                    </p>
-
-                </div>
-
-                <div class="feature-card">
-
-                    <h3>Direção como Mecânica Central</h3>
-
-                    <p>
+                    </p></dd>
+</div>
+<div>
+<dt>Direção como Mecânica Central</dt>
+<dd><p>
                         O restante do jogo deve apoiar a experiência de dirigir,
                         explorar terrenos e superar obstáculos.
-                    </p>
-
-                </div>
-
-                <div class="feature-card">
-
-                    <h3>Escopo Controlado</h3>
-
-                    <p>
+                    </p></dd>
+</div>
+<div>
+<dt>Escopo Controlado</dt>
+<dd><p>
                         Poucos sistemas bem executados terão prioridade sobre
                         grande quantidade de conteúdo.
-                    </p>
-
-                </div>
-
-                <div class="feature-card">
-
-                    <h3>Performance desde o Início</h3>
-
-                    <p>
+                    </p></dd>
+</div>
+<div>
+<dt>Performance desde o Início</dt>
+<dd><p>
                         Otimização é um requisito de design e deve influenciar
                         arte, mapa, física, efeitos e arquitetura do jogo.
-                    </p>
-
-                </div>
-
-            </div>
+                    </p></dd>
+</div>
+</dl>
 
         </section>
 
@@ -346,11 +329,11 @@
                 tentar atalhos e caminhos off-road mais arriscados.
             </p>
 
-            <h3><span class="status-tag implemented">Implementado</span> Ciclo do Protótipo</h3>
+            <h3>Ciclo do Protótipo</h3>
 
             <div class="game-loop">
 
-                <span>Receber chamado da antena</span>
+                <span>VAI! e chamado da antena</span>
                 <span>→</span>
 
                 <span>Dirigir</span>
@@ -362,44 +345,33 @@
                 <span>Realizar reparo</span>
                 <span>→</span>
 
-                <span>Concluir o serviço</span>
+                <span>Reparar a bomba e consultar o relatório</span>
 
             </div>
 
-            <p>
-                Durante a direção, as façanhas já geram pontos e estrelas de sessão.
-                O reparo da antena encerra o serviço diretamente. Não há seleção de
-                missão, garagem, pagamento, relatório consolidado ou compra de peças
-                no fluxo atual.
-            </p>
+            <p>A GameSession começa com preparação gráfica e contagem regressiva. Após VAI!, o jogador dirige até a antena e depois até a bomba. Tempo, distância, façanhas e impactos continuam acumulando entre os serviços. O segundo reparo abre o relatório, que revela os resultados e os créditos demonstrativos. O botão de reinício restaura a sessão inteira.</p>
 
-            <h3><span class="status-tag planned">Planejado</span> Ciclo da Versão Final</h3>
+            <h3>Ciclo da Versão Final</h3>
             <p>
                 A garagem conecta os serviços em um mesmo mapa. O fluxo abaixo é a
                 meta para dezembro, não uma descrição de funcionalidades concluídas.
             </p>
-            <ol class="campaign-loop" aria-label="Ciclo planejado em treze etapas">
-                <li><strong>Estar na garagem</strong><span>Ponto central entre serviços.</span></li>
-                <li><strong>Escolher um serviço</strong><span>Definir o destino de manutenção.</span></li>
-                <li><strong>Configurar a van</strong><span>Equipar as peças disponíveis.</span></li>
-                <li><strong>Sair da garagem</strong><span>Iniciar a viagem de ida.</span></li>
-                <li><strong>Enfrentar o percurso</strong><span>Terreno, obstáculos e caminhos alternativos.</span></li>
-                <li><strong>Acumular façanhas</strong><span>Registrar manobras, destruição e estatísticas.</span></li>
-                <li><strong>Realizar a manutenção</strong><span>Restaurar o equipamento no destino.</span></li>
-                <li><strong>Escolher o retorno</strong><span>Voltar dirigindo ou usar retorno rápido.</span></li>
-                <li><strong>Finalizar na garagem</strong><span>Encerrar a missão após o retorno.</span></li>
-                <li><strong>Consultar o relatório</strong><span>Rever o desempenho do serviço.</span></li>
-                <li><strong>Receber dinheiro</strong><span>Pagamento fixo e bônus pelo desempenho e pelo caos.</span></li>
-                <li><strong>Comprar ou equipar peças</strong><span>Experimentar novas combinações.</span></li>
-                <li><strong>Escolher outra missão</strong><span>Retomar o ciclo de direção e manutenção.</span></li>
-            </ol>
-            <p class="note">
-                O diagrama em HTML substitui a apresentação do antigo loop ilustrado.
-                A imagem original é preservada como histórico, mas não é usada para
-                representar o novo fluxo.
-            </p>
+            <figure class="diagram" aria-labelledby="journey-caption">
+<figcaption id="journey-caption">Ciclo da versão final — da escolha do chamado à próxima configuração da van.</figcaption>
+<ol class="journey">
+<li><strong>Preparar</strong><span>Na garagem, escolher o chamado, consultar a recompensa e equipar as peças.</span></li>
+<li><strong>Explorar</strong><span>Sair com a van, escolher estrada ou atalho e acumular façanhas entre os obstáculos.</span></li>
+<li><strong>Reparar e voltar</strong><span>Concluir a manutenção e retornar dirigindo ou usar o retorno rápido, preservando os resultados.</span></li>
+<li><strong>Receber e melhorar</strong><span>Consultar o relatório na garagem, receber créditos e comprar ou trocar peças antes do próximo serviço.</span></li>
+</ol>
+</figure>
+            <p>A viagem valoriza a escolha de rota. Voltar dirigindo amplia as oportunidades de façanhas, enquanto o retorno rápido preserva os resultados já conquistados.</p>
 
-            <h3><span class="status-tag implemented">Implementado</span> Turbo e HUD</h3>
+            <figure class="gdd-figure gameplay-capture">
+<img src="assets/gameplay-prototipo.png" alt="Van na estrada de terra com velocímetro e turbo ativo" width="1280" height="720" loading="lazy">
+<figcaption>Captura real de uma etapa anterior da GameSession, em 1280 × 720. Mostra a câmera de direção e o HUD Oficina Arcade. A imagem antecede a integração dos dois serviços.</figcaption>
+</figure>
+<h3>Turbo e HUD</h3>
             <p>
                 Na fase com relevo, o turbo consome energia, exige uma espera antes
                 da recarga e limita a reativação após esgotamento. O HUD mostra
@@ -408,11 +380,11 @@
                 limitação de energia da fase atual.
             </p>
 
-            <h3><span class="status-tag implemented">Implementado</span> Façanhas Atuais</h3>
+            <h3>Façanhas Atuais</h3>
             <p>
                 O jogo mede distância horizontal e tempo no ar, reconhece giros
                 completos para frente/trás e rolamentos laterais e distingue pouso
-                limpo, pouso brutal e capotamento após salto. Cada façanha válida
+                suave, firme, brutal e capotamento após salto. Cada façanha válida
                 recebe pontos, de uma a três estrelas, estatísticas e uma mensagem
                 humorística. Pontos e estrelas são acumulados durante a sessão.
             </p>
@@ -423,20 +395,30 @@
                 ser reconhecido tanto por habilidade quanto por uma chegada absurda.
             </p>
 
-            <h3><span class="status-tag planned">Planejado</span> Estatísticas, Destruição e Combos</h3>
-            <p>
-                A expansão reunirá os eventos atuais em estatísticas por missão,
-                acrescentará destruição e combos e alimentará o relatório e os
-                bônus financeiros. Esses registros completos e sua integração
-                econômica ainda não existem.
-            </p>
-            <div class="feature-grid">
-                <div class="feature-card"><h3>Saltos e Manobras</h3><p>Quantidade de saltos, tempo no ar, distância horizontal, maior salto, giros, cambalhotas, pousos limpos, pousos brutais e capotamentos.</p></div>
-                <div class="feature-card"><h3>Destruição</h3><p>Árvores derrubadas, caixas atingidas, barris e outros obstáculos atingidos e eventos relevantes de colisão. Caixas e barris atuais reagem à física; não possuem destruição implementada.</p></div>
-                <div class="feature-card"><h3>Combos</h3><p>Sequências próximas de façanhas e combinações de saltos, giros e impactos, com multiplicadores moderados de pontuação.</p></div>
-                <div class="feature-card"><h3>Percurso</h3><p>Tempo de ida, tempo de volta, tempo total, distância percorrida e tipo de retorno utilizado.</p></div>
-                <div class="feature-card"><h3>Serviço</h3><p>Missão realizada, reparo concluído e avaliação geral do desempenho, sem obrigar direção perfeita.</p></div>
-            </div>
+            <h3>Estatísticas implementadas e expansão por combos</h3>
+            <p>As estatísticas de sessão já reúnem deslocamento, saltos, giros, pousos, árvores e impactos diretos em caixas, barris e cones. Árvores valem 100 pontos e cada prop único atingido vale 25 pontos na sessão atual. Combos, tempos separados de ida/volta e integração com a economia persistente continuam planejados.</p>
+            <dl class="design-list">
+<div>
+<dt>Saltos e Manobras</dt>
+<dd><p>Quantidade de saltos, tempo no ar, distância horizontal, maior salto, giros, cambalhotas, pousos limpos, pousos brutais e capotamentos.</p></dd>
+</div>
+<div>
+<dt>Destruição</dt>
+<dd><p>Árvores derrubadas, caixas atingidas, barris e outros obstáculos atingidos e eventos relevantes de colisão. Caixas e barris atuais reagem à física; não possuem destruição implementada.</p></dd>
+</div>
+<div>
+<dt>Combos</dt>
+<dd><p>Sequências próximas de façanhas e combinações de saltos, giros e impactos, com multiplicadores moderados de pontuação.</p></dd>
+</div>
+<div>
+<dt>Percurso</dt>
+<dd><p>Tempo de ida, tempo de volta, tempo total, distância percorrida e tipo de retorno utilizado.</p></dd>
+</div>
+<div>
+<dt>Serviço</dt>
+<dd><p>Missão realizada, reparo concluído e avaliação geral do desempenho, sem obrigar direção perfeita.</p></dd>
+</div>
+</dl>
             <p class="note">
                 <strong>Pontos não são dinheiro.</strong> Pontos avaliam façanhas e
                 servirão ao cálculo de bônus; dinheiro será usado na garagem. A
@@ -481,7 +463,7 @@
                 o jogador recupere o controle rapidamente e continue a missão.
             </p>
 
-            <h3><span class="status-tag implemented">Implementado</span> Identidade e Dirigibilidade</h3>
+            <h3>Identidade e Dirigibilidade</h3>
             <p>
                 A van americana antiga de manutenção já tem carroceria creme e azul,
                 faixa utilitária laranja, inscrições “24/7 REPAIRS” e “LG-01”, rack
@@ -511,42 +493,29 @@
 
             </figure>
 
-            <div class="feature-grid">
-
-                <div class="feature-card">
-
-                    <h3>Física Arcade</h3>
-
-                    <p>
+            <dl class="design-list">
+<div>
+<dt>Física Arcade</dt>
+<dd><p>
                         Comportamento exagerado e divertido em vez de
                         simulação automobilística realista.
-                    </p>
-
-                </div>
-
-                <div class="feature-card">
-
-                    <h3>Van Indestrutível</h3>
-
-                    <p>
+                    </p></dd>
+</div>
+<div>
+<dt>Van Indestrutível</dt>
+<dd><p>
                         Capotamentos, saltos e impactos fazem parte da
                         experiência e não encerram a partida.
-                    </p>
-
-                </div>
-
-                <div class="feature-card">
-
-                    <h3>Terreno como Desafio</h3>
-
-                    <p>
+                    </p></dd>
+</div>
+<div>
+<dt>Terreno como Desafio</dt>
+<dd><p>
                         O caminho escolhido pelo jogador é uma parte
                         importante de cada missão.
-                    </p>
-
-                </div>
-
-            </div>
+                    </p></dd>
+</div>
+</dl>
 
         </section>
 
@@ -569,44 +538,31 @@
                 animações de personagem e uma segunda câmera de gameplay.
             </p>
 
-            <div class="feature-grid">
-
-                <div class="feature-card">
-
-                    <h3>Durante a Direção</h3>
-
-                    <p>
+            <dl class="design-list">
+<div>
+<dt>Durante a Direção</dt>
+<dd><p>
                         A câmera fica atrás e acima da van, utilizando
                         movimentação suavizada e permitindo boa leitura
                         do terreno à frente.
-                    </p>
-
-                </div>
-
-                <div class="feature-card">
-
-                    <h3>Ao Chegar no Reparo</h3>
-
-                    <p>
+                    </p></dd>
+</div>
+<div>
+<dt>Ao Chegar no Reparo</dt>
+<dd><p>
                         O jogador posiciona a van dentro da área de interação,
                         praticamente parada, e segura E por aproximadamente 2 segundos.
-                    </p>
-
-                </div>
-
-                <div class="feature-card">
-
-                    <h3>Durante o Reparo</h3>
-
-                    <p>
+                    </p></dd>
+</div>
+<div>
+<dt>Durante o Reparo</dt>
+<dd><p>
                         A câmera de direção é mantida. A interface mostra progresso;
                         soltar E, mover a van acima do limite ou sair da área reinicia
                         a contagem. O indicador muda de vermelho para verde ao concluir.
-                    </p>
-
-                </div>
-
-            </div>
+                    </p></dd>
+</div>
+</dl>
 
 
             <figure class="gdd-figure gdd-figure-featured">
@@ -616,18 +572,16 @@
                     alt="Diagrama conceitual da câmera e do fluxo de reparo em Van 4x4"
                 >
 
-                <figcaption>
-                    Referência conceitual do reparo de dentro da van, não uma
-                    captura do protótipo. Atualmente é necessário segurar E e a
-                    câmera não se aproxima do equipamento. O pagamento ilustrado
-                    é apenas conceitual: não existe economia implementada e nenhum
-                    valor de recompensa financeira foi definido.
-                </figcaption>
+                <figcaption>Referência conceitual do reparo de dentro da van. Os comandos e valores da prancha são ilustrativos e podem diferir dos usados no jogo. A interação atual exige segurar E e mantém a câmera de direção. O relatório experimental demonstra 500 CR fixos mais floor(pontos totais / 20). O balanceamento da economia final ainda depende de testes.</figcaption>
 
             </figure>
 
 
-            <h3>Fluxo da Interação</h3>
+            <figure class="gdd-figure gameplay-capture">
+<img src="assets/manutencao-bomba.png" alt="Van parada diante da bomba, instrução de reparo e Serviço 2/2" width="1280" height="720" loading="lazy">
+<figcaption>Captura real da GameSession após a integração dos dois serviços. A instrução de reparo e a barra aparecem ao estacionar junto à bomba. O popup registra uma façanha anterior.</figcaption>
+</figure>
+<h3>Fluxo da Interação</h3>
 
             <div class="game-loop repair-loop">
 
@@ -648,8 +602,7 @@
             </div>
 
             <p class="note">
-                A complexidade dos reparos será mantida baixa para que eles
-                complementem a direção sem competir com a mecânica principal.
+                O reparo dá uma pausa ao percurso. Parar e manter E pressionado confirma a chegada, enquanto o relevo e a escolha de rota continuam sendo o desafio principal.
             </p>
 
         </section>
@@ -719,12 +672,11 @@
         <section id="progression">
 
             <h2>Progressão</h2>
-            <p><span class="status-tag planned">Planejado</span> Garagem, economia, peças e salvamento fazem parte da meta da versão final. Nenhum desses sistemas está implementado no protótipo atual.</p>
+            <p>Garagem, economia, peças e salvamento fazem parte da meta da versão final. A carteira persistente, as compras e a garagem ainda dependem da implementação planejada. O relatório atual já demonstra pagamento em CR.</p>
 
             <h3>Garagem: Ponto Central entre Missões</h3>
             <p>
-                A primeira garagem poderá ser uma interface simplificada, sem exigir
-                um espaço 3D explorável. Ela permitirá selecionar serviços, consultar
+                A garagem será uma interface de preparação entre viagens. Ela permitirá selecionar serviços, consultar
                 dinheiro e informações básicas da van, visualizar melhorias, comprar
                 peças, equipar e trocar as peças adquiridas e iniciar novas missões.
             </p>
@@ -750,12 +702,24 @@
                 relevantes em cada uma. Peças compradas poderão ser trocadas livremente
                 na garagem.
             </p>
-            <div class="feature-grid">
-                <div class="feature-card"><h3>Motor</h3><p>Alternativas de força e aceleração, com compromissos de controle e agilidade a balancear.</p></div>
-                <div class="feature-card"><h3>Pneus</h3><p>Alternativas de tração e aderência, alterando a facilidade de contornar terrenos e iniciar derrapagens.</p></div>
-                <div class="feature-card"><h3>Suspensão</h3><p>Alternativas de estabilidade, resposta a impactos e potencial para saltos e manobras.</p></div>
-                <div class="feature-card"><h3>Turbo</h3><p>Alternativas de intensidade e disponibilidade, com vantagens e limitações perceptíveis.</p></div>
-            </div>
+            <dl class="design-list">
+<div>
+<dt>Motor</dt>
+<dd><p>Alternativas de força e aceleração, com compromissos de controle e agilidade a balancear.</p></dd>
+</div>
+<div>
+<dt>Pneus</dt>
+<dd><p>Alternativas de tração e aderência, alterando a facilidade de contornar terrenos e iniciar derrapagens.</p></dd>
+</div>
+<div>
+<dt>Suspensão</dt>
+<dd><p>Alternativas de estabilidade, resposta a impactos e potencial para saltos e manobras.</p></dd>
+</div>
+<div>
+<dt>Turbo</dt>
+<dd><p>Alternativas de intensidade e disponibilidade, com vantagens e limitações perceptíveis.</p></dd>
+</div>
+</dl>
             <p>As combinações abaixo são exemplos de design, não classes obrigatórias nem conjuntos já disponíveis no jogo:</p>
             <div class="feature-grid">
                 <div class="feature-card"><h3>Van Bruta</h3><p>Mais estabilidade, boa tração e melhor comportamento em impactos; menor agilidade ou aceleração.</p></div>
@@ -771,7 +735,7 @@
             <h3>Resistência Não Significa Vida</h3>
             <p>
                 A van continua praticamente indestrutível. Uma configuração mais
-                resistente poderá mudar estabilidade, massa, recuperação ou resposta
+                resistente poderá mudar estabilidade, recuperação ou resposta
                 às colisões, sem exigir barra de vida ou simulação de danos. Essas
                 diferenças são propostas para as peças futuras, não mudanças já
                 aplicadas à física aprovada do protótipo.
@@ -782,9 +746,12 @@
                 A versão final deverá preservar dinheiro disponível, missões
                 concluídas, peças compradas, peças equipadas e progresso relevante
                 da campanha. O protótipo ainda não possui essa persistência: os
-                pontos e estrelas atuais são de sessão. Formato, organização e
-                detalhes técnicos do salvamento serão estudados no TDD.
+                pontos e estrelas atuais são de sessão. O formato e a recuperação do progresso estão especificados na <a class="companion-link" href="../tdd/index.html#progression">seção 11 do TDD</a><span class="companion-print">seção 11 do TDD</span>.
             </p>
+<h3>Ordens de serviço e avanço</h3>
+<p>A campanha é planejada em chamados individuais. A primeira conclusão de cada chamado libera o seguinte, na ordem antena, bomba, gerador e estação. Ao concluir os quatro pela primeira vez, a campanha reconhece a conclusão e mantém os chamados disponíveis para repetição. Cada partida registra seus próprios eventos e liquida uma única recompensa.</p>
+<p>A progressão será percebida por serviços concluídos, saldo crescente, novas peças compradas e mudanças no comportamento da mesma van. A van básica continuará capaz de concluir os quatro serviços. Comprar uma peça exige saldo, equipá-la substitui a opção da mesma categoria e trocar peças adquiridas na garagem não cobra novamente. Preços e compensações entre configurações serão calibrados, preservando uma configuração original de referência.</p>
+<p>O combo planejado agrupa eventos válidos numa janela curta. Cada evento conserva seus pontos-base e apenas o acréscimo do multiplicador entra como bônus de combo. A elegibilidade dos eventos, a janela, o teto e os multiplicadores serão balanceados. O pagamento fixo deve garantir avanço mesmo sem combos.</p>
 
         </section>
 
@@ -802,7 +769,7 @@
             </p>
 
             <p>
-                <span class="status-tag implemented">Implementado</span> O projeto
+                O projeto
                 já superou o blockout inicial: há terreno com relevo físico, estrada
                 sinuosa integrada ao solo, montanhas, extensão extrema, lago e
                 vegetação low-poly. A estrada orienta o percurso sem impedir a
@@ -816,12 +783,7 @@
                 de destruição. Lama e água alteram a condução, enquanto poeira,
                 respingos nas rodas e impacto no lago dão leitura às superfícies.
             </p>
-            <p class="note">
-                O playground original mantém dois serviços de teste. A experiência
-                de terreno é uma cena de testes reutilizada pela fase atual com a
-                antena. Esses cenários não representam mundos separados da campanha
-                final nem quatro missões já integradas.
-            </p>
+            <p>A GameSession compõe o terreno principal e sua natureza sem herdar a missão antiga e contém antena e bomba. O lago e a extensão estão integrados à mission_level, mas ainda precisam ser incorporados ao mundo da campanha. O playground preserva a sequência antiga de testes.</p>
 
             <figure class="gdd-figure gdd-figure-featured">
 
@@ -843,122 +805,87 @@
 
             <h3>Áreas Principais</h3>
 
-            <div class="feature-grid map-areas">
-
-                <div class="feature-card">
-
-                    <h3>Base / Garagem</h3>
-
-                    <p>
-                        <strong>Planejado:</strong> ponto central entre serviços,
+            <dl class="design-list">
+<div>
+<dt>Base / Garagem</dt>
+<dd><p>
+                        ponto central entre serviços,
                         inicialmente por uma interface simples de seleção e peças.
-                    </p>
-
-                </div>
-
-                <div class="feature-card">
-
-                    <h3>Montanha / Antena</h3>
-
-                    <p>
-                        <strong>Implementado:</strong> mirante com antena, estrada sinuosa, pedras,
+                    </p></dd>
+</div>
+<div>
+<dt>Montanha / Antena</dt>
+<dd><p>
+                        mirante com antena, estrada sinuosa, pedras,
                         grandes inclinações e possibilidade de atalhos
                         diretamente pelo terreno.
-                    </p>
-
-                </div>
-
-                <div class="feature-card">
-
-                    <h3>Área de Lama</h3>
-
-                    <p>
-                        <strong>Implementado:</strong> zonas de baixa aderência,
+                    </p></dd>
+</div>
+<div>
+<dt>Área de Lama</dt>
+<dd><p>
+                        zonas de baixa aderência,
                         incluindo a saída de lama na extensão. Trajetória e velocidade importam.
-                    </p>
-
-                </div>
-
-                <div class="feature-card">
-
-                    <h3>Lago / Travessia</h3>
-
-                    <p>
-                        <strong>Implementado:</strong> lago com interação física da
+                    </p></dd>
+</div>
+<div>
+<dt>Lago / Travessia</dt>
+<dd><p>
+                        lago com interação física da
                         van e respingos. A água cria desafios e possibilidades de percurso.
-                    </p>
-
-                </div>
-
-                <div class="feature-card">
-
-                    <h3>Extensão Extrema</h3>
-
-                    <p>
-                        <strong>Implementado:</strong> elevações e percursos mais
+                    </p></dd>
+</div>
+<div>
+<dt>Extensão Extrema</dt>
+<dd><p>
+                        elevações e percursos mais
                         difíceis ampliam a exploração. Novos equipamentos ainda serão posicionados.
-                    </p>
-
-                </div>
-
-                <div class="feature-card">
-
-                    <h3>Novos Pontos de Serviço</h3>
-
-                    <p>
-                        <strong>Planejado:</strong> integrar bomba, gerador e estação
+                    </p></dd>
+</div>
+<div>
+<dt>Novos Pontos de Serviço</dt>
+<dd><p>
+                        integrar os quatro serviços, incluindo gerador e estação
                         meteorológica às áreas existentes, sem exigir novas grandes regiões.
-                    </p>
-
-                </div>
-
-            </div>
+                    </p></dd>
+</div>
+</dl>
 
 
             <h3>Filosofia do Layout</h3>
 
-            <div class="feature-grid">
-
-                <div class="feature-card">
-
-                    <h3>Rota Segura</h3>
-
-                    <p>
+            <dl class="design-list">
+<div>
+<dt>Rota Segura</dt>
+<dd><p>
                         Estradas oferecem uma maneira previsível de alcançar
                         os objetivos.
-                    </p>
-
-                </div>
-
-                <div class="feature-card">
-
-                    <h3>Atalhos Off-road</h3>
-
-                    <p>
+                    </p></dd>
+</div>
+<div>
+<dt>Atalhos Off-road</dt>
+<dd><p>
                         O jogador pode abandonar a estrada e tentar caminhos
                         mais rápidos, difíceis ou absurdos.
-                    </p>
-
-                </div>
-
-                <div class="feature-card">
-
-                    <h3>Mapa Compacto</h3>
-
-                    <p>
+                    </p></dd>
+</div>
+<div>
+<dt>Mapa Compacto</dt>
+<dd><p>
                         Relevo e caminhos sinuosos serão utilizados para criar
                         sensação de distância sem exigir uma área gigantesca.
-                    </p>
-
-                </div>
-
-            </div>
+                    </p></dd>
+</div>
+</dl>
 
             <p class="note">
                 O relevo atual já sustenta a experiência de direção. A integração
                 dos novos serviços deve aproveitar esse trabalho, preservando curvas,
                 subidas, descidas, saltos e liberdade de exploração.
             </p>
+<h3>Organização da versão final</h3>
+<p>Um mapa finito conectará a base, o mirante, o vale, os bosques, a região do lago e o acesso extremo à estação. A campanha reutiliza estradas e libera exploração fora delas. Regiões adicionais deverão acrescentar escolhas de rota e espaço para os quatro destinos, com geometria preparada antes da partida e densidade moderada de obstáculos.</p>
+<p>A referência de 1 km × 1 km orienta o planejamento de escala. A área e o número de setores serão definidos depois de medir o protótipo conectado, mantendo os acessos e contrastes entre as regiões. Água e lama terão leitura visual clara, e subidas, saltos e trechos rochosos oferecerão alternativas ao caminho mais previsível.</p>
 
         </section>
 
@@ -980,8 +907,8 @@
                     <span class="mission-number">01</span>
                     <div>
                         <h3>Antena de Comunicação</h3>
-                        <p><span class="status-tag implemented">Implementado: reparo</span> Alcançar a antena no mirante e restaurar o sinal. O protótipo já conclui o serviço nesse ponto.</p>
-                        <p><strong>Planejado:</strong> integrar o reparo ao fluxo de garagem, retorno e progressão.</p>
+                        <p>Alcançar a antena no mirante e restaurar o sinal. A GameSession avança desse reparo para a bomba e mantém a sessão em andamento.</p>
+                        <p>A integração à garagem, ao retorno e à progressão faz parte da campanha final.</p>
                         <strong>Desafio principal: subida, curvas e terreno rochoso.</strong>
                     </div>
                 </article>
@@ -989,16 +916,16 @@
                     <span class="mission-number">02</span>
                     <div>
                         <h3>Bomba de Água</h3>
-                        <p><span class="status-tag planned">Planejado: integração</span> Alcançar uma estação de bombeamento e restabelecer seu funcionamento.</p>
-                        <p>O playground antigo já permite reparar a bomba após a antena. Essa entrega é parcial em relação à versão final: a bomba ainda não integra a fase com relevo nem o novo fluxo de missões.</p>
-                        <strong>Desafio previsto: acesso à instalação e travessia de água.</strong>
+                        <p>Alcançar uma estação de bombeamento e restabelecer seu funcionamento.</p>
+                        <p>A bomba é o segundo serviço da GameSession, em uma variante visual própria junto à estrada do vale. Mantém a mecânica de reparo e o indicador independentes da antena. A campanha final ainda deverá conectar esse atendimento à garagem e à progressão.</p>
+                        <strong>Desafio atual: deslocamento do mirante ao vale. Acesso pela região de água previsto na campanha.</strong>
                     </div>
                 </article>
                 <article class="mission-card">
                     <span class="mission-number">03</span>
                     <div>
                         <h3>Gerador Remoto</h3>
-                        <p><span class="status-tag planned">Planejado</span> Uma instalação isolada está sem energia. Chegar ao equipamento e religar ou reparar o gerador.</p>
+                        <p>Uma instalação isolada está sem energia. Chegar ao equipamento e religar ou reparar o gerador.</p>
                         <strong>Desafio previsto: terreno irregular e escolha de rota.</strong>
                     </div>
                 </article>
@@ -1006,7 +933,7 @@
                     <span class="mission-number">04</span>
                     <div>
                         <h3>Estação Meteorológica</h3>
-                        <p><span class="status-tag planned">Planejado</span> Serviço em região mais extrema, com trajetos difíceis, obstáculos e possível travessia de água. Não exige tempestades ou clima dinâmico.</p>
+                        <p>Serviço em região mais extrema, com trajetos difíceis, obstáculos e possível travessia de água. Não exige tempestades ou clima dinâmico.</p>
                         <strong>Desafio previsto: percurso extremo e leitura do terreno.</strong>
                     </div>
                 </article>
@@ -1014,10 +941,32 @@
             <p class="note">
                 Os quatro serviços deverão aproveitar preferencialmente as áreas
                 existentes. Nomes e detalhes do gerador e da estação ainda podem ser
-                refinados. A integração dos serviços não significa criar quatro mundos.
+                refinados. Os destinos compartilham o mesmo mundo e diferem pelo acesso, relevo e equipamento.
             </p>
 
-            <h3><span class="status-tag implemented">Implementado</span> Reparo da Antena</h3>
+            <div class="table-wrap" role="region" aria-labelledby="percursos-caption" tabindex="0">
+                <table>
+                    <caption id="percursos-caption">Percursos planejados para os quatro chamados</caption>
+                    <colgroup>
+                        <col span="2" style="width: 18%">
+                        <col style="width: 23%">
+                        <col style="width: 17%">
+                        <col style="width: 24%">
+                    </colgroup>
+                    <thead>
+                        <tr><th scope="col">Serviço</th><th scope="col">Região</th><th scope="col">Desafio de direção</th><th scope="col">Terreno</th><th scope="col">Escolha de percurso</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><th scope="row">Antena</th><td>Mirante na montanha</td><td>Conduzir em subida e fazer curvas</td><td>Encosta rochosa</td><td>Seguir a estrada sinuosa ou cortar pela encosta</td></tr>
+                        <tr><th scope="row">Bomba de água</th><td>Vale, com acesso pela região de água</td><td>Ajustar trajetória e velocidade junto à água</td><td>Estrada de terra e área do lago</td><td>Seguir a estrada como referência. A conexão final com a água será validada</td></tr>
+                        <tr><th scope="row">Gerador remoto</th><td>Instalação isolada em área existente, a definir</td><td>Escolher uma linha em piso irregular</td><td>Relevo irregular</td><td>Contrastar uma rota previsível com um atalho off-road. O traçado está em aberto</td></tr>
+                        <tr><th scope="row">Estação meteorológica</th><td>Extensão extrema</td><td>Ler obstáculos e mudanças de inclinação</td><td>Relevo extremo, com possível travessia de água</td><td>Escolher o acesso pelo relevo. A alternativa segura e a travessia ainda serão validadas</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="print-keep">
+            <h3>Reparo da Antena</h3>
             <p>
                 Aproximar a van, estacionar na área e segurar E por aproximadamente
                 2 segundos. Soltar a tecla, sair da área ou perder a condição de parada
@@ -1026,12 +975,14 @@
                 O marcador de objetivo orienta a aproximação.
             </p>
             <p>
-                <strong>Planejado:</strong> no fluxo final, concluir o reparo libera
-                a escolha de retorno; o encerramento da missão e o pagamento acontecem
-                na garagem. Esse fluxo ainda substituirá a conclusão direta atual.
+                Na campanha planejada, a van sai da garagem para atender um chamado.
+                Concluir o reparo libera a escolha de retorno. A missão termina na chegada
+                válida à garagem ou com a confirmação do retorno rápido. O pagamento é
+                recebido uma única vez.
             </p>
+            </div>
 
-            <h3><span class="status-tag planned">Planejado</span> Retorno à Garagem</h3>
+            <h3>Retorno à Garagem</h3>
             <div class="feature-grid return-options">
                 <div class="feature-card">
                     <h3>Voltar Dirigindo · Padrão</h3>
@@ -1052,22 +1003,27 @@
                 condição explicitamente, preservando o tempo total realmente registrado.
             </p>
 
-            <h3><span class="status-tag planned">Planejado</span> Relatório Final de Missão</h3>
-            <p>
-                Ao encerrar o serviço na garagem, uma tela legível reunirá resultados
-                de direção, manutenção e recompensas. As informações poderão ser
-                agrupadas, sem exibir todos os números simultaneamente.
-            </p>
-            <div class="feature-grid">
-                <div class="feature-card"><h3>Serviço e Viagem</h3><p>Nome da missão, reparo concluído, tempo de ida, tempo de volta ou indicação de retorno rápido e tempo total.</p></div>
-                <div class="feature-card"><h3>Façanhas e Caos</h3><p>Quantidade de saltos, maior salto, giros e cambalhotas, capotamentos, árvores derrubadas, obstáculos atingidos, pontuação e bônus por combos.</p></div>
-                <div class="feature-card"><h3>Pagamento</h3><p>Valor fixo do serviço, bônus por façanhas e total de dinheiro recebido. Todos os valores e conversões ainda serão balanceados.</p></div>
-            </div>
-            <p>
-                O tom poderá continuar humorístico, por exemplo: “O cliente não
-                perguntou como você chegou. Melhor assim.” A frase é uma sugestão
-                editorial, não uma mensagem já implementada nessa tela.
-            </p>
+            <figure class="gdd-figure gameplay-capture">
+<img src="assets/relatorio-sessao.png" alt="Relatório da sessão concluída com dois serviços, um capotamento e pagamento demonstrativo" width="1280" height="720" loading="lazy">
+<figcaption>Captura real de teste controlado da GameSession, em 1280 × 720. O relatório mostra apenas estatísticas aplicáveis. Os valores ilustram aquela execução, sem representar uma partida completa de campanha ou uma medição de desempenho.</figcaption>
+</figure>
+<h3>Relatório experimental e conclusão da campanha</h3>
+            <p>O relatório animado já mostra estatísticas relevantes, pontuação e pagamento demonstrativo, omitindo contadores opcionais zerados. Permite pular animações e reiniciar a sessão. Na versão final, será apresentado ao voltar à garagem e liquidará a recompensa uma única vez na carteira. O pagamento aparece por último e não depende de direção perfeita.</p>
+            <dl class="design-list">
+<div>
+<dt>Serviço e Viagem</dt>
+<dd><p>Nome da missão, reparo concluído, tempo de ida, tempo de volta ou indicação de retorno rápido e tempo total.</p></dd>
+</div>
+<div>
+<dt>Façanhas e Caos</dt>
+<dd><p>Quantidade de saltos, maior salto, giros e cambalhotas, capotamentos, árvores derrubadas, obstáculos atingidos, pontuação e bônus por combos.</p></dd>
+</div>
+<div>
+<dt>Pagamento</dt>
+<dd><p>Valor fixo do serviço, bônus por façanhas e total de dinheiro recebido. Todos os valores e conversões ainda serão balanceados.</p></dd>
+</div>
+</dl>
+            <p>O humor da conclusão deve reconhecer a viagem e seus acidentes. Uma frase como “O cliente não perguntou como você chegou. Melhor assim.” combina com o reconhecimento das façanhas, inclusive quando a van chega toda torta.</p>
 
         </section>
 
@@ -1091,52 +1047,38 @@
             </p>
 
             <p>
-                <span class="status-tag implemented">Implementado</span> O protótipo
+                O protótipo
                 utiliza geometria low-poly, materiais simples, grupos de vegetação
                 com MultiMesh, recursos de terreno preparados previamente e poucos
-                objetos físicos dinâmicos. Isso expressa a prioridade de desempenho,
-                mas não comprova uma taxa de quadros em hardware modesto.
+                objetos físicos dinâmicos. As metas e as medições disponíveis são distinguidas <a class="companion-link" href="../tdd/index.html#validation">no TDD</a><span class="companion-print">na seção 12 do TDD</span>.
             </p>
 
-            <div class="feature-grid">
-
-                <div class="feature-card">
-
-                    <h3>Hardware Modesto</h3>
-
-                    <p>
+            <dl class="design-list">
+<div>
+<dt>Hardware Modesto</dt>
+<dd><p>
                         A direção visual e os sistemas deverão ser suficientemente
                         leves para permitir execução em computadores modestos,
                         utilizando configurações reduzidas quando necessário.
-                    </p>
-
-                </div>
-
-                <div class="feature-card">
-
-                    <h3>60 FPS</h3>
-
-                    <p>
+                    </p></dd>
+</div>
+<div>
+<dt>60 FPS</dt>
+<dd><p>
                         A experiência deverá buscar manter 60 FPS em máquinas
                         compatíveis com os requisitos mínimos definidos
                         durante os testes.
-                    </p>
-
-                </div>
-
-                <div class="feature-card">
-
-                    <h3>120 / 144+ FPS</h3>
-
-                    <p>
+                    </p></dd>
+</div>
+<div>
+<dt>120 / 144+ FPS</dt>
+<dd><p>
                         Hardware mais potente deverá poder aproveitar monitores
                         de alta taxa de atualização sem limitação artificial
                         a 60 FPS.
-                    </p>
-
-                </div>
-
-            </div>
+                    </p></dd>
+</div>
+</dl>
 
 
             <h3>Diretrizes de Performance</h3>
@@ -1289,6 +1231,47 @@
         </section>
 
 
+<section id="presentation">
+<h2>Direção visual e sonora</h2>
+<p>O visual combina volumes low-poly, terreno legível, verdes variados, terra natural e uma van americana antiga de manutenção. A identidade Oficina Arcade usa grafite, marfim, amarelo e laranja, números fortes e Barlow Condensed Bold. Velocímetro, turbo, estrelas e relatório devem celebrar o percurso preservando a visão da estrada.</p>
+<p>A fundação de áudio é uma frente paralela informada na branch feat/audio-foundation. Seu conteúdo não está integrado nem foi inspecionado nesta branch. A versão final prevê motor com resposta à condução, turbo, pneus/superfícies, impactos, manutenção, ambiente e confirmação de interface. O som deve ajudar a perceber esforço, velocidade e sucesso dos serviços, com humor e energia sem saturar cada colisão.</p>
+<p>Volumes de veículo, ambiente e interface deverão poder ser ajustados. Eventos repetidos terão limites para evitar sobreposição excessiva. A seleção de sons, eventual música, procedência e licenças dependerão da entrega de áudio e de revisão antes da integração.</p>
+</section>
+<section id="delivery"><h2>Andamento e compromisso de entrega</h2>
+<p>Revisão de 16/11/2026. A entrega de 18/11 apresenta GDD, TDD e demonstração de andamento. A versão final está prevista para 09/12/2026. Os sistemas planejados abaixo continuam dentro desse compromisso.</p>
+<div class="table-wrap" role="region" aria-label="Estado do projeto em 16/11/2026" tabindex="0">
+<table class="three-columns">
+<caption>Estado do projeto em 16/11/2026</caption>
+<thead><tr><th scope="col">Frente</th><th scope="col">Estado</th><th scope="col">Experiência e integração</th></tr></thead>
+<tbody>
+<tr><th scope="row">Direção e apresentação</th><td>Implementadas</td><td>Van, suspensão, turbo, câmera, velocímetro e feedback Oficina Arcade.</td></tr>
+<tr><th scope="row">Serviços e sessão</th><td>Implementados no protótipo</td><td>Antena → bomba, estatísticas contínuas, relatório animado e reinício completo.</td></tr>
+<tr><th scope="row">Façanhas e impactos</th><td>Implementados</td><td>Saltos, giros, pousos, árvores derrubadas e props atingidos geram registros únicos.</td></tr>
+<tr><th scope="row">Mundo final</th><td>Em desenvolvimento</td><td>Terreno-base desacoplado. Lago, lama e extensão aguardam composição na campanha.</td></tr>
+<tr><th scope="row">Áudio</th><td>Em desenvolvimento</td><td>Frente paralela em feat/audio-foundation, com integração ainda não verificada.</td></tr>
+<tr><th scope="row">Garagem e progressão</th><td>Planejadas para dezembro</td><td>Menu, seleção de chamados, carteira, peças e salvamento.</td></tr>
+<tr><th scope="row">Gerador e estação</th><td>Planejados para dezembro</td><td>Dois destinos adicionais para completar os quatro serviços.</td></tr>
+<tr><th scope="row">Retorno e combos</th><td>Planejados para dezembro</td><td>Escolha de volta, tempos separados e bônus de sequência com limites a calibrar.</td></tr>
+<tr><th scope="row">Desempenho e opções</th><td>Parcialmente implementados</td><td>Warm-up e recursos preparados já existem. Ajustes gráficos e metas de FPS aguardam validação.</td></tr>
+</tbody></table>
+</div>
+<h3>Plano até dezembro</h3>
+<ol class="schedule">
+<li><strong>16–18/11</strong><span>Fechar a documentação e demonstrar antena → bomba → relatório.</span></li>
+<li><strong>19–22/11</strong><span>Ligar menu, garagem e sessão em um fluxo contínuo.</span></li>
+<li><strong>23–26/11</strong><span>Integrar carteira, salvamento e as quatro categorias de peças.</span></li>
+<li><strong>27–30/11</strong><span>Completar os quatro chamados e a escolha de retorno.</span></li>
+<li><strong>01–03/12</strong><span>Conectar regiões, áudio, opções e combos ao ciclo completo.</span></li>
+<li><strong>04–06/12</strong><span>Revisar física, estatísticas, save e desempenho do conjunto.</span></li>
+<li><strong>07–09/12</strong><span>Testar exportação, corrigir bloqueadores e preparar a apresentação final.</span></li>
+</ol>
+<p>O <a class="companion-link" href="../tdd/index.html#roadmap">plano técnico</a><span class="companion-print">plano técnico (TDD, 12.8)</span> registra dependências e critérios de aceite. <a class="companion-link" href="../tdd/index.html#traceability">A rastreabilidade</a><span class="companion-print">A rastreabilidade (TDD, 12.10)</span> relaciona cada frente à implementação encontrada.</p>
+<div class="print-keep">
+<h3>Decisões para aprovação</h3>
+<ul class="gdd-list"><li><strong>Ordens e progressão</strong> — Definir como a interface reconhecerá a primeira conclusão dos quatro chamados. A ordem de desbloqueio e a repetição dos serviços já estão definidas para a campanha.</li><li><strong>Economia e peças</strong> — Aprovar a referência 500 + floor(pontos / 20) como ponto de partida, depois definir preços, pagamento por chamado e limites seguros de cada peça.</li><li><strong>Mapa</strong> — Definir área e setores finais após o protótipo conectado. A referência de 1 km² traz risco de autoria e desempenho para o prazo individual.</li><li><strong>Combos</strong> — Aprovar janela, teto e forma de bônus antes de integrar. Não usar duplicação de recompensas existentes como multiplicador implícito.</li><li><strong>Retorno e salvamento</strong> — Validar a condição de chegada à garagem no mundo final e definir a resposta a falhas de gravação.</li><li><strong>Áudio e plataformas</strong> — Conferir contrato da frente de áudio, sons e licenças. Definir se haverá música e quais plataformas terão exportação validada até 09/12.</li></ul>
+<p class="note">A expansão espacial, o balanceamento de peças e combos e a validação multiplataforma concentram risco no prazo disponível. O responsável decide qualquer ajuste de compromisso. O plano mantém essas frentes e prevê validação antes da consolidação final.</p>
+</div>
+</section>
     </main>
 
 
